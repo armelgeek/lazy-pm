@@ -161,7 +161,7 @@ export default function Home() {
       </main>
 
       <footer style={{ padding: '40px 20px', textAlign: 'center', color: '#999' }}>
-        <p>&copy; 2025 ShipInDays. Built with AI, for makers.</p>
+        <p>&copy; 2026 ShipInDays. Built with AI, for makers.</p>
       </footer>
     </div>
   );
