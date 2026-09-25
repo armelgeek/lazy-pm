@@ -162,11 +162,6 @@ export default function Home() {
 
       <footer style={{ padding: '40px 20px', textAlign: 'center', color: '#999' }}>
         <p>&copy; 2025 ShipInDays. Built with AI, for makers.</p>
-        <p style={{ marginTop: '20px', fontSize: '12px' }}>
-          <a href="/admin/founders" style={{ color: '#666', textDecoration: 'none' }}>
-            founders
-          </a>
-        </p>
       </footer>
     </div>
   );
