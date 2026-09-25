@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — quête #12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* en-tête de quête */
+  .q-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .q-why { margin: 0; max-width: 760px; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+
+  /* ce soir en 3 temps */
+  .q-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; counter-reset: qstep; }
+  .q-step {
+    display: flex; align-items: center; gap: 11px;
+    background: var(--card); border: 2px solid var(--line); border-radius: 14px;
+    padding: 10px 14px; font-size: 14px; font-weight: 700; color: var(--muted);
+    transition: border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .q-step__n {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 800;
+    background: var(--sunk-2); color: var(--muted);
+  }
+  .q-step small { display: block; font-family: var(--mono); font-size: 11px; font-weight: 500; color: var(--faint); }
+  .q-step[data-state="active"] { border-color: var(--teal); color: var(--ink); box-shadow: 0 4px 0 var(--teal); }
+  .q-step[data-state="active"] .q-step__n { background: var(--teal); color: var(--card); }
+  .q-step[data-state="done"] { background: var(--gold-mid); border-color: var(--gold); color: var(--gold-text); }
+  .q-step[data-state="done"] .q-step__n { background: var(--gold); color: var(--ink); }
+
+  /* le prompt */
+  .q-prompt { border-radius: 18px; padding: 0; overflow: hidden; gap: 0; }
+  .q-prompt__bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px 12px 20px; border-bottom: 2px solid var(--term-line);
+  }
+  .q-prompt__dots { display: flex; gap: 6px; }
+  .q-prompt__dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--term-line); }
+  .q-prompt pre { padding: 18px 22px 22px; line-height: 1.7 !important; }
+  .q-prompt pre .y { font-weight: 700; }
+
+  /* objectifs */
+  .q-obj { background: var(--card); border: 2px solid var(--line); border-radius: 18px; padding: 16px 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .q-obj__head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .q-obj__head h2 { font-size: 17px; margin: 0; }
+  .q-obj .bar { height: 8px; }
+  .q-obj .bar__fill { transition: width .3s ease; }
+  #objectives-list { display: flex; flex-direction: column; gap: 6px; }
+  #objectives-list .check { padding: 9px 12px; font-size: 14px; cursor: pointer; }
+  .check__tag { margin-left: auto; font-family: var(--mono); font-size: 10.5px; font-weight: 800; letter-spacing: .04em; color: var(--rose); }
+  .check--done .check__tag { display: none; }
+  .q-trap { display: flex; gap: 10px; align-items: flex-start; padding: 11px 14px; border-radius: 12px; }
+  .q-trap p { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--gold-deep); }
+
+  /* footer d'actions */
+  .q-progress { display: flex; align-items: center; gap: 12px; }
+  .q-progress .bar { width: 120px; height: 8px; }
+  .q-progress .bar__fill { transition: width .3s ease; }
+  .q-short { display: none; }
+  .footbar--actions .btn--bloque { background: var(--term); color: var(--card); box-shadow: 0 4px 0 #000; }
+  .footbar--actions .btn--bloque:hover { color: var(--card); }
+  .footbar--actions .btn--bloque[aria-expanded="true"] { background: var(--ink); }
+  .stuck--floating { bottom: calc(var(--tabbar-h, 0px) + var(--actions-h, 64px) + 12px) !important; }
+
+  .footbar--actions { flex-wrap: nowrap; }
+  .q-progress .mono { white-space: nowrap; }
+  @media (max-width: 1000px) {
+    .q-progress .bar { display: none; }
+  }
+  @media (max-width: 760px) {
+    .q-step { flex-direction: column; text-align: center; gap: 6px; padding: 10px 6px; font-size: 12.5px; line-height: 1.25; }
+    .q-step small { display: none; }
+    .q-prompt__dots { display: none; }
+  }
+  @media (max-width: 620px) {
+    .q-title { flex-wrap: nowrap !important; }
+    .q-title .node { width: 48px !important; height: 48px !important; font-size: 20px !important; border-width: 4px !important; }
+  }
+  @media (max-width: 520px) {
+    .q-progress { display: none; }
+    .q-long { display: none; }
+    .q-short { display: inline; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- BARRE LATÉRALE CONSOLE DE CHANTIER (identique au chemin) -->
+<nav class="side" aria-label="Navigation">
+  <a class="brand" href="index.html">
+    <svg class="mascot" width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+      <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+      <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+      <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span>LAZYPM.</span>
+  </a>
+
+  <!-- Sélecteur de projet compact façon étiquette -->
+  <div class="side__project" role="button" tabindex="0" title="Changer de projet">
+    <div class="side__project-name">
+      <span class="dot dot--live" title="Projet en cours"></span>
+      <span>AI Headshots</span>
+    </div>
+    <svg class="side__project-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <!-- Groupe : Parcours -->
+  <span class="side__group-label">// PARCOURS</span>
+  <a class="side__link" href="chemin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19c4-2 4-6 8-8s4-6 8-8"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="3" r="2"/></svg>
+    <span>Le chemin</span>
+  </a>
+  <a class="side__link" href="quete.html" aria-current="page">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+    <span>Quête en cours</span>
+    <span class="side__badge side__badge--teal">#12</span>
+  </a>
+  <a class="side__link" href="checkin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span>Check-in</span>
+    <span class="side__badge side__badge--rose">ce soir</span>
+  </a>
+
+  <!-- Groupe : Outils -->
+  <span class="side__group-label">// OUTILS</span>
+  <a class="side__link" href="plus-tard.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h9"/></svg>
+    <span>Plus tard</span>
+    <span class="side__badge">9</span>
+  </a>
+  <a class="side__link side__link--desktop-only" href="plan-en-cours.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>Revue du plan</span>
+  </a>
+
+  <!-- Profil utilisateur bas de barre -->
+  <div class="side__profile">
+    <a class="side__profile-card" href="compte.html">
+      <div class="side__avatar">A</div>
+      <div class="side__profile-info">
+        <span class="side__profile-name">Armel</span>
+        <span class="eyebrow eyebrow--sm" style="color:var(--term-dim);font-size:10px">MENSUEL · 9 $</span>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- HEADER AVEC TOUTES LES ACTIONS (plus de sticky masquant le bas du chat) -->
+<div class="main-header">
+<div class="topbar topbar--compact">
+  <div class="row row--wrap" style="gap:14px;align-items:center">
+    <a class="btn btn--icon" href="chemin.html" aria-label="Retour au chemin" style="background:var(--sunk);box-shadow:none;border-radius:11px;width:38px;height:38px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A4840" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14 5 7 12 14 19"/></svg></a>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono topbar__kicker" style="font-size:10px;color:var(--faint)">QUÊTE EN COURS</span>
+      <span class="mono" style="font-size:14px;font-weight:700">#12<span style="color:var(--faint)">/30</span></span>
+    </div>
+  </div>
+
+  <div class="row row--wrap" style="gap:10px;align-items:center">
+    <a href="plus-tard.html" class="btn btn--ghost btn--sm" aria-label="Noter une idée" style="text-decoration:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg> <span class="btn__label">Noter une idée</span></a>
+  </div>
+</div>
+</div>
+
+<div class="work">
+<main class="pane stack grow" style="gap:18px">
+
+<!-- EN-TÊTE DE LA QUÊTE -->
+<header class="stack-s" style="gap:10px">
+  <div class="row q-title" style="gap:16px;align-items:center">
+    <span class="node node--current" style="width:58px;height:58px;font-size:24px;border-width:5px;box-shadow:0 5px 0 var(--ink);flex-shrink:0">12</span>
+    <div class="stack-s" style="gap:4px">
+      <span class="eyebrow eyebrow--sm eyebrow--teal">// section 2 · se faire payer, trouver les premiers</span>
+      <h1 style="font-size:clamp(24px,3.2vw,34px);margin:0;line-height:1.1">Ça marche sur téléphone</h1>
+    </div>
+  </div>
+  <div class="q-meta">
+    <span class="pill pill--gold pill--xs" style="font-weight:800">+20 XP</span>
+    <span class="pill pill--xs"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2"/><path d="M10 2h4"/></svg> 1 à 2 h</span>
+    <span class="pill pill--teal pill--xs">en cours depuis ce soir</span>
+  </div>
+  <p class="q-why">Plus de la moitié de tes premiers utilisateurs ouvriront le lien sur leur smartphone. Si la page déborde ou si le bouton d'envoi passe sous le clavier, ils s'en vont direct.</p>
+</header>
+
+<!-- CE SOIR, EN 3 TEMPS -->
+<ol class="q-steps" aria-label="Ce soir, en 3 temps" style="list-style:none;margin:0;padding:0">
+  <li class="q-step" id="step-copy" data-state="active"><span class="q-step__n">1</span><span>Copie le prompt<small>ci-dessous</small></span></li>
+  <li class="q-step" id="step-paste" data-state="todo"><span class="q-step__n">2</span><span>Colle-le dans Lovable<small>une seule fois</small></span></li>
+  <li class="q-step" id="step-test" data-state="todo"><span class="q-step__n">3</span><span>Teste sur ton téléphone<small>coche au fur et à mesure</small></span></li>
+</ol>
+
+<!-- PROMPT + OBJECTIFS -->
+<div class="quest-workspace">
+
+  <div class="term q-prompt">
+    <div class="q-prompt__bar">
+      <div class="row" style="gap:14px;align-items:center">
+        <span class="q-prompt__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="eyebrow eyebrow--sm eyebrow--dim">prompt · à coller dans Lovable</span>
+      </div>
+      <button class="btn btn--gold btn--xs" type="button" id="copy-btn" style="height:32px;padding:0 12px;font-size:12.5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M6 15H4.5A1.5 1.5 0 0 1 3 13.5V4.5A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6"/></svg> <span>Copier</span></button>
+    </div>
+<pre id="prompt-text">Adapte toute l'interface pour smartphone et mobile :
+
+<span class="y">1. Mise en page mobile-first</span>
+<span class="d">-</span> Aucun défilement horizontal (overflow-x: hidden)
+<span class="d">-</span> Navigation compacte en bas (thumb zone)
+<span class="d">-</span> Grille des résultats sur 1 colonne fluide
+
+<span class="y">2. Ergonomie tactile &amp; clavier</span>
+<span class="d">-</span> Boutons et zones tactiles ≥ 44px de hauteur
+<span class="d">-</span> Les champs restent visibles quand le clavier s'ouvre
+<span class="d">-</span> Gère min-height: 100dvh et padding-bottom: env(safe-area-inset-bottom) pour iPhone
+
+<span class="y">3. Téléversement mobile</span>
+<span class="d">-</span> L'envoi photo déclenche l'appareil ou la pellicule sans recharger
+<span class="d">-</span> Indicateur de chargement clair pendant l'upload</pre>
+  </div>
+
+  <section class="q-obj" aria-labelledby="obj-title">
+    <div class="q-obj__head">
+      <h2 id="obj-title">Objectifs</h2>
+      <span class="mono" style="font-size:12.5px;font-weight:800;color:var(--teal)" id="obj-count">2/6 testés</span>
+    </div>
+    <span class="bar" aria-hidden="true"><span class="bar__fill" id="obj-bar" style="width:33%;display:block"></span></span>
+    <span class="eyebrow eyebrow--sm">// sur un vrai téléphone, pas ta fenêtre réduite</span>
+
+    <div id="objectives-list">
+      <label class="check check--done"><span class="check__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span> Ouvert sur vrai smartphone (Safari / Chrome)</label>
+      <label class="check check--done"><span class="check__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span> Aucun scroll horizontal sur tout le parcours</label>
+      <label class="check"><span class="check__box"></span> Boutons faciles à toucher au pouce (≥ 44px)</label>
+      <label class="check check--flag"><span class="check__box"></span> Clavier ouvert : bouton d'envoi accessible <span class="check__tag">PIÈGE</span></label>
+      <label class="check"><span class="check__box"></span> Envoi photo depuis la pellicule sans plantage</label>
+      <label class="check"><span class="check__box"></span> Prompts générés lisibles et faciles à copier</label>
+    </div>
+
+    <div class="card card--gold q-trap">
+      <svg class="mascot" width="24" height="24" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 43c4-2 8-2 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <p><strong>Le piège.</strong> Tester en réduisant ta fenêtre sur PC. Seul un vrai téléphone révèle la barre Safari qui se rétracte et le clavier qui cache le bouton.</p>
+    </div>
+  </section>
+
+</div>
+
+</main>
+</div>
+
+<!-- ACTIONS DE LA QUÊTE, TOUJOURS À PORTÉE -->
+<div class="footbar footbar--actions" id="quest-actions">
+  <div class="q-progress">
+    <span class="bar" aria-hidden="true"><span class="bar__fill" id="foot-bar" style="width:33%;display:block"></span></span>
+    <span class="mono" style="font-size:12px;font-weight:700;color:var(--muted)" id="quest-progress-label" aria-live="polite">2/6 objectifs · +20 XP</span>
+  </div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn--sm btn--bloque" id="chat-trigger-btn" type="button" aria-expanded="false" aria-controls="chat-panel">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span class="q-long">Je suis bloqué</span><span class="q-short">Bloqué</span>
+      <span class="tag tag--gold" style="font-size:9.5px;padding:1px 5px">PRO</span>
+    </button>
+    <a class="btn btn--primary btn--sm" href="checkin.html" id="done-btn">Marquer comme faite ✓</a>
+  </div>
+</div>
+
+<!-- ASSISTANT CHAT FLOTTANT -->
+<div class="stuck stuck--floating is-hidden" id="chat-panel" aria-label="Assistant Déblocage">
+  <div class="stuck__head">
+    <div class="row" style="gap:8px;align-items:center">
+      <span>Je suis bloqué</span>
+      <span class="tag tag--gold">PRO</span>
+    </div>
+    <button class="stuck__close" id="chat-close-btn" type="button" aria-label="Fermer l'assistant" title="Fermer (Échap)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+  </div>
+  <div class="stuck__body">
+    <div class="bubble bubble--them">Sur iPhone, le bouton d'action passe sous la barre d'adresse du bas</div>
+    <div class="row row--top" style="gap:10px">
+      <svg class="mascot" width="30" height="30" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div class="bubble bubble--me stack-s">
+        <p>Problème classique de Safari mobile avec la barre d'adresse rétractable.</p>
+        <div style="background:var(--sunk);border-radius:10px;padding:10px 12px">
+          <p class="mono" style="font-size:11px;line-height:1.6">Applique <code>min-height: 100dvh</code> au lieu de <code>100vh</code>, et ajoute <code>padding-bottom: env(safe-area-inset-bottom)</code> sur ta barre d'actions fixe.</p>
+        </div>
+        <p>Dis à Lovable : « Ajuste la barre d'action pour respecter les safe areas iOS et utilise 100dvh ».</p>
+      </div>
+    </div>
+    <div class="stack-s" style="background:var(--term-2);border-radius:12px;padding:13px 15px;gap:6px">
+      <span class="eyebrow eyebrow--sm eyebrow--dim">// ce qu'il sait déjà</span>
+      <span class="mono" style="font-size:12px;color:var(--term-text)">app&nbsp;&nbsp;ai-headshots · lovable</span>
+      <span class="mono" style="font-size:12px;color:var(--term-text)">état #01→#11 validées · #12 active</span>
+      <span class="mono" style="font-size:12px;color:var(--term-text)">ce soir « adapter le rendu mobile »</span>
+    </div>
+  </div>
+  <form class="stuck__foot" onsubmit="event.preventDefault()">
+    <label class="label" for="blocage" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Décris ton blocage</label>
+    <input class="field field--dark grow" id="blocage" type="text" placeholder="Décris ton blocage…">
+    <button class="btn btn--gold btn--icon" type="submit" aria-label="Envoyer"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></button>
+  </form>
+</div>
+
+
+</div>
+</div>
+
+<script>
+const tick = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg>';
+const checks = document.querySelectorAll('#objectives-list .check');
+const steps = { copy: document.getElementById('step-copy'), paste: document.getElementById('step-paste'), test: document.getElementById('step-test') };
+let copied = false;
+
+function render() {
+  const done = document.querySelectorAll('#objectives-list .check--done').length;
+  const pct = Math.round(done / checks.length * 100) + '%';
+  document.getElementById('obj-count').textContent = done + '/' + checks.length + ' testés';
+  document.getElementById('quest-progress-label').textContent = done + '/' + checks.length + ' objectifs · +20 XP';
+  document.getElementById('obj-bar').style.width = pct;
+  document.getElementById('foot-bar').style.width = pct;
+  // le déroulé du soir suit ce que tu fais vraiment
+  const tested = done > 2;
+  steps.copy.dataset.state = copied || tested ? 'done' : 'active';
+  steps.paste.dataset.state = tested ? 'done' : copied ? 'active' : 'todo';
+  steps.test.dataset.state = done === checks.length ? 'done' : (copied || tested) ? 'active' : 'todo';
+}
+
+checks.forEach(item => {
+  item.addEventListener('click', e => {
+    e.preventDefault();
+    const on = item.classList.toggle('check--done');
+    item.querySelector('.check__box').innerHTML = on ? tick : '';
+    render();
+  });
+});
+
+const copyBtn = document.getElementById('copy-btn');
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard?.writeText(document.getElementById('prompt-text').innerText).catch(() => {});
+  copied = true;
+  copyBtn.querySelector('span').textContent = 'Copié ✓';
+  setTimeout(() => copyBtn.querySelector('span').textContent = 'Copier', 2000);
+  render();
+});
+
+// assistant « je suis bloqué »
+const chatPanel = document.getElementById('chat-panel');
+const chatTrigger = document.getElementById('chat-trigger-btn');
+function setChat(open) {
+  chatPanel.classList.toggle('is-hidden', !open);
+  chatTrigger.setAttribute('aria-expanded', open);
+  if (open) setTimeout(() => document.getElementById('blocage')?.focus(), 150);
+}
+chatTrigger.addEventListener('click', () => setChat(chatPanel.classList.contains('is-hidden')));
+document.getElementById('chat-close-btn').addEventListener('click', () => setChat(false));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setChat(false); });
+
+// footer et panneau se posent au-dessus de la barre d'onglets mobile
+const side = document.querySelector('.side');
+const actions = document.getElementById('quest-actions');
+new ResizeObserver(() => {
+  const h = getComputedStyle(side).position === 'sticky' ? side.offsetHeight : 0;
+  document.documentElement.style.setProperty('--tabbar-h', h + 'px');
+  document.documentElement.style.setProperty('--actions-h', actions.offsetHeight + 'px');
+}).observe(side);
+
+render();
+</script>
+</body>
+</html>

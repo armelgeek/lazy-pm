@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — trente quêtes entre ton idée et ton premier client</title>
+<meta name="description" content="Ton IA sait construire. Elle sait pas te faire finir. Trente quêtes, le prompt exact à coller, et les cas que tu vas oublier.">
+<meta name="theme-color" content="#EAE7E0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LazyPM — de l’idée au premier client, pour de vrai">
+<meta property="og:description" content="Trente quêtes, le prompt exact à coller à chaque étape, et un copilote quand tu bloques. Pour Lovable, Bolt, Cursor et v0.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z' fill='%23C8952A'/%3E%3Ccircle cx='22' cy='32' r='3.6' fill='%231F2421'/%3E%3Ccircle cx='38' cy='32' r='3.6' fill='%231F2421'/%3E%3Cpath d='M24 42c4 3 8 3 12 0' stroke='%231F2421' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="landing">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+
+<!-- ══ NAV ══ -->
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a class="brand" href="index.html">
+      <svg width="34" height="34" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/>
+        <circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      LAZYPM.
+      <span class="pill pill--green pill--xs"><span class="dot dot--live"></span> saison 1 ouverte</span>
+    </a>
+    <nav class="nav__links" aria-label="Principale">
+      <a class="nav__link" href="#parcours">Le parcours</a>
+      <a class="nav__link" href="#tarif">Tarif</a>
+      <a class="nav__link" href="#questions">Questions</a>
+      <a class="nav__link nav__link--muted" href="login.html">Se connecter</a>
+      <a class="btn btn--primary btn--sm" href="briefing.html">Commencer</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<main id="contenu">
+<section class="hero">
+  <div class="wrap hero__grid">
+
+    <div class="hero__copy">
+      <p class="hero__kicker"><span class="dot dot--live"></span> 20 idées commencées, zéro lancée&nbsp;? C’est pour toi.</p>
+
+      <h1 class="hero__title">De l'idée au premier&nbsp;client.<br><span class="hero__accent">Pour de vrai, cette&nbsp;fois.</span></h1>
+
+      <p class="lead hero__lead">Ton IA sait construire, mais pas te faire finir. On découpe ton idée en <strong>30 quêtes</strong>, avec le prompt exact à coller à chaque étape jusqu'au premier client.</p>
+
+      <form class="hero__form" action="briefing.html">
+        <label class="sr-only" for="hero-idee">Décris ton idée</label>
+        <input class="field hero__field" id="hero-idee" name="idee" type="text" placeholder="Je veux un site où je peux…" autocomplete="off">
+        <button class="btn btn--primary hero__submit" type="submit">Commencer mon parcours <span aria-hidden="true">→</span></button>
+      </form>
+      <ul class="hero__trust">
+        <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> 3 quêtes gratuites</li>
+        <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Sans carte bancaire</li>
+        <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Tes 30 quêtes en 3 minutes</li>
+      </ul>
+
+      <p class="hero__compat">Marche avec <strong>Lovable</strong>, <strong>Bolt</strong>, <strong>Cursor</strong> et <strong>v0</strong></p>
+
+
+    </div>
+
+    <div class="hero__visual" aria-label="Avant et après LazyPM">
+
+      <span class="hero__tag hero__tag--before">Avant · seul avec ton IA</span>
+      <div class="hero__dead">
+        <div class="row row--between">
+          <span class="hero__dead-name">facturly.io</span>
+          <span class="tag tag--boss">ABANDONNÉE</span>
+        </div>
+        <div class="hero__bar hero__bar--dead" aria-hidden="true"><i style="width:13%"></i></div>
+        <span class="small">Bloqué à l'étape 4. Comme les 20 idées d'avant.</span>
+      </div>
+
+      <span class="hero__tag hero__tag--after">Après · la suivante, avec LazyPM <span aria-hidden="true">↓</span></span>
+      <div class="card hero__live">
+        <div class="row row--between">
+          <span class="ticket" style="color:var(--teal)">EXEMPLE DE PARCOURS</span>
+          <span class="pill pill--green pill--xs"><span class="dot dot--live"></span> en ligne</span>
+        </div>
+        <p class="hero__live-name">ton-saas.com</p>
+
+        <div class="hero__progress">
+          <div class="row row--between">
+            <span class="ticket">étape 24 / 30</span>
+            <span class="ticket" style="color:var(--gold-dark)">80 %</span>
+          </div>
+          <div class="hero__steps" aria-hidden="true">
+            <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on boss"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on boss"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i class="boss"></i>
+          </div>
+        </div>
+
+        <ul class="hero__log">
+          <li><span class="node node--done hero__node"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span><span class="ticket">#11</span> Premier client (en privé)</li>
+          <li><span class="node node--done node--boss hero__node"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#5E2739" stroke-width="2.6" stroke-linejoin="round"><path d="M4 8l4 4 4-7 4 7 4-4v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/></svg></span><span class="ticket" style="color:var(--rose)">#19</span> Lancement public</li>
+        </ul>
+
+        <div class="hero__mrr">
+          <div>
+            <span class="num num--l">340 $</span><span class="small"> /mois</span>
+          </div>
+          <span class="pill pill--gold pill--xs">12 clients</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ SYMPTÔMES ══ -->
+<section class="section--tight">
+  <div class="wrap stack">
+<header class="sh">
+      <span class="sh__eyebrow">Le problème</span>
+      <h2>Ça te parle&nbsp;?</h2>
+      <p class="sh__sub">Les six façons de ne jamais finir un projet. On les a toutes vécues.</p>
+    </header>
+    <ul class="symptom-grid">
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">Tu as 40 projets inachevés</span>
+      </li>
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">Un bug te bloque depuis 3 jours</span>
+      </li>
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">Tu perds 2h sur la couleur d'un bouton</span>
+      </li>
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">Tu tournes en boucle sur le même prompt</span>
+      </li>
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">La nouvelle idée a l'air plus facile</span>
+      </li>
+      <li class="symptom">
+        <span class="symptom__node"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+        <span class="symptom__text">Tu crames tes crédits IA pour rien</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ COMMENT ══ -->
+<section class="section--tight">
+  <div class="wrap stack">
+<header class="sh">
+      <span class="sh__eyebrow">Comment ça marche</span>
+      <h2>Trois minutes pour démarrer</h2>
+      <p class="sh__sub">Tu décris, tu ajustes, tu construis. Le reste, c’est un soir à la fois.</p>
+    </header>
+    <div class="steps">
+      <article class="steps__item">
+        <div class="steps__node steps__node--teal">1</div>
+        <div class="steps__body">
+          <span class="eyebrow eyebrow--sm eyebrow--teal">// 2 minutes</span>
+          <h3>Tu décris ton idée</h3>
+          <p class="txt">Une phrase suffit, même vague. Je la reformule, tu confirmes, et je pose trois questions qui changent vraiment le plan.</p>
+        </div>
+      </article>
+      <div class="steps__connector" aria-hidden="true">
+        <span class="steps__arrow">→</span>
+      </div>
+      <article class="steps__item">
+        <div class="steps__node steps__node--gold">2</div>
+        <div class="steps__body">
+          <span class="eyebrow eyebrow--sm eyebrow--gold">// 5 minutes</span>
+          <h3>Tu modifies le plan</h3>
+          <p class="txt">Coupe ce qui ne te sert pas, marque ce que tu as déjà fait. Un plan que tu n'as pas touché, c'est un PDF de plus.</p>
+        </div>
+      </article>
+      <div class="steps__connector" aria-hidden="true">
+        <span class="steps__arrow">→</span>
+      </div>
+      <article class="steps__item">
+        <div class="steps__node steps__node--dark">3</div>
+        <div class="steps__body">
+          <span class="eyebrow eyebrow--sm">// chaque jour</span>
+          <h3>Tu construis, une quête à la fois</h3>
+          <p class="txt">Tu copies le prompt, tu colles, tu coches. Le soir tu dis où tu en es, et la suite s'ajuste à ton vrai rythme.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ANATOMIE ══ -->
+<section class="band section">
+  <div class="wrap stack">
+<header class="sh">
+      <span class="sh__eyebrow">Cas réel · quête #03</span>
+      <h2>Ce qu’il y a dans une quête</h2>
+      <p class="sh__sub">Un résultat à obtenir, les cas que tu vas oublier, et le prompt exact à coller. Extrait de la saison 1.</p>
+    </header>
+
+    <div class="quest-anatomy">
+      <!-- ── FICHE DE QUÊTE ── -->
+      <article class="quest-card">
+        <header class="quest-card__header">
+          <div class="quest-card__meta">
+            <div class="row" style="gap:10px">
+              <span class="ticket" style="color:var(--teal);font-size:13px">QUÊTE #03</span>
+              <span class="tag tag--pro">LIVRABLE CLÉ</span>
+            </div>
+            <div class="row" style="gap:8px">
+              <span class="pill pill--gold pill--xs">+25 XP</span>
+              <span class="pill pill--xs">⏱ ~45 min</span>
+            </div>
+          </div>
+          <h3 class="quest-card__title">Ils peuvent envoyer leur photo</h3>
+        </header>
+
+        <!-- Pilier 1 : Livrable & Critère -->
+        <div class="quest-pillar">
+          <div class="quest-pillar__label">
+            <span class="quest-pillar__tag quest-pillar__tag--teal">01</span>
+            <span>Le résultat & le test de vérité</span>
+          </div>
+          <p class="txt" style="margin:0"><strong>À construire :</strong> Une zone de glisser-déposer réactive avec affichage immédiat de la photo envoyée.</p>
+          <div class="row row--top" style="gap:8px;background:var(--paper);border-radius:8px;padding:9px 12px;border:1.5px solid var(--line)">
+            <span class="mono" style="color:var(--green);font-weight:700">✔</span>
+            <p class="txt txt--sm" style="margin:0;color:var(--ink)"><strong>Test :</strong> Tu envoies une photo depuis ton smartphone, tu rafraîchis l'écran, elle est toujours là.</p>
+          </div>
+        </div>
+
+        <!-- Pilier 2 : Checklist des cas sournois -->
+        <div class="quest-pillar" style="background:var(--sunk)">
+          <div class="quest-pillar__label">
+            <span class="quest-pillar__tag quest-pillar__tag--rose">02</span>
+            <span>La checklist de test — les cas que tu oublies</span>
+          </div>
+          <div class="quest-checks">
+            <div class="quest-check is-checked" onclick="this.classList.toggle('is-checked')">
+              <span class="quest-check__box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span>
+              <span class="quest-check__tag">POIDS</span>
+              <span>Photo iPhone de 8 Mo → ça passe, ou message explicite</span>
+            </div>
+            <div class="quest-check is-checked" onclick="this.classList.toggle('is-checked')">
+              <span class="quest-check__box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span>
+              <span class="quest-check__tag">ORIENTATION</span>
+              <span>Photo prise en mode portrait → pas couchée sur le côté</span>
+            </div>
+            <div class="quest-check" onclick="this.classList.toggle('is-checked')">
+              <span class="quest-check__box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span>
+              <span class="quest-check__tag">FORMAT</span>
+              <span>Un faux .jpg (ex: PDF renommé) → erreur claire, pas d'écran blanc</span>
+            </div>
+            <div class="quest-check" onclick="this.classList.toggle('is-checked')">
+              <span class="quest-check__box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 10 18 20 6"/></svg></span>
+              <span class="quest-check__tag">RÉSEAU</span>
+              <span>Fermeture de l'onglet pendant l'upload → rien de corrompu</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pilier 3 : Le Piège mascotté -->
+        <div class="quest-pitfall">
+          <svg class="mascot" width="30" height="30" viewBox="0 0 60 60" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:2px">
+            <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+            <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+            <path d="M24 43c4-2 8-2 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <p class="txt txt--sm" style="color:var(--gold-deep);margin:0">
+            <strong>Le piège d'expérience :</strong> Demande 3 photos réelles à des proches. Tes photos de test sont toujours parfaites, les leurs révéleront les vrais bugs dès le premier essai.
+          </p>
+        </div>
+      </article>
+
+      <!-- ── LE PROMPT CLÉ EN MAIN (TERMINAL) ── -->
+      <div class="quest-terminal">
+        <div class="quest-terminal__bar">
+          <div class="row" style="gap:8px">
+            <span class="term__dot term__dot--r"></span>
+            <span class="term__dot term__dot--y"></span>
+            <span class="term__dot term__dot--g"></span>
+            <span class="term__name">prompt-quete-03.txt · prêt à copier</span>
+          </div>
+          <button class="quest-terminal__copy-btn" type="button" onclick="navigator.clipboard.writeText(document.getElementById('quest-prompt-code').innerText);this.innerHTML='<span style=\'color:var(--green)\'>✔</span> Copié !';setTimeout(()=>this.innerHTML='<svg width=\'13\' height=\'13\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2.6\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><rect x=\'9\' y=\'9\' width=\'13\' height=\'13\' rx=\'2\'/><path d=\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\'/></svg> Copier',2000)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copier
+          </button>
+        </div>
+        <div class="quest-terminal__body">
+<pre id="quest-prompt-code"><span class="y"># QUÊTE #03 : UPLOAD DE PHOTO</span>
+Ajoute l'envoi de photos à mon site.
+
+<span class="g">// 1. Ce que je veux obtenir :</span>
+- Une zone où la personne glisse sa photo
+- Une fois envoyée, la photo s'affiche
+- Elle reste là après un rafraîchissement
+- Chaque personne ne voit QUE ses photos
+
+<span class="r">// 2. Les cas critiques que tu dois obligatoirement gérer :</span>
+- Photo iPhone de 8 Mo : soit ça passe, soit un message clair dit "photo trop lourde"
+- Photo en mode portrait : ne doit pas s'afficher couchée sur le côté (vérifie les tags EXIF)
+- Un fichier non image renommé en .jpg : message d'erreur clair
+- Connexion lente : une barre de progression claire bouge
+- Deux photos coup sur coup : les deux arrivent sans conflit
+
+<span class="d">// 3. Explication pas à pas :</span>
+Ensuite, explique-moi étape par étape ce que je dois faire de mon côté pour stocker les photos. Choisis la solution gratuite la plus simple. En français simple, sans jargon.</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LE JEU VS LE TEMPLATE ══ -->
+<section class="section">
+  <div class="wrap stack">
+<header class="sh">
+      <span class="sh__eyebrow">La méthode</span>
+      <h2>C’est un jeu, pas un template.</h2>
+      <p class="sh__sub">Une liste ne sait pas si tu avances. LazyPM, si : il suit ta série, recalcule ta date et te débloque le soir même.</p>
+    </header>
+
+    <div class="versus-grid">
+      <!-- CARTE GAUCHE : LE CIMETIÈRE NOTION -->
+      <article class="versus-card versus-card--dead">
+        <div class="versus-head">
+          <div class="row row--between">
+            <span class="ticket" style="color:var(--rose)">LE PIÈGE CLASSIQUE</span>
+            <span class="tag" style="background:var(--sunk-2);color:var(--muted)">STATIQUE</span>
+          </div>
+          <h3>Le template Notion à 29 $</h3>
+        </div>
+
+        <ul class="versus-list">
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--dead"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <strong style="color:var(--ink)">Une liste passive :</strong>
+              <span class="txt txt--sm">Elle ne sait pas si tu avances ou si tu as abandonné depuis 10 jours.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--dead"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <strong style="color:var(--ink)">Zéro secours à 23h :</strong>
+              <span class="txt txt--sm">Quand ton prompt boucle et que ton code plante, tu es tout seul devant ta case vide.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--dead"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <strong style="color:var(--ink)">Plan rigide :</strong>
+              <span class="txt txt--sm">Tu sautes 3 jours ? La date ne bouge pas, la culpabilité monte, tu fermes le doc.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--dead"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <strong style="color:var(--ink)">Le seul gagnant :</strong>
+              <span class="txt txt--sm">Le vendeur qui a encaissé 29 $ pour un document dupliqué.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="row" style="margin-top:auto;padding-top:10px;border-top:1px dashed var(--line-hard)">
+          <span class="mono" style="font-size:12px;color:var(--muted)">Constat : environ 9 sur 10 abandonnés avant la 2<sup>e</sup> semaine</span>
+        </div>
+      </article>
+
+      <!-- BADGE CENTRAL VS -->
+      <div class="versus-badge" aria-hidden="true">VS</div>
+
+      <!-- CARTE DROITE : LE SYSTÈME VIVANT LAZYPM -->
+      <article class="versus-card versus-card--live">
+        <div class="versus-head">
+          <div class="row row--between">
+            <span class="ticket" style="color:var(--teal-dark)">LE MOTEUR DE JEU</span>
+            <span class="tag tag--pro">PROGRÈS RÉEL</span>
+          </div>
+          <h3>Le parcours LazyPM</h3>
+        </div>
+
+        <ul class="versus-list">
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--live"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Ta série quotidienne :</strong>
+              <span class="txt txt--sm" style="color:var(--teal-dark)">Un feu qui brûle tant que tu partages ton avancement chaque soir. L'honnêteté compte, pas la perfection.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--live"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>L'XP au lieu de la lecture :</strong>
+              <span class="txt txt--sm" style="color:var(--teal-dark)">Tu gagnes des points d'expérience en testant tes livrables sur de vrais utilisateurs, jamais en lisant du contenu.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--live"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Les combats de Boss :</strong>
+              <span class="txt txt--sm" style="color:var(--teal-dark)">3 étapes critiques (l’IA qui marche, ton premier client, ton lancement) traitées comme de vrais affrontements.</span>
+            </div>
+          </li>
+          <li class="versus-item">
+            <span class="versus-icon versus-icon--live"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Déblocage contextualisé :</strong>
+              <span class="txt txt--sm" style="color:var(--teal-dark)">Bloqué à minuit ? On recharge ton code et ta quête exacte pour te délivrer le prompt précis qui te décoince.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="row row--wrap" style="gap:10px;margin-top:auto;padding-top:10px;border-top:1.5px dashed rgba(18, 58, 55, 0.25)">
+          <span class="pill pill--gold"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A6417" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2.5 4 5.5 5 5.5 9a5.5 5.5 0 0 1-11 0c0-2 1-3.5 2.5-5 .3 1.2 1 2 2 2.3C10.5 7 11 5 12 3Z"/></svg> <strong>Série :</strong> 7 jours</span>
+          <span class="pill pill--teal"><svg width="16" height="16" viewBox="0 0 24 24" fill="#1D5B57" stroke="#123A37" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.5l2.6 5.6 6 .8-4.4 4.2 1.1 6.1L12 17.3 6.7 20.2l1.1-6.1L3.4 9.9l6-.8Z"/></svg> <strong>Score :</strong> 340 XP</span>
+          <span class="node node--boss node--done" style="width:34px;height:34px;border-width:2px;box-shadow:none" title="Boss vaincu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E2739" stroke-width="2.4" stroke-linejoin="round"><path d="M4 8l4 4 4-7 4 7 4-4v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/></svg></span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LE CHEMIN ══ -->
+<section class="section" id="parcours">
+  <div class="wrap stack">
+<header class="sh">
+      <span class="sh__eyebrow">Le parcours</span>
+      <h2>La saison 1, en quatre sections</h2>
+      <p class="sh__sub">Trente quêtes, trois boss. Chaque section se termine par quelque chose qui marche vraiment.</p>
+    </header>
+    <div class="grid grid--4">
+      <article class="card card--flat stack-s">
+        <span class="eyebrow eyebrow--sm eyebrow--teal">#01 → #06</span>
+        <h3>Faire marcher le truc</h3>
+        <p class="txt txt--sm">Ton site en ligne, les gens peuvent l'utiliser, et le cœur du produit fonctionne.</p>
+        <span class="eyebrow eyebrow--sm eyebrow--rose">BOSS #04</span>
+      </article>
+      <article class="card card--flat stack-s">
+        <span class="eyebrow eyebrow--sm eyebrow--teal">#07 → #14</span>
+        <h3>Se faire payer</h3>
+        <p class="txt txt--sm">Paiement, limites, emails, et surtout : ton tout premier client qui n'est pas toi.</p>
+        <span class="eyebrow eyebrow--sm eyebrow--rose">BOSS #11</span>
+      </article>
+      <article class="card card--flat stack-s">
+        <span class="eyebrow eyebrow--sm eyebrow--teal">#15 → #21</span>
+        <h3>Préparer le lancement</h3>
+        <p class="txt txt--sm">Le diagnostic de sécurité, ton histoire, et le jour où tu le montres au monde.</p>
+        <span class="eyebrow eyebrow--sm eyebrow--rose">BOSS #19</span>
+      </article>
+      <article class="card card--flat stack-s">
+        <span class="eyebrow eyebrow--sm eyebrow--teal">#22 → #30</span>
+        <h3>Écouter et ajuster</h3>
+        <p class="txt txt--sm">Ce que tes clients demandent, ce que ça te coûte vraiment, et la suite.</p>
+        <span class="eyebrow eyebrow--sm">SANS BOSS · TU ÉCOUTES</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ LA PREUVE ══ -->
+<section class="band--dark section proof">
+  <div class="wrap proof__grid">
+
+    <div class="proof__copy">
+      <header class="sh">
+        <span class="sh__eyebrow sh__eyebrow--dark">Pourquoi me croire</span>
+        <h2 class="proof__title">Je suis dans le même bateau que toi.</h2>
+        <p class="sh__sub proof__sub">20 projets commencés, zéro lancé. J’ai écrit le plan que j’aurais voulu qu’on me donne, et je le suis moi-même, en public. Si ça marche, tu le verras. Si ça coince aussi.</p>
+      </header>
+
+      <ul class="proof__promises">
+        <li>
+          <span class="proof__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6Z"/><polyline points="8.5 12 11 14.5 15.5 9.5"/></svg></span>
+          <div><strong>Remboursé si tu n’as rien lancé</strong><span>Pass saison : arrivé à la quête #30 sans rien en ligne, tu récupères tout.</span></div>
+        </li>
+        <li>
+          <span class="proof__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></span>
+          <div><strong>Un journal public, chaque soir</strong><span>Même les soirs sans code. Tu y vois aussi ce que LazyPM fait déjà pour moi, et ce qui est encore à la main.</span></div>
+        </li>
+        <li>
+          <span class="proof__icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div><strong>Aujourd’hui : quête #07 sur 30</strong><span>Pas encore lancé. C’est justement ce que tu peux vérifier.</span></div>
+        </li>
+      </ul>
+
+      <a href="journal.html" class="btn btn--gold btn--sm proof__cta">Lire le journal <span aria-hidden="true">→</span></a>
+    </div>
+
+    <aside class="journal" aria-label="Extrait du journal public">
+      <div class="journal__head">
+        <div>
+          <span class="journal__kicker">Journal public · LazyPM</span>
+          <strong class="journal__title">Quête 7 sur 30</strong>
+        </div>
+        <span class="journal__streak">7 soirs d’affilée</span>
+      </div>
+      <div class="journal__bar" aria-hidden="true"><i style="width:23%"></i></div>
+
+      <ol class="journal__list">
+        <li class="journal__item journal__item--now">
+          <span class="journal__when">Ce soir</span>
+          <p><strong>#07 · Brancher les paiements.</strong> Webhooks Stripe en place, chaque compte ne voit que ses propres données.</p>
+        </li>
+        <li class="journal__item">
+          <span class="journal__when">Hier</span>
+          <p><strong>#06 · Tester pour de vrai.</strong> 5 personnes ont fait le parcours complet, 3 problèmes trouvés et corrigés.</p>
+        </li>
+        <li class="journal__item journal__item--off">
+          <span class="journal__when">Il y a 2 jours</span>
+          <p><strong>Pas de code, trop fatigué.</strong> Check-in posté quand même : la série tient.</p>
+        </li>
+      </ol>
+
+      <div class="journal__next">
+        <span>Prochain boss</span>
+        <strong>#11 · mon premier client payant</strong>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ══ TARIF ══ -->
+<section class="section" id="tarif">
+  <div class="wrap stack">
+<header class="sh sh--center">
+      <span class="sh__eyebrow">Tarif</span>
+      <h2>3 quêtes gratuites. Le reste à 9 $ par mois.</h2>
+      <p class="sh__sub">Tout ton plan est visible dès le départ. Les prompts et le copilote passent à l’abonnement au premier boss, la quête #04.</p>
+    </header>
+
+    <!-- BANNIÈRE DE CALCUL DU ROI (FAISONS LES COMPTES) -->
+    <div class="pricing-roi">
+      <div class="stack-s">
+        <div class="row" style="gap:8px">
+          <span class="versus-icon versus-icon--dead" style="width:20px;height:20px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+          <span class="mono" style="font-size:12px;font-weight:700;color:var(--rose)">Le coût de tourner en rond</span>
+        </div>
+        <p class="txt txt--sm" style="color:var(--ink-soft);margin:0">
+          Un MVP consomme 150 à 300 crédits IA. Tourner en boucle 2 semaines sur un bug d'authentification te brûle <strong>50 à 75 $ de crédits dans le vide</strong>.
+        </p>
+      </div>
+
+      <div class="pricing-roi__divider" aria-hidden="true"></div>
+
+      <div class="stack-s">
+        <div class="row" style="gap:8px">
+          <span class="versus-icon versus-icon--live" style="width:20px;height:20px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+          <span class="mono" style="font-size:12px;font-weight:700;color:var(--teal-dark)">Rentabilisé dès le premier soir</span>
+        </div>
+        <p class="txt txt--sm" style="color:var(--gold-deep);margin:0">
+          <strong>9 $ pour être débloqué immédiatement avec le prompt exact</strong> qui connaît ton code. Moins qu’une soirée de crédits brûlés.
+        </p>
+      </div>
+    </div>
+
+    <!-- GRILLE DES TROIS TICKETS -->
+    <div class="pricing-grid">
+
+      <!-- TICKET #00 : ESSAI, QUÊTES #01 À #03 -->
+      <article class="pricing-card card card--flat stack">
+        <span class="ticket">TICKET #00 · ESSAI</span>
+        <div class="row row--baseline" style="gap:8px">
+          <span class="num num--xl">0 $</span>
+          <span style="font-size:15px;font-weight:700;color:var(--muted)">tes 3 premiers soirs</span>
+        </div>
+        <p class="txt txt--sm" style="color:var(--muted);margin:0">Pour lancer ta série et voir si les prompts marchent sur ton idée.</p>
+        <hr class="hr">
+        <ul class="pricing-feature-list">
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Quêtes #01 à #03 offertes</strong>
+              <span class="pricing-feature__sub">leurs prompts exacts, prêts à coller dans ton outil</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Plan personnalisé</strong>
+              <span class="pricing-feature__sub">tes 30 quêtes visibles, avec leurs objectifs</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Sans carte bancaire</strong>
+              <span class="pricing-feature__sub">zéro prélèvement, aucun engagement</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <span style="color:var(--faint)">Prompts de #04 à #30</span>
+              <span class="pricing-feature__sub">avec l'abonnement, dès le premier boss</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></span>
+            <div>
+              <span style="color:var(--faint)">Zéro assistance si tu bloques</span>
+              <span class="pricing-feature__sub">pas de copilote contextuel</span>
+            </div>
+          </li>
+        </ul>
+        <a class="btn btn--ghost btn--block" href="briefing.html" style="margin-top:auto">Commencer gratuitement</a>
+      </article>
+
+      <!-- TICKET #01 : ABONNEMENT ACTIF (HERO TIER) -->
+      <article class="pricing-card pricing-card--hero stack">
+        <span class="tag tag--pro pricing-badge-floating">LE PLUS CHOISI</span>
+        <div class="row row--between">
+          <span class="ticket" style="color:var(--teal)">TICKET #01 · ABONNEMENT MENSUEL</span>
+        </div>
+        <div class="row row--baseline" style="gap:8px">
+          <span class="num num--xl" style="color:var(--teal-dark)">9 $</span>
+          <span style="font-size:15px;font-weight:700;color:var(--muted)">par mois</span>
+        </div>
+        <p class="txt txt--sm" style="color:var(--teal-dark);font-weight:600;margin:0">Les 30 quêtes complètes + le copilote pour ne jamais abandonner.</p>
+        <hr class="hr" style="border-color:var(--teal);opacity:0.25">
+        <ul class="pricing-feature-list">
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Les 30 quêtes débloquées</strong>
+              <span class="pricing-feature__sub">tous les prompts pour Lovable, Bolt, Cursor</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Copilote contextuel à 23h</strong>
+              <span class="pricing-feature__sub">analyse ton code et te débloque le soir même</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Replanning automatique</strong>
+              <span class="pricing-feature__sub">recalcul de ta date de lancement sans stress</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Check-in quotidien qui répond</strong>
+              <span class="pricing-feature__sub">un vrai retour chaque soir sur ton avancée</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong>Sans engagement</strong>
+              <span class="pricing-feature__sub">résiliable en 1 clic, progression conservée</span>
+            </div>
+          </li>
+        </ul>
+        <a class="btn btn--primary btn--block" href="briefing.html" style="margin-top:auto">Commencer, payer à la #04</a>
+      </article>
+
+      <!-- TICKET #02 : PASS SAISON COMPLÈTE (OFFRE UNIQUE) -->
+      <article class="pricing-card pricing-card--lifetime stack">
+        <span class="tag tag--gold pricing-badge-floating">BIENTÔT</span>
+        <span class="ticket" style="color:var(--term-dim)">TICKET #02 · PASS SAISON</span>
+        <div class="row row--baseline" style="gap:8px">
+          <span class="num num--xl" style="color:var(--card)">69 $</span>
+          <span style="font-size:15px;font-weight:700;color:var(--term-dim)">paiement unique</span>
+        </div>
+        <p class="txt txt--sm" style="color:var(--term-dim);margin:0">Pour les fondateurs qui veulent livrer sans abonnement récurrent.</p>
+        <hr class="hr hr--dark">
+        <ul class="pricing-feature-list">
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong style="color:var(--card)">12 mois d'accès illimité</strong>
+              <span class="pricing-feature__sub">toutes les quêtes et déblocages couverts</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span>
+            <div>
+              <strong style="color:var(--card)">Jusqu'à 3 projets en parallèle</strong>
+              <span class="pricing-feature__sub">lance plusieurs idées avec le même pass</span>
+            </div>
+          </li>
+          <li class="pricing-feature">
+            <span class="pricing-feature__icon pricing-feature__icon--star">★</span>
+            <div>
+              <strong style="color:var(--term-gold)">Remboursé si tu n’as rien lancé</strong>
+              <span class="pricing-feature__sub">remboursement intégral, sans discussion</span>
+            </div>
+          </li>
+        </ul>
+        <a class="btn btn--gold btn--block" href="journal.html" style="margin-top:auto">Être prévenu via le journal</a>
+      </article>
+
+    </div>
+
+    <!-- ELEMENTS DE CONFIANCE ET RÉASSURANCE -->
+    <div class="trust-badges">
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Aucune carte pour commencer</span>
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Ta progression reste si tu arrêtes</span>
+      <span class="trust-badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Paiement sécurisé par Stripe</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="band section" id="questions">
+  <div class="wrap stack">
+<div class="faq-layout">
+    <header class="sh">
+      <span class="sh__eyebrow">Questions</span>
+      <h2>Les vraies questions</h2>
+      <p class="sh__sub">Pas celles qui arrangent. Une autre ? <a href="mailto:contact@hayzar.com">Écris-nous</a>, on répond dans la journée.</p>
+    </header>
+
+    <div class="faq-grid">
+      <!-- Q1 -->
+      <details class="faq-item" open>
+        <summary class="faq-summary">
+          <span>C'est pas juste un template Notion&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Un template te donne une liste statique. Il ne te débloque pas à 23h un mardi quand ton code plante, il ne charge pas ton historique, et il ne recalcule pas ta date quand tu sautes 3 jours.</p>
+        </div>
+      </details>
+
+      <!-- Q2 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Je ne sais pas coder. Ça marche quand même&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">C'est fait exactement pour ça. Les prompts décrivent le résultat fonctionnel, pas le code, et ils obligent ton IA à t'expliquer en français simple chaque étape technique.</p>
+        </div>
+      </details>
+
+      <!-- Q3 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Ça marche avec quels outils IA&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Lovable, Bolt, Cursor, Claude Code, v0, Replit. Tu choisis au briefing et tes prompts s'adaptent : sur Lovable on ne te parle jamais de terminal ni de commandes git.</p>
+        </div>
+      </details>
+
+      <!-- Q4 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Combien ça coûte en crédits IA&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Une saison complète sur Lovable, c'est environ 50 à 75 $ de crédits. On te le dit dès le premier jour, et une quête dédiée t'aide à calibrer et suivre tes dépenses réelles.</p>
+        </div>
+      </details>
+
+      <!-- Q5 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Et si je prends du retard&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Ta date de lancement glisse, c'est tout. Le replanning te permet de décaler, de couper des quêtes superflues ou d'accélérer. C'est toujours toi qui tranches.</p>
+        </div>
+      </details>
+
+      <!-- Q6 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Est-ce que je perds ma série si je saute 1 jour&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Non. La série compte les soirs où tu viens dire où tu en es, même si tu n'as pas codé. Elle récompense la régularité et l'honnêteté, pas la productivité toxique.</p>
+        </div>
+      </details>
+
+      <!-- Q7 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Mon idée est trop grosse pour 30 quêtes</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">On te le signale dès le briefing. Le système te propose la version la plus compacte qui peut exister et trouver ses premiers utilisateurs réels.</p>
+        </div>
+      </details>
+
+      <!-- Q8 -->
+      <details class="faq-item">
+        <summary class="faq-summary">
+          <span>Qu'est-ce qui se passe après la #30&nbsp;?</span>
+          <span class="faq-icon" aria-hidden="true">+</span>
+        </summary>
+        <div class="faq-content">
+          <p class="txt txt--sm" style="margin:0">Tu as un produit en ligne avec des clients qui paient. La suite se construira avec eux : une saison 2 se prépare à partir de ce que demandent ceux qui arrivent au bout.</p>
+        </div>
+      </details>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA ══ -->
+<section class="section cta">
+  <div class="wrap stack center" style="align-items:center">
+    <h2 class="cta__title">Ton idée n°21 mérite<br>mieux qu’un dossier.</h2>
+    <p class="lead center">Une phrase pour commencer. Tu vois ta première quête tout de suite, sans compte et sans carte.</p>
+    <form class="hero__form cta__form" action="briefing.html">
+      <label class="sr-only" for="idee">Décris ton idée</label>
+      <input class="field hero__field" id="idee" name="idee" type="text" placeholder="Je veux un site où je peux…" autocomplete="off">
+      <button class="btn btn--primary hero__submit" type="submit">Voir ma quête #01 <span aria-hidden="true">→</span></button>
+    </form>
+    <ul class="hero__trust" style="justify-content:center">
+      <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> 3 quêtes gratuites</li>
+      <li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Sans carte bancaire</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="wrap stack-l">
+    <div class="footer__cols">
+      <div class="footer__col" style="flex:1.2;min-width:240px">
+        <span class="brand">
+          <svg width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+            <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+            <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+            <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+            <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          LAZYPM.
+        </span>
+        <p class="txt txt--sm" style="color:var(--term-dim);max-width:34ch">Trente quêtes entre ton idée et ton premier client. Construit en public, avec lui-même.</p>
+        <span class="mono" style="font-size:12px">opéré par HAYZAR LLC</span>
+      </div>
+      <nav class="footer__col" aria-label="Produit">
+        <span class="footer__ttl">Produit</span>
+        <a href="#parcours">Le parcours</a>
+        <a href="#tarif">Tarif</a>
+        <a href="journal.html">Journal public</a>
+      </nav>
+      <nav class="footer__col" aria-label="Compte">
+        <span class="footer__ttl">Compte</span>
+        <a href="signup.html">Créer un compte</a>
+        <a href="login.html">Se connecter</a>
+        <a href="compte.html">Mon abonnement</a>
+        <a href="compte.html">Mes factures</a>
+      </nav>
+      <nav class="footer__col" aria-label="Légal">
+        <span class="footer__ttl">Légal</span>
+        <a href="#">Conditions</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">Remboursements</a>
+        <a href="mailto:contact@hayzar.com">contact@hayzar.com</a>
+      </nav>
+    </div>
+    <hr class="hr hr--dark">
+    <div class="row row--between row--wrap">
+      <span class="mono" style="font-size:12px">© 2026 LazyPM · opéré par HAYZAR LLC</span>
+      <span class="mono" style="font-size:12px">paiement sécurisé par Stripe</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+</body>
+</html>

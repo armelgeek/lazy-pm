@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — le journal public</title>
+<meta name="description" content="Je construis LazyPM avec LazyPM, en public. Chaque soir : la quête, ce qui est fait, ce qui a coincé.">
+<meta name="theme-color" content="#EAE7E0">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LazyPM — de l’idée au premier client, pour de vrai">
+<meta property="og:description" content="Trente quêtes, le prompt exact à coller à chaque étape, et un copilote quand tu bloques. Pour Lovable, Bolt, Cursor et v0.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z' fill='%23C8952A'/%3E%3Ccircle cx='22' cy='32' r='3.6' fill='%231F2421'/%3E%3Ccircle cx='38' cy='32' r='3.6' fill='%231F2421'/%3E%3Cpath d='M24 42c4 3 8 3 12 0' stroke='%231F2421' stroke-width='3' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .jr-hero { padding: clamp(48px, 7vw, 96px) 0 clamp(32px, 4vw, 48px); }
+  .jr-hero .sh h1 { font-size: clamp(36px, 5vw, 60px); line-height: .98; letter-spacing: -0.045em; }
+  .jr-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 36px; }
+  .jr-stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; }
+  .jr-stat strong { font-family: var(--display); font-size: 28px; letter-spacing: -0.03em; line-height: 1; }
+  .jr-stat span { font-size: 13.5px; color: var(--muted); }
+  .jr-track { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .jr-track__legend { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .jr-track .hero__steps i { height: 16px; }
+
+  .jr-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: clamp(32px, 5vw, 64px); align-items: start; padding-bottom: clamp(64px, 8vw, 112px); }
+  .jr-feed { list-style: none; margin: 0; padding: 0; position: relative; }
+  .jr-feed::before { content: ''; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .jr-entry { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 20px; padding-bottom: 28px; }
+  .jr-entry:last-child { padding-bottom: 0; }
+  .jr-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--gold); border: 4px solid var(--paper); box-sizing: border-box; position: relative; z-index: 1; margin-top: 18px; }
+  .jr-entry--now .jr-dot { background: var(--teal); }
+  .jr-entry--off .jr-dot { background: var(--grey-dark); }
+  .jr-entry--boss .jr-dot { background: var(--gold); box-shadow: 0 0 0 2px var(--rose); }
+  .jr-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .jr-entry--now .jr-card { border: 2px solid var(--teal); box-shadow: 0 16px 40px -24px rgba(18, 58, 55, .55); }
+  .jr-entry--off .jr-card { background: transparent; border-style: dashed; }
+  .jr-card__top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .jr-when { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); }
+  .jr-entry--now .jr-when { color: var(--teal); }
+  .jr-status { font-family: var(--mono); font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--gold-pale); color: var(--gold-text); }
+  .jr-status--now { background: var(--teal-pale); color: var(--teal-dark); }
+  .jr-status--off { background: var(--sunk-2); color: var(--ink-soft); }
+  .jr-status--boss { background: var(--rose-pale); color: var(--rose-text); }
+  .jr-card h2 { font-size: 20px; letter-spacing: -0.02em; line-height: 1.2; }
+  .jr-card h2 .mono { font-family: var(--mono); font-size: 14px; color: var(--muted); font-weight: 700; letter-spacing: 0; margin-right: 6px; }
+  .jr-card p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+  .jr-meta { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); padding-top: 4px; border-top: 1px solid var(--line-soft); }
+  .jr-meta strong { color: var(--ink-soft); font-weight: 700; }
+  .jr-stuck { background: var(--sunk); border-radius: var(--r); padding: 10px 14px; font-size: 14px; color: var(--ink-soft); }
+  .jr-stuck strong { color: var(--ink); }
+
+  .jr-side { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 14px; }
+  .jr-box { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .jr-box h3 { font-size: 17px; }
+  .jr-box p { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+  .jr-box--dark { background: var(--term); border-color: var(--term); }
+  .jr-box--dark h3 { color: var(--card); }
+  .jr-box--dark p { color: var(--term-text); }
+  .jr-sub { display: flex; flex-direction: column; gap: 8px; }
+  .jr-sub .field { height: 46px; }
+  .jr-sub__ok { font-size: 13.5px; font-weight: 700; color: var(--green-text); }
+  .jr-sub__ok[hidden] { display: none; }
+  .jr-sub__err { font-size: 13px; color: var(--rose-text); font-weight: 700; }
+  .jr-sub__err[hidden] { display: none; }
+
+  .jr-tools { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .jr-tool { display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: 10px; align-items: start; }
+  .jr-tool__icon { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; margin-top: 1px; }
+  .jr-tool--on .jr-tool__icon { background: var(--teal); color: var(--card); }
+  .jr-tool--off .jr-tool__icon { background: var(--sunk-2); color: var(--muted); }
+  .jr-tool__label { font-size: 14px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+  .jr-tool--off .jr-tool__label { color: var(--ink-soft); font-weight: 600; }
+  .jr-tool__since { grid-column: 2; font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .jr-tool--on .jr-tool__since { color: var(--teal); }
+  .jr-tools__bar { height: 6px; border-radius: 99px; background: var(--sunk-2); overflow: hidden; margin-top: 6px; }
+  .jr-tools__bar i { display: block; height: 100%; background: var(--teal); }
+  .jr-tools__sum { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--teal-dark); }
+
+  @media (max-width: 960px) {
+    .jr-layout { grid-template-columns: 1fr; }
+    .jr-side { position: static; }
+    .jr-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
+    .jr-entry { grid-template-columns: 16px minmax(0, 1fr); gap: 12px; }
+    .jr-feed::before { left: 7px; }
+    .jr-dot { width: 16px; height: 16px; border-width: 3px; }
+    .jr-card { padding: 16px; }
+  }
+</style>
+</head>
+<body class="landing">
+<a class="skip-link" href="#contenu">Aller au contenu</a>
+
+<!-- ══ NAV ══ -->
+<header class="nav" id="nav">
+  <div class="nav__in">
+    <a class="brand" href="index.html">
+      <svg width="34" height="34" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/>
+        <circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      LAZYPM.
+      <span class="pill pill--green pill--xs"><span class="dot dot--live"></span> saison 1 ouverte</span>
+    </a>
+    <nav class="nav__links" aria-label="Principale">
+      <a class="nav__link" href="index.html#parcours">Le parcours</a>
+      <a class="nav__link" href="index.html#tarif">Tarif</a>
+      <a class="nav__link" href="index.html#questions">Questions</a>
+      <a class="nav__link nav__link--muted" href="login.html">Se connecter</a>
+      <a class="btn btn--primary btn--sm" href="briefing.html">Commencer</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu">
+<section class="jr-hero">
+  <div class="wrap">
+    <header class="sh">
+      <span class="sh__eyebrow">Journal public · mis à jour chaque soir</span>
+      <h1>Je construis LazyPM avec LazyPM.</h1>
+      <p class="sh__sub">D’abord la méthode, suivie à la main. Puis l’outil prend le relais, une quête après l’autre. Chaque soir : la quête du jour, ce qui est fait, ce qui a coincé. Même les soirs sans code.</p>
+    </header>
+
+    <div class="jr-stats">
+      <div class="jr-stat"><strong>6 / 30</strong><span>quêtes faites, la #07 ce soir</span></div>
+      <div class="jr-stat"><strong>7 soirs</strong><span>de série, dont 1 sans code</span></div>
+      <div class="jr-stat"><strong>11 h 30</strong><span>de travail au total</span></div>
+      <div class="jr-stat"><strong>#11</strong><span>prochain boss : mon premier client payant</span></div>
+    </div>
+
+    <div class="jr-track">
+      <div class="jr-track__legend"><span>quête #01</span><span>boss #04 · #11 · #19</span><span>#30</span></div>
+      <div class="hero__steps" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on boss"></i><i class="on"></i><i class="on"></i><i class="now"></i><i></i><i></i><i></i><i class="boss"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="boss"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap jr-layout">
+  <ol class="jr-feed" aria-label="Journal, du plus récent au plus ancien">
+    <li class="jr-entry jr-entry--now">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 7 · ce soir</span><span class="jr-status jr-status--now">en cours</span></div>
+        <h2><span class="mono">#07</span>Brancher les paiements</h2>
+        <p>Webhooks Stripe en place. Chaque compte ne voit que ses propres données : j’ai testé avec deux comptes dans deux navigateurs.</p>
+        <p class="jr-stuck"><strong>Ce qui a coincé :</strong> le webhook arrivait deux fois. Le copilote m’a fait ajouter une vérification d’identifiant, réglé en 20 minutes.</p>
+        <div class="jr-meta"><span>temps <strong>1 h 40</strong></span><span>objectifs <strong>3/5</strong></span></div>
+      </article>
+    </li>
+    <li class="jr-entry">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 6 · hier</span><span class="jr-status">faite</span></div>
+        <h2><span class="mono">#06</span>Tester pour de vrai</h2>
+        <p>5 personnes de la liste d’attente ont fait le parcours complet, en écran partagé pour deux d’entre elles. 3 problèmes trouvés, dont un briefing trop long, corrigés dans la foulée.</p>
+        <div class="jr-meta"><span>temps <strong>2 h 10</strong></span><span><strong>+20 XP</strong></span></div>
+      </article>
+    </li>
+    <li class="jr-entry jr-entry--off">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 5</span><span class="jr-status jr-status--off">pas de code</span></div>
+        <h2>Trop fatigué, check-in quand même</h2>
+        <p>Rien construit ce soir. J’ai dit où j’en étais au check-in : la série tient, la date de lancement recule d’un jour.</p>
+      </article>
+    </li>
+    <li class="jr-entry">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 4</span><span class="jr-status">faite</span></div>
+        <h2><span class="mono">#05</span>Comptes et page de quête</h2>
+        <p>Connexion par lien magique, et la page de quête avec son prompt généré à l’ouverture. Le bouton « Copier » marche partout sauf sur Safari iPhone : noté dans « Plus tard », réparé au jour 6.</p>
+        <div class="jr-meta"><span>temps <strong>1 h 05</strong></span><span><strong>+20 XP</strong></span></div>
+      </article>
+    </li>
+    <li class="jr-entry jr-entry--boss">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 3</span><span class="jr-status jr-status--boss">boss vaincu</span></div>
+        <h2><span class="mono">#04</span>L’IA génère le plan</h2>
+        <p>La quête la plus dure du parcours. Le plan sortait trop long ; il a fallu trois versions du prompt pour qu’il tienne en 30 quêtes réalistes.</p>
+        <p class="jr-stuck"><strong>Ce qui a coincé :</strong> l’IA inventait des quêtes hors sujet. Solution : lui donner les 4 sections comme cadre fixe.</p>
+        <div class="jr-meta"><span>temps <strong>3 h 30</strong></span><span><strong>+50 XP</strong></span></div>
+      </article>
+    </li>
+    <li class="jr-entry">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 2</span><span class="jr-status">faites</span></div>
+        <h2><span class="mono">#02 · #03</span>Des gens en veulent, le briefing marche</h2>
+        <p>J’ai montré la page à 8 personnes qui ont des projets en pause. 5 ont laissé leur email. Le briefing reformule leur idée correctement 7 fois sur 8.</p>
+        <div class="jr-meta"><span>temps <strong>2 h 20</strong></span><span><strong>+40 XP</strong></span></div>
+      </article>
+    </li>
+    <li class="jr-entry">
+      <span class="jr-dot" aria-hidden="true"></span>
+      <article class="jr-card">
+        <div class="jr-card__top"><span class="jr-when">Jour 1</span><span class="jr-status">faite</span></div>
+        <h2><span class="mono">#01</span>Le site existe</h2>
+        <p>lazypm.app répond. Une page, un champ, un bouton. Rien de plus, et c’est voulu.</p>
+        <div class="jr-meta"><span>temps <strong>45 min</strong></span><span><strong>+20 XP</strong></span></div>
+      </article>
+    </li>
+  </ol>
+
+  <aside class="jr-side">
+    <div class="jr-box">
+      <span class="sh__eyebrow">Comment c’est possible</span>
+      <h3>Ce que LazyPM fait déjà pour moi</h3>
+      <p>Au jour 0, tout était à la main : le plan dans un document, les prompts écrits avec Claude, le check-in dans un carnet. Chaque quête remplace une de ces étapes.</p>
+      <ul class="jr-tools">
+        <li class="jr-tool jr-tool--on"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span><span class="jr-tool__label">Mon plan de 30 quêtes</span><span class="jr-tool__since">depuis #04</span></li>
+        <li class="jr-tool jr-tool--on"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span><span class="jr-tool__label">Le prompt de chaque quête</span><span class="jr-tool__since">depuis #05</span></li>
+        <li class="jr-tool jr-tool--on"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span><span class="jr-tool__label">La page de quête, avec ses objectifs</span><span class="jr-tool__since">depuis #05</span></li>
+        <li class="jr-tool jr-tool--off"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h11"/><path d="M4 12h16"/><path d="M4 17h8"/></svg></span><span class="jr-tool__label">Le check-in du soir</span><span class="jr-tool__since">carnet · prévu #09</span></li>
+        <li class="jr-tool jr-tool--off"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h11"/><path d="M4 12h16"/><path d="M4 17h8"/></svg></span><span class="jr-tool__label">Le replanning quand je prends du retard</span><span class="jr-tool__since">à la main · prévu #18</span></li>
+        <li class="jr-tool jr-tool--off"><span class="jr-tool__icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h11"/><path d="M4 12h16"/><path d="M4 17h8"/></svg></span><span class="jr-tool__label">Le copilote « je suis bloqué »</span><span class="jr-tool__since">pas encore · prévu #13</span></li>
+      </ul>
+      <div class="jr-tools__bar" aria-hidden="true"><i style="width:50%"></i></div>
+      <span class="jr-tools__sum">3 étapes sur 6 déjà faites par l’outil</span>
+    </div>
+
+    <div class="jr-box jr-box--dark">
+      <span class="sh__eyebrow sh__eyebrow--dark">Le deal</span>
+      <h3>Si je ne lance pas, tu es remboursé.</h3>
+      <p>Si la méthode ne me fait pas lancer LazyPM et trouver mon premier client payant d’ici la quête #30, le pass saison est remboursé à tous.</p>
+    </div>
+
+    <div class="jr-box">
+      <h3>Suivre le journal</h3>
+      <p>Un email le dimanche avec la semaine : ce qui avance, ce qui coince. Pas de pub.</p>
+      <form class="jr-sub" id="sub-form" novalidate>
+        <label class="sr-only" for="sub-email">Ton email</label>
+        <input class="field field--sunk" id="sub-email" type="email" placeholder="toi@exemple.com" autocomplete="email" required>
+        <button class="btn btn--primary btn--sm" type="submit">Recevoir le résumé du dimanche</button>
+        <span class="jr-sub__err" id="sub-err" hidden>Cet email n’a pas l’air complet.</span>
+        <span class="jr-sub__ok" id="sub-ok" hidden>C’est noté. Premier résumé dimanche.</span>
+      </form>
+    </div>
+
+    <div class="jr-box">
+      <h3>Et toi, ton idée&nbsp;?</h3>
+      <p>Même parcours, même prompts. Les 3 premières quêtes sont gratuites.</p>
+      <a class="btn btn--gold btn--sm" href="briefing.html">Commencer mon parcours <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="footer">
+  <div class="wrap stack-l">
+    <div class="footer__cols">
+      <div class="footer__col" style="flex:1.2;min-width:240px">
+        <span class="brand">
+          <svg width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+            <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+            <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+            <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+            <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          LAZYPM.
+        </span>
+        <p class="txt txt--sm" style="color:var(--term-dim);max-width:34ch">Trente quêtes entre ton idée et ton premier client. Construit en public, avec lui-même.</p>
+        <span class="mono" style="font-size:12px">opéré par HAYZAR LLC</span>
+      </div>
+      <nav class="footer__col" aria-label="Produit">
+        <span class="footer__ttl">Produit</span>
+        <a href="index.html#parcours">Le parcours</a>
+        <a href="index.html#tarif">Tarif</a>
+        <a href="journal.html" aria-current="page">Journal public</a>
+      </nav>
+      <nav class="footer__col" aria-label="Compte">
+        <span class="footer__ttl">Compte</span>
+        <a href="signup.html">Créer un compte</a>
+        <a href="login.html">Se connecter</a>
+        <a href="compte.html">Mon abonnement</a>
+        <a href="compte.html">Mes factures</a>
+      </nav>
+      <nav class="footer__col" aria-label="Légal">
+        <span class="footer__ttl">Légal</span>
+        <a href="#">Conditions</a>
+        <a href="#">Confidentialité</a>
+        <a href="#">Remboursements</a>
+        <a href="mailto:contact@hayzar.com">contact@hayzar.com</a>
+      </nav>
+    </div>
+    <hr class="hr hr--dark">
+    <div class="row row--between row--wrap">
+      <span class="mono" style="font-size:12px">© 2026 LazyPM · opéré par HAYZAR LLC</span>
+      <span class="mono" style="font-size:12px">paiement sécurisé par Stripe</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+const subForm = document.getElementById('sub-form'), subEmail = document.getElementById('sub-email');
+subForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const ok = subEmail.checkValidity();
+  document.getElementById('sub-err').hidden = ok;
+  subEmail.setAttribute('aria-invalid', !ok);
+  if (!ok) { subEmail.focus(); return; }
+  document.getElementById('sub-ok').hidden = false;
+  subForm.querySelector('button').disabled = true;
+  subEmail.disabled = true;
+});
+</script>
+</body>
+</html>

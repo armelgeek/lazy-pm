@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — revue du plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .free-limit { display: flex; align-items: center; gap: 8px; margin: 2px 0 14px 60px; padding: 8px 12px; border-radius: 10px; border: 2px dashed var(--line-hard); font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--muted); }
+  @media (max-width: 520px) { .free-limit { margin-left: 0; } }
+  .lbl-short { display: none; }
+  @media (max-width: 760px) { .plan-perks { display: none !important; } }
+  @media (max-width: 520px) { .lbl-long { display: none; } .lbl-short { display: inline; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<nav class="side" aria-label="Navigation">
+  <a class="brand" href="index.html">
+    <svg class="mascot" width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+      <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+      <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+      <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span>LAZYPM.</span>
+  </a>
+
+  <!-- Sélecteur de projet compact façon étiquette -->
+  <div class="side__project" role="button" tabindex="0" title="Changer de projet">
+    <div class="side__project-name">
+      <span class="dot dot--live" title="Projet en cours"></span>
+      <span>AI Headshots</span>
+    </div>
+    <svg class="side__project-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <!-- Groupe : Parcours -->
+  <span class="side__group-label">// PARCOURS</span>
+  <a class="side__link" href="chemin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19c4-2 4-6 8-8s4-6 8-8"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="3" r="2"/></svg>
+    <span>Le chemin</span>
+  </a>
+  <a class="side__link" href="quete.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+    <span>Quête en cours</span>
+    <span class="side__badge side__badge--teal">#12</span>
+  </a>
+  <a class="side__link" href="checkin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span>Check-in</span>
+    <span class="side__badge side__badge--rose">ce soir</span>
+  </a>
+
+  <!-- Groupe : Outils -->
+  <span class="side__group-label">// OUTILS</span>
+  <a class="side__link" href="plus-tard.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h9"/></svg>
+    <span>Plus tard</span>
+    <span class="side__badge">9</span>
+  </a>
+  <a class="side__link side__link--desktop-only" href="plan.html" aria-current="page">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>Revue du plan</span>
+  </a>
+
+  <!-- Profil utilisateur bas de barre -->
+  <div class="side__profile">
+    <a class="side__profile-card" href="compte.html">
+      <div class="side__avatar">A</div>
+      <div class="side__profile-info">
+        <span class="side__profile-name">Armel</span>
+        <span class="eyebrow eyebrow--sm" style="color:var(--term-dim);font-size:10px">MENSUEL · 9 $</span>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="main">
+
+<div class="main-header">
+<div class="topbar topbar--compact">
+  <div class="row" style="gap:14px;align-items:center">
+    <a class="btn btn--icon" href="chemin.html" aria-label="Retour au chemin" style="background:var(--sunk);box-shadow:none;border-radius:11px;width:38px;height:38px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A4840" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14 5 7 12 14 19"/></svg></a>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono topbar__kicker" style="font-size:10px;color:var(--faint)">PARCOURS</span>
+      <span class="mono" style="font-size:14px;font-weight:700">Revue du plan<span style="color:var(--faint)"> · 30 quêtes</span></span>
+    </div>
+  </div>
+  <a href="plus-tard.html" class="btn btn--ghost btn--sm" aria-label="Noter une idée"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg> <span class="btn__label">Noter une idée</span></a>
+</div>
+</div>
+
+
+<main class="pane stack">
+<div class="row row--between row--wrap" style="gap:16px">
+<div class="stack-s">
+<span class="eyebrow">// ton parcours, avant que tu t'engages dessus</span>
+<h1 style="font-size:clamp(26px,4vw,38px)">30 quêtes pour AI Headshots</h1>
+</div>
+<div class="row" style="gap:10px">
+<div class="card card--flat stat" style="padding:12px 18px"><span class="num num--m">23 oct</span><span class="stat__lbl">lancement estimé</span></div>
+<div class="card card--flat stat" style="padding:12px 18px"><span class="num num--m">62 h</span><span class="stat__lbl">travail total</span></div>
+</div>
+</div>
+
+<div class="card card--gold row row--top" style="gap:13px;padding:16px 20px">
+<svg class="mascot" width="34" height="34" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+<path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+<circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+<path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+<circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+<path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+</svg>
+<p class="txt txt--sm" style="color:var(--gold-deep)">Tu m'as dit 1 à 2 h par soir. Sur ce rythme, 30 quêtes prennent 40 jours, pas 30. Je te propose de couper les quêtes 23 et 26 pour rentrer dans le mois — ou de garder tout et de viser le 2 novembre. À toi de voir.</p>
+</div>
+
+<div class="row row--top row--stack-m" style="gap:16px;align-items:stretch">
+<div class="card card--flat stack-s grow" style="padding:0;overflow:hidden">
+
+<!-- SECTION HEADER -->
+<div class="table-head row--between" style="padding:16px 20px;margin:0;background:var(--sunk-2);border-bottom:2px solid var(--line)">
+<span>SECTION 1 · faire marcher le truc de base</span><span>6 quêtes · 14 h</span>
+</div>
+
+<!-- QUEST TIMELINE -->
+<div class="quest-timeline" style="padding:24px 20px 16px">
+
+  <!-- Quest 01 — Normal -->
+  <div class="quest-node">
+    <div class="quest-node__track">
+      <div class="quest-badge">01</div>
+      <div class="quest-line"></div>
+    </div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Ton site existe</span>
+        <span class="quest-card__time">⏱ 2 h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quest 02 — Normal -->
+  <div class="quest-node">
+    <div class="quest-node__track">
+      <div class="quest-badge">02</div>
+      <div class="quest-line"></div>
+    </div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Vérifier que des gens en veulent</span>
+        <span class="quest-card__time">⏱ 2 h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quest 03 — Done ✔ -->
+  <div class="quest-node quest-node--done">
+    <div class="quest-node__track">
+      <div class="quest-badge quest-badge--done" aria-label="déjà faite"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></div>
+      <div class="quest-line quest-line--done"></div>
+    </div>
+    <div class="quest-card quest-card--done">
+      <div class="quest-card__top">
+        <span class="quest-card__title" style="text-decoration:line-through">Ils peuvent envoyer leur photo</span>
+        <span class="quest-card__tag quest-card__tag--done">déjà fait</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Limite du gratuit : prompts payants à partir du premier boss -->
+  <div class="free-limit" role="note">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>
+    <span>#01 à #03 gratuites · à partir de la #04, prompts et copilote avec l’abonnement</span>
+  </div>
+
+  <!-- Quest 04 — BOSS 🔥 -->
+  <div class="quest-node quest-node--boss">
+    <div class="quest-node__track">
+      <div class="quest-badge quest-badge--boss">04</div>
+      <div class="quest-line quest-line--boss"></div>
+    </div>
+    <div class="quest-card quest-card--boss">
+      <div class="quest-card__top">
+        <span class="quest-card__title">L'IA génère les prompts</span>
+        <span class="quest-card__time">⏱ 4 h</span>
+      </div>
+      <span class="quest-card__sub">BOSS · si elle rate, il n'y a pas de produit</span>
+      <span class="quest-card__obj"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><polyline points="8 12 11 15 16 9"/></svg> objectif : poser une limite de dépense sur tes crédits IA</span>
+    </div>
+  </div>
+
+  <!-- Quest 05 — Normal -->
+  <div class="quest-node">
+    <div class="quest-node__track">
+      <div class="quest-badge">05</div>
+      <div class="quest-line"></div>
+    </div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Copier le prompt en un clic</span>
+        <span class="quest-card__time">⏱ 2 h</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SECTION 2 HEADER -->
+<div class="table-head row--between" style="padding:16px 20px;margin:0;background:var(--sunk-2);border-top:2px solid var(--line);border-bottom:2px solid var(--line)">
+<span>SECTION 2 · se faire payer</span><span>8 quêtes · 18 h</span>
+</div>
+
+<div class="quest-timeline" style="padding:24px 20px 16px">
+
+  <!-- Quest 07 — Normal -->
+  <div class="quest-node">
+    <div class="quest-node__track">
+      <div class="quest-badge">07</div>
+      <div class="quest-line"></div>
+    </div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Ils peuvent payer</span>
+        <span class="quest-card__time">⏱ 3 h</span>
+      </div>
+      <span class="quest-card__obj"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><polyline points="8 12 11 15 16 9"/></svg> objectif : vérifier que ton prix couvre les crédits IA de chaque client</span>
+    </div>
+  </div>
+
+  <!-- Quest 08 — Normal -->
+  <div class="quest-node">
+    <div class="quest-node__track">
+      <div class="quest-badge">08</div>
+    </div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Limiter les gratuits</span>
+        <span class="quest-card__time">⏱ 2 h</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center;padding:8px 20px 20px">
+  <span class="mono" style="font-size:12px;color:var(--faint);background:var(--sunk);padding:6px 16px;border-radius:999px">… 22 autres quêtes, toutes visibles une fois ton compte créé</span>
+</div>
+
+</div>
+
+<div class="stack" style="flex:0 0 300px;max-width:100%;gap:12px">
+<div class="card card--flat stack-s">
+<span class="eyebrow eyebrow--sm">// tu peux, avant de partir</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Supprimer une quête</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Dire « je l'ai déjà faite »</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Allonger une estimation</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Réordonner ce qui n'est pas verrouillé</span>
+</div>
+<div class="card card--dark stack-s">
+<span class="eyebrow eyebrow--sm eyebrow--dim">// ce que je ne décide pas</span>
+<p class="txt txt--sm" style="color:var(--term-text)">Ton prix, à qui tu vends, ce qu'on coupe quand ça déborde, et si le résultat est assez bon. Ça reste chez toi.</p>
+</div>
+<div class="card stack-s" style="background:var(--teal-pale);border-color:var(--teal);box-shadow:none">
+<span class="eyebrow eyebrow--sm eyebrow--teal">// pourquoi cet écran</span>
+<p class="txt txt--sm" style="color:var(--teal-dark)">Un plan que tu n'as pas touché, c'est un PDF de plus. Change deux trucs, et il devient le tien.</p>
+</div>
+</div>
+</div>
+</main>
+
+<div class="footbar footbar--actions">
+<div class="row row--wrap plan-perks" style="gap:10px;flex:1">
+<span class="pill pill--teal pill--xs" style="font-weight:700">+20 XP</span>
+<span class="pill pill--gold pill--xs" style="font-weight:700">Ta série démarre</span>
+<span class="eyebrow eyebrow--sm eyebrow--dim">// en t'engageant</span>
+</div>
+<div class="row" style="gap:11px">
+<button class="btn btn--ghost btn--sm" type="button"><span class="lbl-long">Couper les quêtes 23 et 26</span><span class="lbl-short">Couper 23 et 26</span></button>
+<a class="btn btn--primary btn--sm" href="chemin.html"><span class="lbl-long">Je m'engage sur ce plan</span><span class="lbl-short">Je m'engage</span></a>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+// le footer d'actions se colle juste au-dessus de la barre d'onglets mobile
+const side = document.querySelector('.side');
+new ResizeObserver(() => {
+  const h = getComputedStyle(side).position === 'sticky' ? side.offsetHeight : 0;
+  document.documentElement.style.setProperty('--tabbar-h', h + 'px');
+}).observe(side);
+</script>
+</body>
+</html>

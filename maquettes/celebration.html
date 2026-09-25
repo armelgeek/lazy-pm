@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — premier client</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="dark-page">
+<div class="stack-l center" style="max-width:760px;align-items:center">
+
+<span class="eyebrow eyebrow--dim">// quête #11 · boss</span>
+
+<div class="row" style="gap:22px">
+<span class="node node--done node--boss" style="width:132px;height:132px;border-width:7px;box-shadow:0 10px 0 var(--gold-dark)"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#5E2739" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l4 4 4-7 4 7 4-4v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Z"/></svg></span>
+<svg class="mascot" width="96" height="96" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+<path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+<circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+<path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+<circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+<path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+</svg>
+</div>
+
+<h1 style="font-size:clamp(32px,6vw,62px);line-height:1">Quelqu'un vient de<br>payer pour ton produit</h1>
+
+<p class="txt center" style="color:var(--term-text);font-size:19px;max-width:48ch">Pas ta mère, pas un ami. Une inconnue qui a sorti sa carte parce que ce que tu as construit lui était utile.</p>
+
+<div class="stack" style="width:100%;background:var(--term-2);border-radius:20px;padding:26px 30px;text-align:left">
+<div class="row row--between" style="padding-bottom:13px;border-bottom:2px solid var(--term-line)">
+<span class="mono" style="font-size:12.5px;color:var(--term-dim)">stripe · webhook reçu</span>
+<span class="row" style="gap:8px"><span class="dot" style="background:var(--term-green)"></span><span class="mono" style="font-size:12.5px;color:var(--term-green)">200 OK</span></span>
+</div>
+<pre class="mono" style="margin:0;font-size:13px;line-height:1.85;color:var(--term-text);white-space:pre-wrap"><span style="color:var(--term-green)">✔</span> client     m***e@gmail.com
+<span style="color:var(--term-green)">✔</span> montant    <span style="color:var(--term-gold)">9,00 $</span> · abonnement mensuel
+<span style="color:var(--term-green)">✔</span> arrivé     il y a 4 minutes
+<span style="color:var(--term-green)">✔</span> jour       19 de ta saison 1</pre>
+</div>
+
+<div class="row row--wrap" style="width:100%;gap:13px">
+<div class="stat grow" style="background:var(--term-2);border-radius:16px;padding:18px 20px;min-width:160px">
+<span class="row" style="gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="#C8952A" stroke="#8A6417" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.6 6 .8-4.4 4.2 1.1 6.1L12 17.3 6.7 20.2l1.1-6.1L3.4 9.9l6-.8Z"/></svg><span class="num" style="font-size:26px;color:var(--term-gold)">+60 XP</span></span>
+<span class="stat__lbl" style="color:var(--term-dim)">boss vaincu</span></div>
+<div class="stat grow" style="background:var(--term-2);border-radius:16px;padding:18px 20px;min-width:160px">
+<span class="row" style="gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D6A94B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2.5 4 5.5 5 5.5 9a5.5 5.5 0 0 1-11 0c0-2 1-3.5 2.5-5 .3 1.2 1 2 2 2.3C10.5 7 11 5 12 3Z"/></svg><span class="num" style="font-size:26px;color:var(--term-gold)">9 jours</span></span>
+<span class="stat__lbl" style="color:var(--term-dim)">ta plus longue série</span></div>
+<div class="stat grow" style="background:var(--term-2);border-radius:16px;padding:18px 20px;min-width:160px">
+<span class="num" style="font-size:26px;color:var(--term-green)">18 restantes</span>
+<span class="stat__lbl" style="color:var(--term-dim)">le lancement est le #19</span></div>
+</div>
+
+<p class="mono center" style="font-size:13px;color:var(--term-dim)">// aucune app de gamification ne peut fabriquer ce moment. celui-là est réel.</p>
+
+<div class="row row--wrap" style="gap:12px;justify-content:center">
+<button class="btn btn--gold btn--lg" type="button" style="box-shadow:0 6px 0 var(--gold-dark)">Partager ce moment</button>
+<a class="btn btn--lg" href="chemin.html" style="background:transparent;border:3px solid var(--term-line);box-shadow:0 6px 0 var(--term-line);color:var(--term-pale)">Continuer vers #12</a>
+</div>
+
+</div>
+</main>
+</body>
+</html>

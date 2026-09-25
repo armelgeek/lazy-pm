@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — revue du plan en cours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .lbl-short { display: none; }
+  @media (max-width: 760px) { .plan-perks { display: none !important; } }
+  @media (max-width: 520px) { .lbl-long { display: none; } .lbl-short { display: inline; } }
+  .sec { display: flex; flex-direction: column; }
+  .sec__head { display: flex; justify-content: space-between; gap: 12px; padding: 14px 20px; background: var(--sunk-2); border-bottom: 2px solid var(--line); font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); }
+  .sec + .sec .sec__head { border-top: 2px solid var(--line); }
+  .sec__body { padding: 18px 20px 8px; }
+  .sec__head .ok-count { color: var(--gold-dark); }
+
+  /* quêtes faites repliées */
+  .done-fold { margin-bottom: 12px; }
+  .done-fold summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--gold-mid); color: var(--gold-text); font-weight: 700; font-size: 14px; }
+  .done-fold summary::-webkit-details-marker { display: none; }
+  .done-fold summary .lock { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 11px; font-weight: 600; opacity: .8; }
+  .done-fold summary .chev { transition: transform .2s ease; }
+  .done-fold[open] summary .chev { transform: rotate(180deg); }
+  .done-fold ol { list-style: none; margin: 8px 0 0; padding: 0 0 0 4px; display: flex; flex-direction: column; gap: 4px; }
+  .done-fold li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: var(--ink-soft); padding: 4px 10px; }
+  .done-fold li .mono { font-size: 11.5px; color: var(--gold-dark); width: 40px; flex-shrink: 0; }
+
+  /* états */
+  .quest-badge--current { background: var(--teal); border-color: var(--teal-dark); color: var(--card); box-shadow: 0 0 0 4px var(--teal-pale); }
+  .quest-card--current { background: var(--teal-pale); border-color: var(--teal); }
+  .quest-card--current .quest-card__title { color: var(--teal-dark); font-weight: 800; }
+  .quest-badge--skipped { background: var(--card); border-color: var(--rose); color: var(--rose); }
+  .quest-card--skipped { background: var(--rose-pale); border: 2px dashed var(--rose); }
+  .quest-card--skipped .quest-card__title { color: var(--rose-text); }
+
+  /* quêtes à venir modifiables */
+  .edit { display: inline-flex; gap: 4px; }
+  .edit button { height: 28px; min-width: 28px; padding: 0 8px; border-radius: 8px; border: 2px solid var(--line); background: var(--card); font: 700 11.5px var(--mono); color: var(--ink-soft); cursor: pointer; }
+  .edit button:hover { border-color: var(--ink); color: var(--ink); }
+  .quest-node.is-removed .quest-card { opacity: .5; border-style: dashed; border-color: var(--line-hard); }
+  .quest-node.is-removed .quest-card__title { text-decoration: line-through; }
+  .quest-node.is-removed .quest-badge { opacity: .5; }
+  .quest-card__time.is-longer { background: var(--gold-pale); color: var(--gold-deep); }
+
+  .save-state { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--muted); }
+  .save-state.has-changes { color: var(--teal-dark); }
+  .btn[disabled] { opacity: .45; pointer-events: none; }
+  @media (max-width: 520px) {
+    .sec__head { flex-direction: column; gap: 2px; }
+    .quest-card__top { flex-wrap: wrap; }
+    .save-state { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<nav class="side" aria-label="Navigation">
+  <a class="brand" href="index.html">
+    <svg class="mascot" width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+      <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+      <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+      <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span>LAZYPM.</span>
+  </a>
+
+  <!-- Sélecteur de projet compact façon étiquette -->
+  <div class="side__project" role="button" tabindex="0" title="Changer de projet">
+    <div class="side__project-name">
+      <span class="dot dot--live" title="Projet en cours"></span>
+      <span>AI Headshots</span>
+    </div>
+    <svg class="side__project-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <!-- Groupe : Parcours -->
+  <span class="side__group-label">// PARCOURS</span>
+  <a class="side__link" href="chemin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19c4-2 4-6 8-8s4-6 8-8"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="3" r="2"/></svg>
+    <span>Le chemin</span>
+  </a>
+  <a class="side__link" href="quete.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+    <span>Quête en cours</span>
+    <span class="side__badge side__badge--teal">#12</span>
+  </a>
+  <a class="side__link" href="checkin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span>Check-in</span>
+    <span class="side__badge side__badge--rose">ce soir</span>
+  </a>
+
+  <!-- Groupe : Outils -->
+  <span class="side__group-label">// OUTILS</span>
+  <a class="side__link" href="plus-tard.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h9"/></svg>
+    <span>Plus tard</span>
+    <span class="side__badge">9</span>
+  </a>
+  <a class="side__link side__link--desktop-only" href="plan-en-cours.html" aria-current="page">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>Revue du plan</span>
+  </a>
+
+  <!-- Profil utilisateur bas de barre -->
+  <div class="side__profile">
+    <a class="side__profile-card" href="compte.html">
+      <div class="side__avatar">A</div>
+      <div class="side__profile-info">
+        <span class="side__profile-name">Armel</span>
+        <span class="eyebrow eyebrow--sm" style="color:var(--term-dim);font-size:10px">MENSUEL · 9 $</span>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="main">
+
+<div class="main-header">
+<div class="topbar topbar--compact">
+  <div class="row" style="gap:14px;align-items:center">
+    <a class="btn btn--icon" href="chemin.html" aria-label="Retour au chemin" style="background:var(--sunk);box-shadow:none;border-radius:11px;width:38px;height:38px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A4840" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14 5 7 12 14 19"/></svg></a>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono topbar__kicker" style="font-size:10px;color:var(--faint)">PARCOURS</span>
+      <span class="mono" style="font-size:14px;font-weight:700">Revue du plan<span style="color:var(--faint)"> · 11/30 faites</span></span>
+    </div>
+  </div>
+  <a href="plus-tard.html" class="btn btn--ghost btn--sm" aria-label="Noter une idée"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg> <span class="btn__label">Noter une idée</span></a>
+</div>
+</div>
+
+
+<main class="pane stack">
+<div class="row row--between row--wrap" style="gap:16px">
+<div class="stack-s">
+<span class="eyebrow">// ton parcours, tel qu’il est ce soir</span>
+<h1 style="font-size:clamp(26px,4vw,38px)">30 quêtes pour AI Headshots</h1>
+</div>
+<div class="row" style="gap:10px">
+<div class="card card--flat stat" style="padding:12px 18px"><span class="num num--m" id="launch">14 oct</span><span class="stat__lbl">lancement estimé</span></div>
+<div class="card card--flat stat" style="padding:12px 18px"><span class="num num--m">11/30</span><span class="stat__lbl">quêtes faites</span></div>
+</div>
+</div>
+
+<div class="card card--gold row row--top" style="gap:13px;padding:16px 20px">
+<svg class="mascot" width="34" height="34" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+<path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+<circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+<path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+<circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+<path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+</svg>
+<p class="txt txt--sm" style="color:var(--gold-deep);margin:0">Tu as 9 jours d’avance sur le plan de départ. Rien à couper : tu peux même rallonger une quête si tu veux la faire bien. Seule la #06 traîne — c’est elle qui évite que ça plante le jour du lancement.</p>
+</div>
+
+<div class="row row--top row--stack-m" style="gap:16px;align-items:stretch">
+<div class="card card--flat grow" style="padding:0;overflow:hidden;min-width:0">
+
+<section class="sec">
+<div class="sec__head"><span>SECTION 1 · faire marcher le truc de base</span><span><span class="ok-count">5 faites</span> · 1 sautée</span></div>
+<div class="sec__body">
+  <details class="done-fold">
+    <summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> 5 quêtes faites <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg> verrouillées</span> <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></summary>
+    <ol><li><span class="mono">#01</span>Ton site existe</li><li><span class="mono">#02</span>Vérifier que des gens en veulent</li><li><span class="mono">#03</span>Ils peuvent envoyer leur photo</li><li><span class="mono">#04</span>L’IA génère les prompts · boss vaincu</li><li><span class="mono">#05</span>Copier le prompt en un clic</li></ol>
+  </details>
+  <div class="quest-node">
+    <div class="quest-node__track"><div class="quest-badge quest-badge--skipped">06</div><div class="quest-line"></div></div>
+    <div class="quest-card quest-card--skipped">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Que ça plante pas</span>
+        <a class="btn btn--xs" href="quete.html" style="text-decoration:none">Reprendre</a>
+      </div>
+      <span class="quest-card__sub">sautée · 11 objectifs non cochés</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sec">
+<div class="sec__head"><span>SECTION 2 · se faire payer, trouver les premiers</span><span><span class="ok-count">5 faites</span> · 8 quêtes</span></div>
+<div class="sec__body">
+  <details class="done-fold">
+    <summary><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> 5 quêtes faites <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg> verrouillées</span> <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></summary>
+    <ol><li><span class="mono">#07</span>Ils peuvent payer</li><li><span class="mono">#08</span>Limiter les gratuits</li><li><span class="mono">#09</span>Email de bienvenue</li><li><span class="mono">#10</span>Tableau de bord</li><li><span class="mono">#11</span>Ton premier client · boss vaincu</li></ol>
+  </details>
+  <div class="quest-node">
+    <div class="quest-node__track"><div class="quest-badge quest-badge--current">12</div><div class="quest-line"></div></div>
+    <div class="quest-card quest-card--current">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Ça marche sur téléphone</span>
+        <a class="btn btn--primary btn--xs" href="quete.html" style="text-decoration:none">Ouvrir</a>
+      </div>
+      <span class="quest-card__obj">en cours · 2/6 objectifs</span>
+    </div>
+  </div>
+  <div class="quest-node" data-q="13" data-h="3">
+    <div class="quest-node__track"><div class="quest-badge">13</div><div class="quest-line"></div></div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Améliorer la qualité</span>
+        <span class="row" style="gap:8px;align-items:center">
+          <span class="quest-card__time">⏱ <span class="h">3</span> h</span>
+          <span class="edit"><button type="button" data-act="longer" aria-label="Allonger la quête 13 d’une heure">+1 h</button><button type="button" data-act="remove" aria-label="Retirer la quête 13">retirer</button></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="quest-node" data-q="14" data-h="2">
+    <div class="quest-node__track"><div class="quest-badge">14</div><div class="quest-line"></div></div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Montrer des résultats</span>
+        <span class="row" style="gap:8px;align-items:center">
+          <span class="quest-card__time">⏱ <span class="h">2</span> h</span>
+          <span class="edit"><button type="button" data-act="longer" aria-label="Allonger la quête 14 d’une heure">+1 h</button><button type="button" data-act="remove" aria-label="Retirer la quête 14">retirer</button></span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sec">
+<div class="sec__head"><span>SECTION 3 · lancer pour de vrai</span><span>16 quêtes</span></div>
+<div class="sec__body">
+  <div class="quest-node" data-q="15" data-h="2">
+    <div class="quest-node__track"><div class="quest-badge">15</div><div class="quest-line"></div></div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Une page qui donne envie</span>
+        <span class="row" style="gap:8px;align-items:center">
+          <span class="quest-card__time">⏱ <span class="h">2</span> h</span>
+          <span class="edit"><button type="button" data-act="longer" aria-label="Allonger la quête 15 d’une heure">+1 h</button><button type="button" data-act="remove" aria-label="Retirer la quête 15">retirer</button></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="quest-node" data-q="16" data-h="2">
+    <div class="quest-node__track"><div class="quest-badge">16</div><div class="quest-line"></div></div>
+    <div class="quest-card">
+      <div class="quest-card__top">
+        <span class="quest-card__title">Tes 20 premiers visiteurs</span>
+        <span class="row" style="gap:8px;align-items:center">
+          <span class="quest-card__time">⏱ <span class="h">2</span> h</span>
+          <span class="edit"><button type="button" data-act="longer" aria-label="Allonger la quête 16 d’une heure">+1 h</button><button type="button" data-act="remove" aria-label="Retirer la quête 16">retirer</button></span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;padding:4px 0 14px">
+    <span class="mono" style="font-size:12px;color:var(--faint);background:var(--sunk);padding:6px 16px;border-radius:999px">… 14 autres quêtes, modifiables quand tu y arrives</span>
+  </div>
+</div>
+</section>
+
+</div>
+
+<div class="stack" style="flex:0 0 300px;max-width:100%;gap:12px">
+<div class="card card--flat stack-s">
+<span class="eyebrow eyebrow--sm">// ce que tu peux changer</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Allonger une quête à venir</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Retirer une quête à venir</span>
+<span class="row" style="gap:10px"><span class="ok">✔</span> Reprendre une quête sautée</span>
+<span class="row" style="gap:10px;color:var(--muted)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg> Les quêtes faites sont verrouillées</span>
+</div>
+<div class="card card--dark stack-s">
+<span class="eyebrow eyebrow--sm eyebrow--dim">// ce que je ne décide pas</span>
+<p class="txt txt--sm" style="color:var(--term-text)">Ce qu’on coupe quand ça déborde, et si le résultat est assez bon. Ça reste chez toi.</p>
+</div>
+</div>
+</div>
+</main>
+
+<div class="footbar footbar--actions">
+  <span class="save-state" id="save-state" aria-live="polite">aucun changement</span>
+  <div class="row" style="gap:8px">
+    <button class="btn btn--ghost btn--sm" type="button" id="reset-btn" disabled>Annuler</button>
+    <a class="btn btn--primary btn--sm" href="chemin.html" id="save-btn" aria-disabled="true"><span class="lbl-long">Enregistrer les changements</span><span class="lbl-short">Enregistrer</span></a>
+  </div>
+</div>
+
+</div>
+</div>
+<script>
+// le footer d'actions se colle juste au-dessus de la barre d'onglets mobile
+const side = document.querySelector('.side');
+new ResizeObserver(() => {
+  const h = getComputedStyle(side).position === 'sticky' ? side.offsetHeight : 0;
+  document.documentElement.style.setProperty('--tabbar-h', h + 'px');
+}).observe(side);
+
+// modifications du plan : +1 h ≈ un soir de plus, une quête retirée ≈ ses soirs en moins
+const BASE = new Date(2026, 9, 14);
+const MONTHS = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
+const nodes = [...document.querySelectorAll('.quest-node[data-q]')];
+const saveBtn = document.getElementById('save-btn'), resetBtn = document.getElementById('reset-btn');
+
+function render() {
+  let changes = 0, days = 0;
+  nodes.forEach(n => {
+    const extra = +n.dataset.h - +n.dataset.base;
+    const removed = n.classList.contains('is-removed');
+    changes += (extra > 0 ? 1 : 0) + (removed ? 1 : 0);
+    days += removed ? -Math.ceil(+n.dataset.base / 2) : extra;
+    n.querySelector('.h').textContent = n.dataset.h;
+    n.querySelector('.quest-card__time').classList.toggle('is-longer', extra > 0);
+    n.querySelector('[data-act="remove"]').textContent = removed ? 'remettre' : 'retirer';
+  });
+  const d = new Date(BASE);
+  d.setDate(d.getDate() + days);
+  const launch = d.getDate() + ' ' + MONTHS[d.getMonth()];
+  document.getElementById('launch').textContent = launch;
+  const state = document.getElementById('save-state');
+  state.textContent = changes ? changes + (changes > 1 ? ' changements' : ' changement') + ' · lancement le ' + launch : 'aucun changement';
+  state.classList.toggle('has-changes', changes > 0);
+  resetBtn.disabled = !changes;
+  saveBtn.toggleAttribute('disabled', !changes);
+  saveBtn.setAttribute('aria-disabled', !changes);
+}
+
+nodes.forEach(n => {
+  n.dataset.base = n.dataset.h;
+  n.querySelector('[data-act="longer"]').addEventListener('click', () => {
+    if (n.classList.contains('is-removed')) return;
+    n.dataset.h = +n.dataset.h + 1;
+    render();
+  });
+  n.querySelector('[data-act="remove"]').addEventListener('click', () => {
+    n.classList.toggle('is-removed');
+    n.dataset.h = n.dataset.base;
+    render();
+  });
+});
+resetBtn.addEventListener('click', () => {
+  nodes.forEach(n => { n.classList.remove('is-removed'); n.dataset.h = n.dataset.base; });
+  render();
+});
+render();
+</script>
+</body>
+</html>

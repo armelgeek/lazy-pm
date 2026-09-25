@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — check-in du soir</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .ci-choices { display: flex; gap: 10px; }
+  .ci-choices .choice { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 10px 14px; }
+  .ci-choices .choice svg { width: 19px; height: 19px; }
+  #objectives-list { gap: 6px !important; }
+  #objectives-list .check { padding: 8px 14px; }
+  .ci-choices .choice--none[aria-pressed="true"] { background: var(--rose-pale); border-color: var(--rose); box-shadow: 0 5px 0 var(--rose); color: var(--rose-text); }
+  .ci-choices .choice--done[aria-pressed="true"] { background: var(--gold-pale); border-color: var(--gold); box-shadow: 0 5px 0 var(--gold-dark); color: var(--gold-text); }
+  .ci-lines { width: 100%; min-height: 72px; padding: 12px 16px; resize: vertical; line-height: 1.5; }
+  .ci-reply[hidden], .ci-step[hidden] { display: none; }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .cal__day { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .cal__lbl, .cal__note { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .cal__note { min-height: 14px; font-weight: 700; color: var(--ink-soft); }
+  .cal__cell { width: 100%; max-width: 44px; aspect-ratio: 1; border-radius: 11px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 16px; }
+  .cal__cell--quest { background: var(--gold); box-shadow: 0 4px 0 var(--gold-dark); color: var(--ink); }
+  .cal__cell--kept  { background: var(--card); border: 3px solid var(--gold); box-shadow: 0 4px 0 var(--gold); color: var(--gold-text); }
+  .cal__cell--next  { background: transparent; border: 2px dashed var(--line-hard); color: var(--faint); }
+  .cal__cell--today { background: var(--card); border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink); color: var(--ink); }
+  .cal__key { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; color: var(--ink-soft); }
+  .cal__dot { width: 12px; height: 12px; border-radius: 4px; box-shadow: none; border-width: 2px; }
+  @media (max-width: 620px) { .ci-choices { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<nav class="side" aria-label="Navigation">
+  <a class="brand" href="index.html">
+    <svg class="mascot" width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+      <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+      <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+      <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span>LAZYPM.</span>
+  </a>
+
+  <div class="side__project" role="button" tabindex="0" title="Changer de projet">
+    <div class="side__project-name">
+      <span class="dot dot--live" title="Projet en cours"></span>
+      <span>AI Headshots</span>
+    </div>
+    <svg class="side__project-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <span class="side__group-label">// PARCOURS</span>
+  <a class="side__link" href="chemin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19c4-2 4-6 8-8s4-6 8-8"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="3" r="2"/></svg>
+    <span>Le chemin</span>
+  </a>
+  <a class="side__link" href="quete.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+    <span>Quête en cours</span>
+    <span class="side__badge side__badge--teal">#12</span>
+  </a>
+  <a class="side__link" href="checkin.html" aria-current="page">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span>Check-in</span>
+    <span class="side__badge side__badge--rose">ce soir</span>
+  </a>
+
+  <span class="side__group-label">// OUTILS</span>
+  <a class="side__link" href="plus-tard.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h9"/></svg>
+    <span>Plus tard</span>
+    <span class="side__badge">9</span>
+  </a>
+  <a class="side__link side__link--desktop-only" href="plan-en-cours.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>Revue du plan</span>
+  </a>
+
+  <div class="side__profile">
+    <a class="side__profile-card" href="compte.html">
+      <div class="side__avatar">A</div>
+      <div class="side__profile-info">
+        <span class="side__profile-name">Armel</span>
+        <span class="eyebrow eyebrow--sm" style="color:var(--term-dim);font-size:10px">MENSUEL · 9 $</span>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="main">
+
+<div class="main-header">
+<div class="topbar">
+  <div class="row row--wrap" style="gap:14px;align-items:center">
+    <a class="btn btn--icon" href="quete.html" aria-label="Retour à la quête" style="background:var(--sunk);box-shadow:none;border-radius:11px;width:38px;height:38px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A4840" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14 5 7 12 14 19"/></svg></a>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono" style="font-size:10px;color:var(--faint)">CHECK-IN DU SOIR</span>
+      <span class="mono" style="font-size:14px;font-weight:700">#12<span style="color:var(--faint)">/30 · mercredi 23h14</span></span>
+    </div>
+  </div>
+
+  <div class="row row--wrap" style="gap:10px;align-items:center">
+    <a href="plus-tard.html" class="btn btn--ghost btn--sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg> Noter une idée</a>
+  </div>
+</div>
+</div>
+
+<div class="work">
+<main class="pane stack grow" style="gap:14px;padding-bottom:32px">
+
+<div class="stack-s" style="gap:6px">
+  <div class="row" style="gap:14px;align-items:center">
+    <span class="node node--current" style="width:52px;height:52px;font-size:22px;border-width:4px;flex-shrink:0">12</span>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono" style="font-size:12px;font-weight:700;color:var(--teal)">CHECK-IN · QUÊTE #12 · 1 MINUTE</span>
+      <h1 style="font-size:clamp(22px,3vw,30px);margin:0">Où t'en es sur « Ça marche sur téléphone »&nbsp;?</h1>
+    </div>
+  </div>
+</div>
+
+<form class="quest-workspace" id="checkin" onsubmit="event.preventDefault()">
+
+  <!-- GAUCHE : LES TROIS ÉTAPES -->
+  <div class="stack" style="gap:14px">
+
+    <div class="stack-s">
+      <span class="eyebrow eyebrow--sm">// 1 — coche ce que t'as vraiment testé</span>
+      <div class="stack-s" style="gap:8px" id="objectives-list">
+        <label class="check check--done" style="cursor:pointer"><span class="check__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span> Ouvert sur vrai smartphone (Safari / Chrome)</label>
+        <label class="check check--done" style="cursor:pointer"><span class="check__box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg></span> Aucun scroll horizontal sur tout le parcours</label>
+        <label class="check" style="cursor:pointer"><span class="check__box"></span> Boutons faciles à toucher au pouce (≥ 44px)</label>
+        <label class="check check--flag" style="cursor:pointer"><span class="check__box"></span> Clavier ouvert : bouton d'envoi accessible</label>
+        <label class="check" style="cursor:pointer"><span class="check__box"></span> Envoi photo depuis la pellicule sans plantage</label>
+        <label class="check" style="cursor:pointer"><span class="check__box"></span> Prompts générés lisibles et faciles à copier</label>
+      </div>
+    </div>
+
+    <div class="stack-s">
+      <span class="eyebrow eyebrow--sm">// 2 — où t'en es ce soir</span>
+      <div class="ci-choices" role="group" aria-label="Où t'en es">
+        <button class="choice choice--done" type="button" data-state="done" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg> Terminée</button>
+        <button class="choice" type="button" data-state="half" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none"/></svg> À moitié</button>
+        <button class="choice choice--none" type="button" data-state="none" aria-pressed="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg> Pas touché</button>
+      </div>
+    </div>
+
+    <div class="stack-s ci-step" id="step-lines">
+      <label class="eyebrow eyebrow--sm" for="deux-lignes">// 3 — deux lignes, obligatoire</label>
+      <textarea class="field ci-lines" id="deux-lignes" rows="2" placeholder="Ce qui s'est passé ce soir, et ce qui coince…"></textarea>
+    </div>
+
+  </div>
+
+  <!-- DROITE : LA RÉPONSE DU COACH + LA SEMAINE -->
+  <div class="stack" style="gap:14px">
+
+    <div class="row row--top" style="gap:12px">
+      <svg class="mascot" width="52" height="52" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 43c4-2 8-2 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+
+      <div class="card card--strong stack grow" style="padding:20px 22px;gap:14px">
+        <div class="ci-reply stack-s" data-for="none">
+          <h2 style="font-size:20px;line-height:1.22">Pas touché aujourd'hui. Ça arrive à tout le monde.</h2>
+          <p class="txt txt--sm" style="margin:0">Une question&nbsp;: c'est la vie qui a pris le dessus, ou tu étais bloqué&nbsp;?</p>
+          <div class="row row--wrap" style="gap:8px">
+            <button class="btn btn--outline btn--sm grow" type="button">J'avais pas le temps</button>
+            <a class="btn btn--outline btn--sm grow" href="quete.html">J'étais bloqué</a>
+          </div>
+        </div>
+        <div class="ci-reply stack-s" data-for="half" hidden>
+          <h2 style="font-size:20px;line-height:1.22">À moitié, c'est de l'avance.</h2>
+          <p class="txt txt--sm" style="margin:0">Demain tu reprends là où ça coince&nbsp;: le bouton d'envoi sous le clavier. Le prompt est déjà prêt dans la quête.</p>
+        </div>
+        <div class="ci-reply stack-s" data-for="done" hidden>
+          <h2 style="font-size:20px;line-height:1.22">Quête #12 bouclée.</h2>
+          <p class="txt txt--sm" style="margin:0">Ton site marche maintenant sur téléphone — là où la moitié de tes utilisateurs vont l'ouvrir. Ta date de lancement avance d'un jour.</p>
+        </div>
+
+        <div class="card card--gold row" style="gap:12px;padding:12px 16px;border-radius:12px">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#C8952A" stroke="#8A6417" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2.5 4 5.5 5 5.5 9a5.5 5.5 0 0 1-11 0c0-2 1-3.5 2.5-5 .3 1.2 1 2 2 2.3C10.5 7 11 5 12 3Z"/></svg>
+          <div class="stack-s" style="gap:1px">
+            <span class="num num--m" style="color:var(--gold-deep);font-size:18px">7 jours — ta série continue</span>
+            <span class="txt txt--sm" style="color:var(--gold-deep);font-size:12.5px">Parce que t'es passé ce soir.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stack" style="gap:12px;padding:16px 18px">
+      <div class="row row--between row--baseline">
+        <h3>Ta semaine</h3>
+        <span class="eyebrow eyebrow--sm">21 → 27 sept</span>
+      </div>
+      <div class="cal">
+        <div class="cal__day"><span class="cal__lbl">lun</span><span class="cal__cell cal__cell--quest">21</span><span class="cal__note">#10</span></div>
+        <div class="cal__day"><span class="cal__lbl">mar</span><span class="cal__cell cal__cell--quest">22</span><span class="cal__note">#11</span></div>
+        <div class="cal__day"><span class="cal__lbl">mer</span><span class="cal__cell cal__cell--today" id="cal-today">23</span><span class="cal__note">ce soir</span></div>
+        <div class="cal__day"><span class="cal__lbl">jeu</span><span class="cal__cell cal__cell--next">24</span><span class="cal__note"></span></div>
+        <div class="cal__day"><span class="cal__lbl">ven</span><span class="cal__cell cal__cell--next">25</span><span class="cal__note"></span></div>
+        <div class="cal__day"><span class="cal__lbl">sam</span><span class="cal__cell cal__cell--next">26</span><span class="cal__note"></span></div>
+        <div class="cal__day"><span class="cal__lbl">dim</span><span class="cal__cell cal__cell--next">27</span><span class="cal__note"></span></div>
+      </div>
+      <div class="row row--wrap" style="gap:6px 14px">
+        <span class="cal__key"><i class="cal__dot cal__cell--quest"></i>quête validée</span>
+        <span class="cal__key"><i class="cal__dot cal__cell--kept"></i>passé, série tenue</span>
+      </div>
+      <hr class="hr">
+      <p class="txt txt--sm" style="margin:0">À ton rythme, lancement le <strong style="color:var(--teal-dark)">14 octobre</strong>. Une quête validée le rapproche d'un jour.</p>
+    </div>
+
+  </div>
+</form>
+
+</main>
+</div>
+
+<!-- ACTIONS DU CHECK-IN, TOUJOURS À PORTÉE -->
+<div class="footbar footbar--actions">
+  <span class="mono" style="font-size:12px;font-weight:700;color:var(--muted)" id="ci-summary" aria-live="polite">2/6 objectifs · pas touché</span>
+  <div class="row" style="gap:8px">
+    <a class="btn btn--bare btn--sm" href="chemin.html" style="box-shadow:none">J'arrête pour aujourd'hui</a>
+    <button class="btn btn--primary btn--sm" type="submit" form="checkin">Valider le check-in</button>
+  </div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script>
+const tick = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg>';
+const labels = { done: 'terminée', half: 'à moitié', none: 'pas touché' };
+let state = 'none';
+
+function render() {
+  const checks = document.querySelectorAll('#objectives-list .check');
+  const done = document.querySelectorAll('#objectives-list .check--done').length;
+  document.getElementById('ci-summary').textContent = done + '/' + checks.length + ' objectifs · ' + labels[state];
+  document.querySelectorAll('.ci-reply').forEach(r => r.hidden = r.dataset.for !== state);
+  const needsLines = state !== 'done';
+  document.getElementById('step-lines').hidden = !needsLines;
+  document.getElementById('deux-lignes').required = needsLines;
+  document.getElementById('cal-today').className = 'cal__cell ' + (state === 'done' ? 'cal__cell--quest' : 'cal__cell--kept');
+}
+
+document.querySelectorAll('#objectives-list .check').forEach(item => {
+  item.addEventListener('click', () => {
+    const on = item.classList.toggle('check--done');
+    item.querySelector('.check__box').innerHTML = on ? tick : '';
+    render();
+  });
+});
+
+document.querySelectorAll('.ci-choices .choice').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.ci-choices .choice').forEach(b => b.setAttribute('aria-pressed', b === btn));
+    state = btn.dataset.state;
+    render();
+  });
+});
+
+render();
+
+// le footer d'actions se colle juste au-dessus de la barre d'onglets mobile
+const side = document.querySelector('.side');
+new ResizeObserver(() => {
+  const h = getComputedStyle(side).position === 'sticky' ? side.offsetHeight : 0;
+  document.documentElement.style.setProperty('--tabbar-h', h + 'px');
+}).observe(side);
+</script>
+</body>
+</html>

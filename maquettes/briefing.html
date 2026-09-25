@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — Briefing interactif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.briefing-steps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.briefing-step-dot {
+  width: 28px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line-hard);
+  transition: background 0.2s ease;
+}
+.briefing-step-dot--active {
+  background: var(--teal);
+}
+.choice-feedback {
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<header class="nav">
+  <div class="nav__in">
+    <a class="brand" href="index.html">
+      <svg width="30" height="30" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/>
+        <circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      LAZYPM.
+    </a>
+    <div class="row" style="gap:12px;align-items:center">
+      <div class="briefing-steps" aria-label="Progression du briefing">
+        <span class="briefing-step-dot briefing-step-dot--active"></span>
+        <span class="briefing-step-dot briefing-step-dot--active"></span>
+        <span class="briefing-step-dot"></span>
+      </div>
+      <span class="mono" style="font-size:12px;font-weight:700;color:var(--muted)">ÉTAPE 2/3 · BRIEFING</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ CONTENU PRINCIPAL ══ -->
+<main class="section">
+  <div class="wrap stack" style="max-width:880px;gap:28px">
+
+    <!-- BLOC REFORMULATION INITIALE -->
+    <div class="row row--top row--stack-m" style="gap:20px;align-items:stretch">
+      <svg class="mascot" width="80" height="80" viewBox="0 0 60 60" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:4px">
+        <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+        <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+        <circle cx="22" cy="32" r="3.6" fill="#1F2421"/>
+        <circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+        <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+
+      <div class="card card--strong stack grow" style="gap:16px;background:var(--paper)">
+        <div class="row row--between row--wrap" style="gap:8px">
+          <span class="eyebrow" id="user-idea-quote">// tu m'as écrit : « je veux un site où je peux faire des headshots »</span>
+          <span class="pill pill--teal pill--xs" id="reformulation-status"><span class="dot dot--live"></span> IA en écoute</span>
+        </div>
+
+        <h2 id="reformulation-heading" style="font-size:clamp(20px,2.8vw,26px);line-height:1.25">
+          Des gens envoient leur photo, ton site leur rend un portrait professionnel.
+        </h2>
+
+        <!-- FORMULAIRE ÉDITION SI PRÉCISION -->
+        <div id="precision-box" style="display:none;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:12px 14px">
+          <label class="label mono small" for="custom-idea-input" style="display:block;margin-bottom:6px">Ajuste la phrase exacte :</label>
+          <div class="row" style="gap:8px">
+            <input class="field grow" id="custom-idea-input" type="text" style="height:44px;font-size:14.5px">
+            <button class="btn btn--primary btn--sm" id="btn-save-precision" type="button">Appliquer</button>
+          </div>
+        </div>
+
+        <div class="row row--wrap" style="gap:10px" id="validation-buttons">
+          <button class="btn btn--primary" id="btn-confirm-idea" type="button">C'est ça</button>
+          <button class="btn btn--ghost" id="btn-refine-idea" type="button">Presque, je précise</button>
+          <button class="btn btn--ghost" id="btn-reset-idea" type="button" style="color:var(--muted)">Autre idée</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── QUESTION 1 : LA GÉNÉRATION ── -->
+    <div class="stack" style="gap:10px">
+      <div class="row row--baseline" style="gap:12px">
+        <h3 style="font-size:18px">1. Le cœur du produit, tu le génères comment&nbsp;?</h3>
+        <span class="eyebrow eyebrow--sm eyebrow--teal">// calibre les quêtes 04 et 05</span>
+      </div>
+      <div class="row row--wrap" style="gap:10px;align-items:stretch" id="group-generation">
+        <button class="choice" type="button" aria-pressed="false" data-val="built-in">Mon site le fabrique en direct</button>
+        <button class="choice" type="button" aria-pressed="true" data-val="ai-prompts">Des requêtes API / Prompts IA</button>
+        <button class="choice choice--vague" type="button" aria-pressed="false" data-val="unsure">Je ne sais pas encore</button>
+      </div>
+    </div>
+
+    <!-- ── QUESTION 2 : BUSINESS MODEL ── -->
+    <div class="stack" style="gap:10px">
+      <div class="row row--baseline" style="gap:12px">
+        <h3 style="font-size:18px">2. C'est gratuit ou payant dès le départ&nbsp;?</h3>
+        <span class="eyebrow eyebrow--sm eyebrow--teal">// calibre les quêtes 07 et 08 (Stripe)</span>
+      </div>
+      <div class="row row--wrap" style="gap:10px;align-items:stretch" id="group-pricing">
+        <button class="choice" type="button" aria-pressed="false" data-val="paid">Payant dès le début</button>
+        <button class="choice" type="button" aria-pressed="false" data-val="free-first">Gratuit pour accumuler du monde</button>
+        <button class="choice choice--vague" type="button" aria-pressed="true" data-val="unsure">Je ne sais pas encore</button>
+      </div>
+
+      <!-- CARTOUCHE D'ASSISTANCE INTELLIGENTE IA -->
+      <div class="card card--gold row row--top choice-feedback" id="pricing-feedback" style="gap:13px;padding:14px 18px">
+        <svg class="mascot" width="30" height="30" viewBox="0 0 60 60" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:2px">
+          <path d="M30 7v6" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="30" cy="5" r="3.5" fill="#8A3B52"/>
+          <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+          <circle cx="22" cy="32" r="3.6" fill="#1F2421"/>
+          <circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+          <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <p class="txt txt--sm" id="pricing-feedback-text" style="color:var(--gold-deep);margin:0">
+          <strong>Conseil par défaut :</strong> Pas de souci. Je pars sur une formule payante à 9 $/mois, c'est le modèle le plus rapide à brancher sur Stripe et le plus rentable dès le début. Tu pourras ajuster à tout moment.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── QUESTION 3 : L'OUTIL DE BUILD ── -->
+    <div class="stack" style="gap:10px">
+      <div class="row row--baseline" style="gap:12px">
+        <h3 style="font-size:18px">3. Tu construis avec quel outil&nbsp;?</h3>
+        <span class="eyebrow eyebrow--sm eyebrow--teal">// adapte 100% des prompts générés</span>
+      </div>
+      <div class="row row--wrap" style="gap:10px;align-items:stretch" id="group-tool">
+        <button class="choice" type="button" aria-pressed="true" data-val="lovable">Lovable</button>
+        <button class="choice" type="button" aria-pressed="false" data-val="cursor">Cursor</button>
+        <button class="choice" type="button" aria-pressed="false" data-val="bolt">Bolt.new</button>
+        <button class="choice choice--vague" type="button" aria-pressed="false" data-val="v0">v0 / Autre</button>
+      </div>
+      <div class="mono small" id="tool-note" style="color:var(--muted)">
+        // sur Lovable : aucun terme git ni terminal dans tes prompts. Tu copies, tu colles, ça build.
+      </div>
+    </div>
+
+    <!-- ── QUESTION 4 : LE TEMPS DISPONIBLE ── -->
+    <div class="stack" style="gap:10px">
+      <div class="row row--baseline" style="gap:12px">
+        <h3 style="font-size:18px">4. Tu as combien de temps à y consacrer par jour&nbsp;?</h3>
+        <span class="eyebrow eyebrow--sm eyebrow--teal">// calcule ta date de livraison estimée</span>
+      </div>
+      <div class="row row--wrap" style="gap:10px;align-items:stretch" id="group-time">
+        <button class="choice" type="button" aria-pressed="true" data-val="1-2h">1 à 2 h le soir</button>
+        <button class="choice" type="button" aria-pressed="false" data-val="3-4h">3 à 4 h par jour</button>
+        <button class="choice" type="button" aria-pressed="false" data-val="full">Plein temps (Sprint)</button>
+      </div>
+      <div class="mono small" id="time-note" style="color:var(--teal-dark);font-weight:700">
+        ⏱ Rythme calibré : 30 quêtes complétées en ~35 à 40 jours réels (1 quête par soir).
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ FOOTBAR ══ -->
+<div class="footbar">
+  <span class="eyebrow eyebrow--sm">// 4 questions nettes. Pas de blabla, on passe direct au plan.</span>
+  <div class="row" style="gap:12px">
+    <span class="pill pill--teal pill--xs" style="font-weight:700">+20 XP</span>
+    <button class="btn btn--primary" id="btn-generate-plan" type="button">Générer mon parcours →</button>
+  </div>
+</div>
+
+<!-- ══ SCRIPT DE DYNAMIQUE DU BRIEFING ══ -->
+<script>
+(function() {
+  // 1. Récupération de l'idée depuis l'URL ou fallback
+  const urlParams = new URLSearchParams(window.location.search);
+  const ideaParam = urlParams.get('idee') || urlParams.get('idea');
+
+  const quoteEl = document.getElementById('user-idea-quote');
+  const headingEl = document.getElementById('reformulation-heading');
+  const customInput = document.getElementById('custom-idea-input');
+  const precisionBox = document.getElementById('precision-box');
+  const statusEl = document.getElementById('reformulation-status');
+
+  if (ideaParam && ideaParam.trim().length > 0) {
+    const cleanIdea = ideaParam.trim();
+    quoteEl.innerText = `// tu m'as écrit : « ${cleanIdea} »`;
+    customInput.value = cleanIdea;
+
+    // Simulation de reformulation intelligente
+    if (/factur|devis|compta/i.test(cleanIdea)) {
+      headingEl.innerText = "Un outil où tes clients génèrent, envoient et encaissent leurs devis et factures sans friction.";
+    } else if (/photo|image|headshot|portrait/i.test(cleanIdea)) {
+      headingEl.innerText = "Des gens envoient leur photo, ton site leur rend un portrait professionnel.";
+    } else if (/recette|cuisine|meal/i.test(cleanIdea)) {
+      headingEl.innerText = "Une application où les utilisateurs planifient leurs repas de la semaine et génèrent leur liste de courses.";
+    } else {
+      headingEl.innerText = `Une application web complète permettant à tes utilisateurs de : ${cleanIdea.toLowerCase()}.`;
+    }
+  }
+
+  // 2. Gestion des boutons de validation d'idée
+  document.getElementById('btn-confirm-idea').addEventListener('click', function() {
+    statusEl.className = 'pill pill--green pill--xs';
+    statusEl.innerHTML = '<span class="dot dot--live"></span> Idée confirmée ✔';
+    precisionBox.style.display = 'none';
+  });
+
+  document.getElementById('btn-refine-idea').addEventListener('click', function() {
+    precisionBox.style.display = precisionBox.style.display === 'none' ? 'block' : 'none';
+    customInput.focus();
+  });
+
+  document.getElementById('btn-save-precision').addEventListener('click', function() {
+    if (customInput.value.trim().length > 0) {
+      headingEl.innerText = customInput.value.trim();
+      quoteEl.innerText = `// idée ajustée : « ${customInput.value.trim()} »`;
+      precisionBox.style.display = 'none';
+      statusEl.className = 'pill pill--green pill--xs';
+      statusEl.innerHTML = '<span class="dot dot--live"></span> Idée mise à jour ✔';
+    }
+  });
+
+  document.getElementById('btn-reset-idea').addEventListener('click', function() {
+    precisionBox.style.display = 'block';
+    customInput.value = '';
+    customInput.placeholder = 'Décris ton projet en une phrase...';
+    customInput.focus();
+  });
+
+  // 3. Gestion des boutons à choix unique
+  function setupChoiceGroup(groupId, onChange) {
+    const container = document.getElementById(groupId);
+    if (!container) return;
+    const buttons = container.querySelectorAll('.choice');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
+        if (onChange) onChange(btn.getAttribute('data-val'));
+      });
+    });
+  }
+
+  setupChoiceGroup('group-generation');
+
+  setupChoiceGroup('group-pricing', function(val) {
+    const feedbackBox = document.getElementById('pricing-feedback');
+    const feedbackText = document.getElementById('pricing-feedback-text');
+    feedbackBox.style.display = 'flex';
+
+    if (val === 'paid') {
+      feedbackText.innerHTML = "<strong>Excellente décision :</strong> On intègre Stripe dès les quêtes #07 et #08. Ton premier client paiera avant la fin de la saison 1.";
+    } else if (val === 'free-first') {
+      feedbackText.innerHTML = "<strong>Choix d'audience :</strong> Pas de Stripe d'entrée de jeu. Les quêtes s'orientent vers l'inscription rapide et la recommandation d'amis.";
+    } else {
+      feedbackText.innerHTML = "<strong>Conseil par défaut :</strong> Pas de souci. Je pars sur une formule payante à 9 $/mois, c'est le modèle le plus rapide à brancher sur Stripe et le plus rentable dès le début. Tu pourras ajuster à tout moment.";
+    }
+  });
+
+  setupChoiceGroup('group-tool', function(val) {
+    const toolNote = document.getElementById('tool-note');
+    if (val === 'lovable') {
+      toolNote.innerText = "// sur Lovable : aucun terme git ni terminal dans tes prompts. Tu copies, tu colles, ça build.";
+    } else if (val === 'cursor') {
+      toolNote.innerText = "// sur Cursor : prompts complets avec structure de fichiers, composants React et commandes propres.";
+    } else if (val === 'bolt') {
+      toolNote.innerText = "// sur Bolt : prompts orientés conteneurs WebContainer avec packages prêts à l'emploi.";
+    } else {
+      toolNote.innerText = "// prompts universels en français clair, adaptables à n'importe quel constructeur IA.";
+    }
+  });
+
+  setupChoiceGroup('group-time', function(val) {
+    const timeNote = document.getElementById('time-note');
+    if (val === '1-2h') {
+      timeNote.innerText = "⏱ Rythme calibré : 30 quêtes complétées en ~35 à 40 jours réels (1 quête par soir).";
+    } else if (val === '3-4h') {
+      timeNote.innerText = "⏱ Rythme soutenu : 30 quêtes complétées en ~20 à 25 jours (lancement rapide visé).";
+    } else {
+      timeNote.innerText = "⏱ Mode Sprint : 30 quêtes complétées en ~10 à 14 jours intensifs.";
+    }
+  });
+
+  // 4. Redirection vers plan.html en transmettant l'état
+  document.getElementById('btn-generate-plan').addEventListener('click', function() {
+    const tool = document.querySelector('#group-tool .choice[aria-pressed="true"]')?.getAttribute('data-val') || 'lovable';
+    const time = document.querySelector('#group-time .choice[aria-pressed="true"]')?.getAttribute('data-val') || '1-2h';
+    const idea = headingEl.innerText;
+
+    const targetUrl = `plan.html?idea=${encodeURIComponent(idea)}&tool=${encodeURIComponent(tool)}&time=${encodeURIComponent(time)}`;
+    window.location.href = targetUrl;
+  });
+})();
+</script>
+
+</body>
+</html>

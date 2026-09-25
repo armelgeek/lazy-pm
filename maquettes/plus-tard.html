@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LazyPM — plus tard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Karla:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .pt-lead { margin: 0; font-size: 15px; color: var(--ink-soft); max-width: 70ch; }
+
+  /* saisie */
+  .pt-capture { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 12px 20px; }
+  .pt-capture__main { display: flex; align-items: flex-start; gap: 11px; }
+  .pt-capture__main > svg { margin-top: 13px; flex-shrink: 0; }
+  .pt-capture__main .field { flex: 1 1 0; min-width: 0; border: none; background: transparent; min-height: 48px; padding: 12px 4px; font-size: 16px; resize: none; line-height: 1.45; }
+  .pt-capture__main .field:focus { outline: none; }
+  .pt-capture:focus-within { box-shadow: 0 6px 0 var(--teal); border-color: var(--teal); }
+  .pt-capture__opts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 2px dashed var(--line); }
+  .pt-kind { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); font: 700 12.5px var(--body); color: var(--muted); cursor: pointer; }
+  .pt-kind i { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  .pt-kind[data-kind="bug"] i { background: var(--rose); }
+  .pt-kind[data-kind="client"] i { background: var(--gold); }
+  .pt-kind[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
+  .pt-client { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pt-client[hidden] { display: none; }
+  .pt-client .field { height: 36px; width: 200px; max-width: 100%; }
+  .pt-client label.cancel { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 12px; color: var(--rose); cursor: pointer; }
+  .pt-client input[type="checkbox"] { accent-color: var(--rose); width: 16px; height: 16px; }
+  .pt-hint { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+
+  /* filtres */
+  .pt-tabs { display: inline-flex; gap: 4px; background: var(--sunk-2); border-radius: 12px; padding: 4px; align-self: flex-start; }
+  .pt-tab { height: 34px; padding: 0 14px; border: none; border-radius: 9px; background: transparent; font: 700 13.5px var(--body); color: var(--muted); cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+  .pt-tab .mono { font-size: 11.5px; color: var(--faint); }
+  .pt-tab[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 0 2px 0 var(--line); }
+
+  /* liste */
+  .pt-group { display: flex; flex-direction: column; gap: 8px; }
+  .pt-group[hidden] { display: none; }
+  .pt-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .later {
+    display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 14px;
+    background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 12px 14px 12px 12px;
+  }
+  .later:hover { border-color: var(--line-hard); }
+  .later__q {
+    display: grid; place-items: center; height: 40px; border-radius: 10px;
+    font-family: var(--mono); font-size: 12px; font-weight: 800;
+    background: var(--teal-pale); color: var(--teal-dark);
+  }
+  .later--bug .later__q { background: var(--rose-pale); color: var(--rose-text); }
+  .later__q--demand { background: var(--gold); color: var(--ink); font-size: 14px; }
+  .later__title { display: block; font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .later__meta { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+  .later__side { display: flex; align-items: center; gap: 8px; justify-self: end; }
+  .later--new { animation: pt-in .45s ease; border-color: var(--teal); }
+  .later--top { border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); }
+  @keyframes pt-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+  /* citations clients */
+  .quotes { grid-column: 2 / -1; }
+  .quotes summary { list-style: none; cursor: pointer; font-family: var(--mono); font-size: 11.5px; font-weight: 700; color: var(--teal-dark); display: inline-flex; align-items: center; gap: 6px; }
+  .quotes summary::-webkit-details-marker { display: none; }
+  .quotes[open] summary .chev { transform: rotate(180deg); }
+  .quotes ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .quote { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 10px; background: var(--sunk); border-radius: 10px; padding: 9px 12px; font-size: 13.5px; }
+  .quote .mono { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+  .quote--cancel { background: var(--rose-pale); color: var(--rose-text); }
+  .quote--cancel small { display: block; font-family: var(--mono); font-size: 10.5px; color: var(--rose); margin-top: 2px; }
+
+  /* frise #12 → #22 → #29 */
+  .pt-road { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .pt-road li { display: grid; grid-template-columns: 38px 1fr; gap: 12px; position: relative; padding-bottom: 16px; }
+  .pt-road li:last-child { padding-bottom: 0; }
+  .pt-road li:not(:last-child)::before { content: ''; position: absolute; left: 18px; top: 36px; bottom: 2px; width: 2px; background: var(--term-line); }
+  .pt-road__n { width: 38px; height: 34px; border-radius: 9px; display: grid; place-items: center; font-family: var(--mono); font-size: 12px; font-weight: 800; background: var(--term-line); color: var(--term-pale); }
+  .pt-road li:first-child .pt-road__n { background: var(--card); color: var(--ink); }
+  .pt-road li:last-child .pt-road__n { background: var(--gold); color: var(--ink); }
+  .pt-road strong { display: block; color: var(--card); font-size: 14px; }
+  .pt-road span.txt { display: block; color: var(--term-text); font-size: 12.5px; line-height: 1.45; margin-top: 2px; }
+
+  /* quête bonus */
+  .bonus { border: none; padding: 0; margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(460px, 100vw); background: var(--paper, var(--card)); box-shadow: -12px 0 40px rgba(0,0,0,.25); }
+  .bonus::backdrop { background: rgba(31, 36, 33, .45); }
+  .bonus[open] { display: flex; flex-direction: column; animation: bonus-in .25s ease; }
+  @keyframes bonus-in { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .bonus__head { padding: 18px 20px 14px; border-bottom: 2px solid var(--line); display: flex; gap: 12px; align-items: flex-start; }
+  .bonus__head h2 { font-size: 19px; margin: 4px 0 0; line-height: 1.25; }
+  .bonus__close { margin-left: auto; width: 36px; height: 36px; border-radius: 10px; border: none; background: var(--sunk); cursor: pointer; display: grid; place-items: center; flex-shrink: 0; }
+  .bonus__body { padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .bonus .term { border-radius: 14px; padding: 14px 16px; gap: 10px; }
+  .bonus .term pre { font-size: 12px; line-height: 1.6; }
+  .bonus__checks { display: flex; flex-direction: column; gap: 6px; }
+  .bonus__checks .check { padding: 9px 12px; font-size: 14px; cursor: pointer; }
+  .bonus__foot { padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px)); border-top: 2px solid var(--line); display: flex; gap: 8px; align-items: center; }
+  .bonus__foot .btn--primary { flex: 1; }
+
+  @media (max-width: 620px) {
+    .pt-hint { display: none; }
+    .later { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; align-items: start; }
+    .later__side { grid-column: 2; justify-self: start; flex-wrap: wrap; }
+    .later__side:empty { display: none; }
+    .quotes { grid-column: 1 / -1; }
+    .quote { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    .pt-tabs { align-self: stretch; }
+    .pt-tab { flex: 1; justify-content: center; padding: 0 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+<nav class="side" aria-label="Navigation">
+  <a class="brand" href="index.html">
+    <svg class="mascot" width="28" height="28" viewBox="0 0 60 60" fill="none" aria-hidden="true">
+      <path d="M30 7v6" stroke="#FAF9F4" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="30" cy="5" r="3.5" fill="#B0605F"/>
+      <path d="M11 31a19 19 0 0 1 38 0v11a7 7 0 0 1-7 7H18a7 7 0 0 1-7-7Z" fill="#C8952A"/>
+      <circle cx="22" cy="32" r="3.6" fill="#1F2421"/><circle cx="38" cy="32" r="3.6" fill="#1F2421"/>
+      <path d="M24 42c4 3 8 3 12 0" stroke="#1F2421" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <span>LAZYPM.</span>
+  </a>
+
+  <!-- Sélecteur de projet compact façon étiquette -->
+  <div class="side__project" role="button" tabindex="0" title="Changer de projet">
+    <div class="side__project-name">
+      <span class="dot dot--live" title="Projet en cours"></span>
+      <span>AI Headshots</span>
+    </div>
+    <svg class="side__project-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+
+  <!-- Groupe : Parcours -->
+  <span class="side__group-label">// PARCOURS</span>
+  <a class="side__link" href="chemin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19c4-2 4-6 8-8s4-6 8-8"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="3" r="2"/></svg>
+    <span>Le chemin</span>
+  </a>
+  <a class="side__link" href="quete.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/></svg>
+    <span>Quête en cours</span>
+    <span class="side__badge side__badge--teal">#12</span>
+  </a>
+  <a class="side__link" href="checkin.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <span>Check-in</span>
+    <span class="side__badge side__badge--rose">ce soir</span>
+  </a>
+
+  <!-- Groupe : Outils -->
+  <span class="side__group-label">// OUTILS</span>
+  <a class="side__link" href="plus-tard.html" aria-current="page">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h9"/></svg>
+    <span>Plus tard</span>
+    <span class="side__badge">9</span>
+  </a>
+  <a class="side__link side__link--desktop-only" href="plan-en-cours.html">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>Revue du plan</span>
+  </a>
+
+  <!-- Profil utilisateur bas de barre -->
+  <div class="side__profile">
+    <a class="side__profile-card" href="compte.html">
+      <div class="side__avatar">A</div>
+      <div class="side__profile-info">
+        <span class="side__profile-name">Armel</span>
+        <span class="eyebrow eyebrow--sm" style="color:var(--term-dim);font-size:10px">MENSUEL · 9 $</span>
+      </div>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+  </div>
+</nav>
+<div class="main">
+
+<div class="main-header">
+<div class="topbar topbar--compact">
+  <div class="row" style="gap:14px;align-items:center">
+    <a class="btn btn--icon" href="chemin.html" aria-label="Retour au chemin" style="background:var(--sunk);box-shadow:none;border-radius:11px;width:38px;height:38px"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4A4840" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="14 5 7 12 14 19"/></svg></a>
+    <div class="stack-s" style="gap:2px">
+      <span class="mono topbar__kicker" style="font-size:10px;color:var(--faint)">OUTILS</span>
+      <span class="mono" style="font-size:14px;font-weight:700">Plus tard<span style="color:var(--faint)"> · <span id="total-count">9</span> notes</span></span>
+    </div>
+  </div>
+  <a href="quete.html" class="btn btn--ghost btn--sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polygon points="10 8 16 12 10 16 10 8" fill="#1F2421"/></svg> <span class="btn__label">Reprendre la quête #12</span></a>
+</div>
+</div>
+
+<main class="pane stack" style="gap:18px">
+
+<header class="stack-s" style="gap:6px">
+  <span class="eyebrow eyebrow--sm">// ce qui t’est venu en construisant, et ce que tes clients demandent</span>
+  <h1 style="font-size:clamp(26px,4vw,36px);margin:0">Plus tard</h1>
+  <p class="pt-lead">Note-le, oublie-le, reprends ta quête. Les idées sont triées par ce que tes clients demandent&nbsp;: la n°1 devient ta quête #29.</p>
+</header>
+
+<form class="card card--strong pt-capture" id="capture-form">
+  <div class="pt-capture__main">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+    <label class="label" for="capture" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ta note</label>
+    <textarea class="field" id="capture" rows="1" autocomplete="off" placeholder="une idée, un truc qui marche pas…"></textarea>
+    <button class="btn btn--primary btn--sm" type="submit" style="height:46px;padding:0 20px;font-size:15px">Garder</button>
+  </div>
+  <div class="pt-capture__opts" role="group" aria-label="Type de note">
+    <button class="pt-kind" type="button" data-kind="idea" aria-pressed="true"><i></i>Idée</button>
+    <button class="pt-kind" type="button" data-kind="bug" aria-pressed="false"><i></i>À réparer</button>
+    <button class="pt-kind" type="button" data-kind="client" aria-pressed="false"><i></i>Réponse d’un client</button>
+    <span class="pt-hint" id="capture-hint">notée pendant #12 · Entrée pour garder</span>
+  </div>
+  <div class="pt-client" id="client-fields" hidden>
+    <label class="label" for="client-who" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Qui a répondu</label>
+    <input class="field field--sunk" id="client-who" type="text" placeholder="qui ? (prénom ou email)" autocomplete="off">
+    <label class="cancel"><input type="checkbox" id="client-cancelled"> a annulé</label>
+  </div>
+</form>
+
+<div class="row row--top row--stack-m" style="gap:18px;align-items:flex-start">
+
+<div class="stack grow" style="gap:14px;min-width:0">
+  <div class="pt-tabs" role="tablist" aria-label="Filtrer">
+    <button class="pt-tab" type="button" role="tab" aria-selected="true" data-filter="all">Tout <span class="mono" data-count="all">9</span></button>
+    <button class="pt-tab" type="button" role="tab" aria-selected="false" data-filter="bug">À réparer <span class="mono" data-count="bug">2</span></button>
+    <button class="pt-tab" type="button" role="tab" aria-selected="false" data-filter="idea">Idées <span class="mono" data-count="idea">7</span></button>
+  </div>
+
+  <section class="pt-group" data-group="fresh" hidden>
+    <div class="row" style="gap:11px"><span class="eyebrow eyebrow--sm eyebrow--gold">RÉPONSES À RANGER · <span data-count="fresh">0</span></span><span class="rule"></span></div>
+    <ul class="pt-list" id="fresh-list"></ul>
+    <span class="mono" style="font-size:11px;color:var(--muted)">LazyPM les range avec l’idée qui leur ressemble au prochain check-in.</span>
+  </section>
+
+  <section class="pt-group" data-group="bug">
+    <div class="row" style="gap:11px"><span class="eyebrow eyebrow--sm eyebrow--rose">À RÉPARER · <span data-count="bug">2</span></span><span class="rule"></span></div>
+    <ul class="pt-list">
+      <li class="later later--bug" data-bonus="copy">
+        <span class="later__q" title="noté pendant la quête #05">#05</span>
+        <div><span class="later__title">Le bouton copier marche pas sur Safari iPhone</span><span class="later__meta">noté il y a 3 jours</span></div>
+        <div class="later__side"><button class="btn btn--xs" type="button" data-open-bonus>Réparer maintenant</button></div>
+      </li>
+      <li class="later later--bug" data-bonus="rotate">
+        <span class="later__q" title="noté pendant la quête #03">#03</span>
+        <div><span class="later__title">Les photos iPhone arrivent parfois tournées</span><span class="later__meta">noté il y a 6 jours</span></div>
+        <div class="later__side"><button class="btn btn--xs" type="button" data-open-bonus>Réparer maintenant</button></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="pt-group" data-group="idea">
+    <div class="row" style="gap:11px;padding-top:4px"><span class="eyebrow eyebrow--sm eyebrow--teal">IDÉES · <span data-count="idea">7</span> · triées par demande</span><span class="rule"></span></div>
+    <ul class="pt-list">
+      <li class="later later--top">
+        <span class="later__q later__q--demand" title="5 clients l’ont demandé">×5</span>
+        <div><span class="later__title">Un format vertical pour les stories</span><span class="later__meta">5 clients · dont 1 qui est parti à cause de ça</span></div>
+        <div class="later__side"><span class="tag tag--gold">N°1 · QUÊTE #29</span></div>
+        <details class="quotes"><summary>voir ce qu’ils disent <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></summary><ul><li class="quote"><span class="mono">marie.k</span><span>« Je poste surtout en story, le carré me sert à rien »</span></li><li class="quote"><span class="mono">thomas.r</span><span>« Il faudrait du 9:16, je recadre à la main à chaque fois »</span></li><li class="quote quote--cancel"><span class="mono">jules.b</span><span>« Pas de vertical, j’ai pris un autre outil »<small>a annulé son abonnement</small></span></li><li class="quote"><span class="mono">toi · #04</span><span>« Format vertical pour les stories Instagram »</span></li></ul></details>
+      </li>
+      <li class="later">
+        <span class="later__q later__q--demand" style="background:var(--gold-pale);color:var(--gold-deep)" title="2 clients l’ont demandé">×2</span>
+        <div><span class="later__title">Pouvoir retoucher le prompt avant de le copier</span><span class="later__meta">2 clients</span></div>
+        <div class="later__side"></div>
+        <details class="quotes"><summary>voir ce qu’ils disent <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></summary><ul><li class="quote"><span class="mono">sofia.n</span><span>« J’aimerais changer deux mots avant de copier »</span></li><li class="quote"><span class="mono">amine.d</span><span>« Le prompt est bien mais je veux l’ajuster »</span></li></ul></details>
+      </li>
+      <li class="later">
+        <span class="later__q later__q--demand" style="background:var(--gold-pale);color:var(--gold-deep)" title="1 client l’a demandé">×1</span>
+        <div><span class="later__title">Une version en anglais</span><span class="later__meta">1 client</span></div>
+        <div class="later__side"></div>
+        <details class="quotes"><summary>voir ce qu’ils disent <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></summary><ul><li class="quote"><span class="mono">peter.w</span><span>« Any chance to get it in English? »</span></li></ul></details>
+      </li>
+      <li class="later">
+        <span class="later__q" title="noté pendant la quête #04">#04</span>
+        <div><span class="later__title">Laisser choisir le style avant de générer</span><span class="later__meta">ton idée · il y a 2 jours</span></div>
+        <div class="later__side"><span class="pill pill--green pill--xs">déjà prévu en #25</span></div>
+      </li>
+      <li class="later">
+        <span class="later__q" title="noté pendant la quête #07">#07</span>
+        <div><span class="later__title">Un mode « équipe » pour les agences</span><span class="later__meta">ton idée · il y a 4 jours</span></div>
+        <div class="later__side"><span class="pill pill--xs">saison 2</span></div>
+      </li>
+      <li class="later">
+        <span class="later__q" title="noté pendant la quête #09">#09</span>
+        <div><span class="later__title">Refaire le logo</span><span class="later__meta">ton idée · personne ne l’a demandé</span></div>
+        <div class="later__side"></div>
+      </li>
+      <li class="later">
+        <span class="later__q" title="noté pendant la quête #10">#10</span>
+        <div><span class="later__title">Parler à quelqu’un qui a déjà lancé ça</span><span class="later__meta">ton idée · il y a 4 jours</span></div>
+        <div class="later__side"></div>
+      </li>
+    </ul>
+  </section>
+</div>
+
+<aside class="stack" style="flex:0 0 300px;max-width:100%;gap:12px">
+  <div class="card card--dark stack" style="gap:16px">
+    <span class="eyebrow eyebrow--sm eyebrow--dim">// ce que devient une note</span>
+    <ol class="pt-road">
+      <li><span class="pt-road__n">#12</span><div><strong>Ce soir</strong><span class="txt">Tu la notes ici et tu reprends ta quête. Ce qui casse se répare tout de suite.</span></div></li>
+      <li><span class="pt-road__n">#22</span><div><strong>Le tri</strong><span class="txt">Tu écris à tes clients et tu colles leurs réponses. Chaque idée gardée devient une quête, avec son prompt.</span></div></li>
+      <li><span class="pt-road__n">#29</span><div><strong>La livraison</strong><span class="txt">Tu construis la n°1. Ce sont tes clients qui la choisissent, pas toi.</span></div></li>
+    </ol>
+  </div>
+
+  <div class="card card--flat stack-s" style="gap:10px">
+    <span class="eyebrow eyebrow--sm">// tes clients</span>
+    <div class="row" style="gap:16px">
+      <div class="stat"><span class="num num--m">18</span><span class="stat__lbl">clients</span></div>
+      <div class="stat"><span class="num num--m" id="n-replied">9</span><span class="stat__lbl">ont répondu</span></div>
+      <div class="stat"><span class="num num--m" style="color:var(--rose)">2</span><span class="stat__lbl">partis</span></div>
+    </div>
+    <p class="txt txt--sm" style="margin:0"><span id="n-silent">9</span> ne t’ont pas encore répondu. Envoie-leur ce message depuis ta boîte mail, puis colle leur réponse ci-dessus.</p>
+    <div style="background:var(--sunk);border-radius:12px;padding:12px 14px">
+      <p class="txt txt--sm" id="msg-text" style="margin:0;color:var(--ink);font-style:italic">« Salut [prénom], tu utilises AI Headshots depuis quelques jours. C’est quoi le truc qui te manque le plus&nbsp;? »</p>
+    </div>
+    <button class="btn btn--ghost btn--sm btn--block" type="button" id="copy-msg" style="height:42px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M6 15H4.5A1.5 1.5 0 0 1 3 13.5V4.5A1.5 1.5 0 0 1 4.5 3h9A1.5 1.5 0 0 1 15 4.5V6"/></svg> <span>Copier le message</span></button>
+  </div>
+
+  <div class="card card--green stack-s" style="gap:4px">
+    <span class="eyebrow eyebrow--sm" style="color:var(--green-text)">// ce qu’ils aiment · ×4</span>
+    <p class="txt txt--sm" style="margin:0;color:var(--green-text);font-weight:700">« Les prompts sont vraiment bons »</p>
+    <span class="mono" style="font-size:11px;color:var(--green)">ne touche pas à ça</span>
+  </div>
+</aside>
+</div>
+</main>
+
+<div class="footbar">
+  <span class="eyebrow eyebrow--sm">// rien ici ne t’est rappelé avant la quête #22</span>
+  <a class="mono" href="chemin.html" style="font-size:12.5px;font-weight:700;color:var(--ink);text-decoration:none">retour au chemin <span style="color:var(--teal)">→</span></a>
+</div>
+
+</div>
+</div>
+
+<!-- QUÊTE BONUS : une note « à réparer » devient un prompt prêt à coller -->
+<dialog class="bonus" id="bonus" aria-labelledby="bonus-title">
+  <div class="bonus__head">
+    <div>
+      <span class="eyebrow eyebrow--sm eyebrow--rose">// quête bonus · pas d’XP, ton plan ne bouge pas</span>
+      <h2 id="bonus-title">…</h2>
+      <span class="mono" id="bonus-origin" style="font-size:11.5px;color:var(--muted)"></span>
+    </div>
+    <button class="bonus__close" type="button" data-close-bonus aria-label="Fermer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg></button>
+  </div>
+  <div class="bonus__body">
+    <div class="term">
+      <div class="row row--between" style="align-items:center">
+        <span class="eyebrow eyebrow--sm eyebrow--dim">prompt · à coller dans Lovable</span>
+        <button class="btn btn--gold btn--xs" type="button" id="bonus-copy" style="height:30px;padding:0 11px;font-size:12px"><span>Copier</span></button>
+      </div>
+      <pre id="bonus-prompt"></pre>
+    </div>
+    <div class="stack-s" style="gap:8px">
+      <span class="eyebrow eyebrow--sm">// pour savoir que c’est réparé</span>
+      <div class="bonus__checks" id="bonus-checks"></div>
+    </div>
+    <p class="txt txt--sm" style="margin:0;color:var(--muted)">LazyPM a écrit ce prompt à partir de ta note, de la quête pendant laquelle tu l’as prise et de ce qui est déjà construit.</p>
+  </div>
+  <div class="bonus__foot">
+    <button class="btn btn--bare btn--sm" type="button" data-close-bonus style="box-shadow:none">Plus tard</button>
+    <button class="btn btn--primary btn--sm" type="button" id="bonus-done">C’est réparé</button>
+  </div>
+</dialog>
+<script>
+const esc = t => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const tick = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2421" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12 10 18 20 6"/></svg>';
+let kind = 'idea';
+let filter = 'all';
+
+// ── compteurs et filtres
+function counts() {
+  const n = {
+    bug: document.querySelectorAll('[data-group="bug"] .later').length,
+    idea: document.querySelectorAll('[data-group="idea"] .later').length,
+    fresh: document.querySelectorAll('#fresh-list .later').length,
+  };
+  n.all = n.bug + n.idea;
+  document.querySelectorAll('[data-count]').forEach(el => el.textContent = n[el.dataset.count]);
+  document.getElementById('total-count').textContent = n.all;
+  document.querySelector('[data-group="fresh"]').hidden = !n.fresh || filter === 'bug';
+  const badge = document.querySelector('.side__link[aria-current="page"] .side__badge');
+  if (badge) badge.textContent = n.all;
+}
+
+function applyFilter() {
+  document.querySelectorAll('.pt-tab').forEach(t => t.setAttribute('aria-selected', t.dataset.filter === filter));
+  document.querySelectorAll('.pt-group[data-group="bug"], .pt-group[data-group="idea"]').forEach(g => g.hidden = filter !== 'all' && g.dataset.group !== filter);
+  counts();
+}
+document.querySelectorAll('.pt-tab').forEach(t => t.addEventListener('click', () => { filter = t.dataset.filter; applyFilter(); }));
+
+// ── saisie : idée, à réparer, ou réponse d'un client
+const input = document.getElementById('capture');
+const hints = { idea: 'notée pendant #12 · Entrée pour garder', bug: 'notée pendant #12 · tu pourras la réparer tout de suite', client: 'colle sa réponse telle quelle' };
+const placeholders = { idea: 'une idée, un truc qui marche pas…', bug: 'ce qui marche pas, en une phrase…', client: '« Franchement j’aimerais pouvoir… »' };
+document.querySelectorAll('.pt-kind').forEach(b => b.addEventListener('click', () => {
+  kind = b.dataset.kind;
+  document.querySelectorAll('.pt-kind').forEach(x => x.setAttribute('aria-pressed', x === b));
+  document.getElementById('client-fields').hidden = kind !== 'client';
+  document.getElementById('capture-hint').textContent = hints[kind];
+  input.placeholder = placeholders[kind];
+  input.rows = kind === 'client' ? 3 : 1;
+  input.focus();
+}));
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey && kind !== 'client') { e.preventDefault(); document.getElementById('capture-form').requestSubmit(); }
+});
+
+function row(cls, badge, title, meta, side) {
+  const li = document.createElement('li');
+  li.className = 'later later--new ' + cls;
+  li.innerHTML = '<span class="later__q">' + badge + '</span><div><span class="later__title">' + title + '</span><span class="later__meta">' + meta + '</span></div><div class="later__side">' + side + '</div>';
+  return li;
+}
+
+document.getElementById('capture-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) { input.focus(); return; }
+  if (kind === 'client') {
+    const who = document.getElementById('client-who'), cancelled = document.getElementById('client-cancelled');
+    const li = row('', '“', '« ' + esc(text) + ' »', esc(who.value.trim() || 'anonyme') + (cancelled.checked ? ' · a annulé' : '') + ' · à l’instant', '');
+    if (cancelled.checked) li.style.borderColor = 'var(--rose)';
+    li.querySelector('.later__q').style.cssText = 'background:var(--gold-pale);color:var(--gold-deep);font-size:20px';
+    document.getElementById('fresh-list').prepend(li);
+    const replied = document.getElementById('n-replied'), silent = document.getElementById('n-silent');
+    replied.textContent = +replied.textContent + 1;
+    silent.textContent = Math.max(0, +silent.textContent - 1);
+    who.value = ''; cancelled.checked = false;
+    if (filter === 'bug') { filter = 'all'; applyFilter(); }
+  } else {
+    const side = kind === 'bug' ? '<button class="btn btn--xs" type="button" data-open-bonus>Réparer maintenant</button>' : '';
+    const li = row(kind === 'bug' ? 'later--bug' : '', '#12', esc(text), 'noté à l’instant', side);
+    const list = document.querySelector('.pt-group[data-group="' + kind + '"] .pt-list');
+    if (kind === 'bug') list.prepend(li);
+    else {
+      // une idée à toi se range après celles que des clients demandent
+      const firstOwn = [...list.children].find(x => !x.querySelector('.later__q--demand'));
+      firstOwn ? firstOwn.before(li) : list.append(li);
+    }
+    if (filter !== 'all' && filter !== kind) { filter = 'all'; applyFilter(); }
+  }
+  input.value = '';
+  counts();
+});
+
+// ── message à envoyer aux clients
+const copyMsg = document.getElementById('copy-msg');
+copyMsg.addEventListener('click', () => {
+  navigator.clipboard?.writeText(document.getElementById('msg-text').innerText.replace(/^« | »$/g, '')).catch(() => {});
+  copyMsg.querySelector('span').textContent = 'Copié ✓';
+  setTimeout(() => copyMsg.querySelector('span').textContent = 'Copier le message', 2000);
+});
+
+// ── quête bonus : la note devient un prompt + de quoi vérifier
+const PROMPTS = {
+  copy: {
+    prompt: 'Sur Safari iPhone, le bouton « Copier » du prompt généré ne copie rien.\n\nCorrige-le :\n- utilise navigator.clipboard.writeText\n- si ça échoue, repli : sélectionne le texte dans un champ caché et document.execCommand("copy")\n- affiche « Copié ✓ » pendant 2 secondes quand ça a marché\n\nNe change rien d’autre dans la page.',
+    checks: ['Testé sur un vrai iPhone, dans Safari', 'Le texte collé ailleurs est complet', 'Le bouton affiche « Copié ✓ »'],
+  },
+  rotate: {
+    prompt: 'Certaines photos envoyées depuis un iPhone arrivent tournées de 90°.\n\nCorrige-le :\n- à l’envoi, lis l’orientation EXIF de l’image\n- redresse l’image avant de la sauvegarder et de l’afficher\n- garde la qualité d’origine\n\nNe change rien d’autre.',
+    checks: ['Une photo portrait prise sur iPhone arrive droite', 'Une photo paysage arrive droite', 'Une photo de la pellicule arrive droite'],
+  },
+};
+const bonus = document.getElementById('bonus');
+let current = null;
+
+function openBonus(li) {
+  current = li;
+  const title = li.querySelector('.later__title').textContent;
+  const data = PROMPTS[li.dataset.bonus] || {
+    prompt: 'Dans mon app AI Headshots : ' + title + '.\n\nTrouve la cause et corrige-la sans toucher au reste.\nExplique en une phrase ce que tu as changé.',
+    checks: ['Tu as reproduit le problème avant de coller le prompt', 'Le problème ne se produit plus', 'Rien d’autre n’a cassé'],
+  };
+  document.getElementById('bonus-title').textContent = title;
+  document.getElementById('bonus-origin').textContent = 'noté pendant la quête ' + li.querySelector('.later__q').textContent;
+  document.getElementById('bonus-prompt').textContent = data.prompt;
+  document.getElementById('bonus-checks').innerHTML = data.checks.map(c => '<label class="check"><span class="check__box"></span> ' + esc(c) + '</label>').join('');
+  document.querySelectorAll('#bonus-checks .check').forEach(c => c.addEventListener('click', e => {
+    e.preventDefault();
+    const on = c.classList.toggle('check--done');
+    c.querySelector('.check__box').innerHTML = on ? tick : '';
+  }));
+  bonus.showModal();
+}
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-open-bonus]');
+  if (btn) openBonus(btn.closest('.later'));
+  if (e.target.closest('[data-close-bonus]')) bonus.close();
+});
+bonus.addEventListener('click', e => { if (e.target === bonus) bonus.close(); });
+document.getElementById('bonus-copy').addEventListener('click', e => {
+  navigator.clipboard?.writeText(document.getElementById('bonus-prompt').textContent).catch(() => {});
+  const s = e.currentTarget.querySelector('span');
+  s.textContent = 'Copié ✓';
+  setTimeout(() => s.textContent = 'Copier', 2000);
+});
+document.getElementById('bonus-done').addEventListener('click', () => {
+  current?.remove();
+  bonus.close();
+  counts();
+});
+
+counts();
+</script>
+</body>
+</html>
