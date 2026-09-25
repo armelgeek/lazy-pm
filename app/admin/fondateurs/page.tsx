@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,7 @@ interface Founder {
   created_at: string;
 }
 
-export default function Fondateurs() {
+function FondateursContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
@@ -146,5 +146,13 @@ export default function Fondateurs() {
         </button>
       </p>
     </div>
+  );
+}
+
+export default function Fondateurs() {
+  return (
+    <Suspense fallback={<div style={{ padding: '40px 20px' }}>Chargement...</div>}>
+      <FondateursContent />
+    </Suspense>
   );
 }
