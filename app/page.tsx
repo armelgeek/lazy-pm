@@ -144,16 +144,16 @@ export default function Home() {
                 <div className="hero__progress">
                   <div className="row row--between">
                     <span className="ticket">day 24 / 30</span>
-                    <span className="ticket" style={{ color: 'var(--gold-dark)' }}>80%</span>
+                    <span className="ticket" style={{ color: '#666' }}>80%</span>
                   </div>
                   <div className="hero__steps" aria-hidden="true">
                     <i className="on"></i><i className="on"></i><i className="on"></i><i className="on"></i>
                     <i className="on"></i><i className="on"></i><i className="on"></i><i className="on"></i>
-                    <i className="on"></i><i className="on"></i><i className="on boss"></i><i className="on"></i>
                     <i className="on"></i><i className="on"></i><i className="on"></i><i className="on"></i>
-                    <i className="on"></i><i className="on"></i><i className="on boss"></i><i className="on"></i>
+                    <i className="on"></i><i className="on"></i><i className="on"></i><i className="on"></i>
+                    <i className="on"></i><i className="on"></i><i className="on"></i><i className="on"></i>
                     <i className="on"></i><i className="on"></i><i className="on"></i><i className="now"></i>
-                    <i></i><i></i><i></i><i></i><i></i><i className="boss"></i>
+                    <i></i><i></i><i></i><i></i><i></i><i></i>
                   </div>
                 </div>
 
