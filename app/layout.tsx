@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import "../public/styles.css";
 
 export const metadata: Metadata = {
-  title: "ShipInDays — de l'idée au premier client en 30 jours",
-  description: "Finis ton produit en 30 jours. Chaque jour une quête, le prompt exact à coller, et ton premier client.",
+  title: "ShipInDays — Ship Your Product in 30 Days",
+  description: "Turn your idea into a shipped product in 30 days. One task per day, the exact prompt to paste, and your first customer.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

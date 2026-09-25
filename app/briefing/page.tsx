@@ -5,10 +5,10 @@ import { useState, Suspense } from 'react';
 
 function BriefingContent() {
   const searchParams = useSearchParams();
-  const ideeInitiale = searchParams.get('idee') || '';
-  const sourceInitiale = searchParams.get('source') || 'direct';
+  const ideaInitial = searchParams.get('idea') || '';
+  const sourceInitial = searchParams.get('source') || 'direct';
   const [email, setEmail] = useState('');
-  const [idee, setIdee] = useState(ideeInitiale);
+  const [idea, setIdea] = useState(ideaInitial);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -21,21 +21,21 @@ function BriefingContent() {
       const res = await fetch('/api/founders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, idee, source: sourceInitiale }),
+        body: JSON.stringify({ email, idee: idea, source: sourceInitial }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data.error || 'Une erreur est survenue');
+        setMessage(data.error || 'An error occurred');
         return;
       }
 
-      setMessage('✅ Ton idée a bien été enregistrée !');
+      setMessage('✅ Your idea has been saved! Check your email.');
       setEmail('');
-      setIdee('');
+      setIdea('');
     } catch (err) {
-      setMessage('❌ Erreur de connexion');
+      setMessage('❌ Connection error');
     } finally {
       setLoading(false);
     }
@@ -43,15 +43,20 @@ function BriefingContent() {
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1>Décris ton idée</h1>
+      <h1>Tell us your idea</h1>
+      <p style={{ color: '#666', marginBottom: '30px' }}>
+        We'll turn it into a 30-day plan to ship your product.
+      </p>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="idee">Ton idée</label>
+          <label htmlFor="idea" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Your idea
+          </label>
           <textarea
-            id="idee"
-            value={idee}
-            onChange={(e) => setIdee(e.target.value)}
-            placeholder="Décris ton idée..."
+            id="idea"
+            value={idea}
+            onChange={(e) => setIdea(e.target.value)}
+            placeholder="I want to build..."
             required
             style={{
               width: '100%',
@@ -59,18 +64,21 @@ function BriefingContent() {
               minHeight: '100px',
               borderRadius: '8px',
               border: '1px solid #ddd',
+              fontFamily: 'inherit',
             }}
           />
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <label htmlFor="email">Ton email</label>
+          <label htmlFor="email" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Your email
+          </label>
           <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="toi@exemple.com"
+            placeholder="you@example.com"
             required
             style={{
               width: '100%',
@@ -94,7 +102,7 @@ function BriefingContent() {
             cursor: loading ? 'not-allowed' : 'pointer',
           }}
         >
-          {loading ? 'Enregistrement...' : 'Enregistrer mon idée'}
+          {loading ? 'Saving...' : 'Save my idea'}
         </button>
 
         {message && (
@@ -117,7 +125,7 @@ function BriefingContent() {
 
 export default function Briefing() {
   return (
-    <Suspense fallback={<div>Chargement...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <BriefingContent />
     </Suspense>
   );

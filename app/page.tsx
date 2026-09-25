@@ -8,20 +8,19 @@ export default function Home() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const idee = formData.get('idee') as string;
+    const idea = formData.get('idea') as string;
     const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
     const source = searchParams.get('utm_source') || 'direct';
-    router.push(`/briefing?idee=${encodeURIComponent(idee)}&source=${encodeURIComponent(source)}`);
+    router.push(`/briefing?idea=${encodeURIComponent(idea)}&source=${encodeURIComponent(source)}`);
   };
 
   return (
     <div className="landing">
-      <a className="skip-link" href="#contenu">
-        Aller au contenu
+      <a className="skip-link" href="#content">
+        Skip to content
       </a>
       <div className="ea-bar">
-        <span className="dot dot--live"></span> Saison 1 en accès anticipé · les 3 premières quêtes
-        sont ouvertes · <a href="#fondateurs">20 places au prix fondateur</a>
+        <span className="dot dot--live"></span> Early access · 3 free days to validate your idea · <a href="#founders">Founder spots available</a>
       </div>
 
       <header className="nav" id="nav">
@@ -45,61 +44,60 @@ export default function Home() {
             </svg>
             SHIPINDAYS.
             <span className="pill pill--green pill--xs">
-              <span className="dot dot--live"></span> accès anticipé
+              <span className="dot dot--live"></span> Early access
             </span>
           </a>
-          <nav className="nav__links" aria-label="Principale">
-            <a className="nav__link" href="#parcours">
-              Le parcours
+          <nav className="nav__links" aria-label="Main">
+            <a className="nav__link" href="#journey">
+              The journey
             </a>
-            <a className="nav__link" href="#tarif">
-              Tarif
+            <a className="nav__link" href="#pricing">
+              Pricing
             </a>
-            <a className="nav__link" href="#questions">
-              Questions
+            <a className="nav__link" href="#faq">
+              FAQ
             </a>
             <a className="btn btn--primary btn--sm" href="/briefing">
-              Commencer
+              Start
             </a>
           </nav>
         </div>
       </header>
 
-      <main id="contenu">
+      <main id="content">
         <section className="hero">
           <div className="wrap hero__grid">
             <div className="hero__copy">
               <p className="hero__kicker">
-                <span className="dot dot--live"></span> 20 idées commencées, zéro lancée&nbsp;? C'est
-                pour toi.
+                <span className="dot dot--live"></span> 20 ideas started, zero shipped?&nbsp;This is for you.
               </p>
 
               <h1 className="hero__title">
-                De l'idée au premier&nbsp;client.
+                From idea to first&nbsp;customer.
                 <br />
-                <span className="hero__accent">Pour de vrai, cette&nbsp;fois.</span>
+                <span className="hero__accent">For real this&nbsp;time.</span>
               </h1>
 
               <p className="lead hero__lead">
-                Ton IA sait construire, mais pas te faire finir. On découpe ton idée en{' '}
-                <strong>30 quêtes</strong>, avec le prompt exact à coller à chaque étape jusqu'au
-                premier client.
+                Your AI can build. It can't make you finish. We break your idea into{' '}
+                <strong>30 days</strong>, with the exact prompt to paste each day until your first
+                paying customer.
               </p>
 
               <form className="hero__form" onSubmit={handleSubmit}>
-                <label className="sr-only" htmlFor="hero-idee">
-                  Décris ton idée
+                <label className="sr-only" htmlFor="hero-idea">
+                  Describe your idea
                 </label>
                 <input
                   className="field hero__field"
-                  id="hero-idee"
-                  name="idee"
+                  id="hero-idea"
+                  name="idea"
                   type="text"
-                  placeholder="Je veux un site où je peux…"
+                  placeholder="I want a tool that..."
                   autoComplete="off"
                 />
                 <button className="btn btn--primary hero__submit" type="submit">
-                  Commencer mon parcours <span aria-hidden="true">→</span>
+                  Start my journey <span aria-hidden="true">→</span>
                 </button>
               </form>
               <ul className="hero__trust">
@@ -117,7 +115,7 @@ export default function Home() {
                   >
                     <polyline points="4 12 10 18 20 6"></polyline>
                   </svg>{' '}
-                  3 quêtes gratuites
+                  3 days free
                 </li>
                 <li>
                   <svg
@@ -133,7 +131,7 @@ export default function Home() {
                   >
                     <polyline points="4 12 10 18 20 6"></polyline>
                   </svg>{' '}
-                  Sans carte bancaire
+                  No credit card required
                 </li>
                 <li>
                   <svg
@@ -149,12 +147,12 @@ export default function Home() {
                   >
                     <polyline points="4 12 10 18 20 6"></polyline>
                   </svg>{' '}
-                  Tes 30 quêtes en 3 minutes
+                  Your 30-day plan in 3 minutes
                 </li>
               </ul>
 
               <p className="hero__compat">
-                Marche avec <strong>Lovable</strong>, <strong>Bolt</strong>, <strong>Cursor</strong> et{' '}
+                Works with <strong>Lovable</strong>, <strong>Bolt</strong>, <strong>Cursor</strong> and{' '}
                 <strong>v0</strong>
               </p>
             </div>
@@ -163,10 +161,10 @@ export default function Home() {
       </main>
 
       <footer style={{ padding: '40px 20px', textAlign: 'center', color: '#999' }}>
-        <p>&copy; 2025 LazyPM. Construit avec l'IA, pour les IA.</p>
+        <p>&copy; 2025 ShipInDays. Built with AI, for makers.</p>
         <p style={{ marginTop: '20px', fontSize: '12px' }}>
-          <a href="/admin/fondateurs" style={{ color: '#666', textDecoration: 'none' }}>
-            fondateurs
+          <a href="/admin/founders" style={{ color: '#666', textDecoration: 'none' }}>
+            founders
           </a>
         </p>
       </footer>

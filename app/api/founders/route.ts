@@ -58,26 +58,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Envoyer l'email si c'est un nouveau fondateur
+    // Send email if it's a new founder
     if (isNew) {
-      const emailTemplate = `Salut ! 🚀
+      const emailTemplate = `Hey! 🚀
 
-Merci d'avoir rejoint ShipInDays. Tu vas finir ce produit en 30 jours.
+Thanks for joining ShipInDays. You're going to ship this product in 30 days.
 
-**Ton idée :**
+**Your idea:**
 ${idee}
 
-**La suite ?**
-1. Tu as 3 jours gratuits pour valider ton idée
-2. L'IA génère un plan de 30 jours (une tâche par jour)
-3. Chaque jour : un prompt à coller, un test à faire
+**What's next?**
+1. You have 3 free days to validate your idea
+2. AI generates your 30-day plan (one task per day)
+3. Each day: paste the prompt, run the test
 
-Réponds à cet email pour me dire quelle autre idée tu veux lancer après celle-ci.
+Reply to this email and tell me what other idea you want to launch after this one.
 
-À demain ! 💪
+Ship it! 💪
 
 ---
-ShipInDays · Finis ton produit en 30 jours`;
+ShipInDays · Ship your product in 30 days`;
 
       await resend.emails.send({
         from: 'onboarding@resend.dev',

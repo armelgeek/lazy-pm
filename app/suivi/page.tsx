@@ -11,7 +11,7 @@ interface Founder {
   created_at: string;
 }
 
-function SuiviContent() {
+function TrackingContent() {
   const searchParams = useSearchParams();
   const [password, setPassword] = useState('');
   const [founders, setFounders] = useState<Founder[]>([]);
@@ -27,7 +27,7 @@ function SuiviContent() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError('Mot de passe incorrect');
+        setError('Incorrect password');
         return;
       }
 
@@ -35,7 +35,7 @@ function SuiviContent() {
       setAuthenticated(true);
       setPassword('');
     } catch (err) {
-      setError('Erreur de connexion');
+      setError('Connection error');
     } finally {
       setLoading(false);
     }
@@ -49,17 +49,19 @@ function SuiviContent() {
   if (!authenticated) {
     return (
       <div style={{ padding: '40px 20px', maxWidth: '400px', margin: '0 auto' }}>
-        <h1>Ta page de suivi</h1>
-        <p>Vois qui s'inscrit et d'où ils viennent.</p>
+        <h1>Your tracking page</h1>
+        <p style={{ color: '#666' }}>See who signed up and where they came from.</p>
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '20px' }}>
-            <label htmlFor="password">Mot de passe</label>
+            <label htmlFor="password" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+              Password
+            </label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Entrez le mot de passe"
+              placeholder="Enter password"
               required
               style={{
                 width: '100%',
@@ -83,7 +85,7 @@ function SuiviContent() {
               cursor: loading ? 'not-allowed' : 'pointer',
             }}
           >
-            {loading ? 'Vérification...' : 'Accéder'}
+            {loading ? 'Verifying...' : 'Access'}
           </button>
           {error && (
             <p style={{ marginTop: '20px', color: '#c62828' }}>❌ {error}</p>
@@ -112,7 +114,7 @@ function SuiviContent() {
 
   return (
     <div style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <h1>Ta page de suivi</h1>
+      <h1>Your tracking page</h1>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
         <div style={{ padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
@@ -120,12 +122,12 @@ function SuiviContent() {
           <h2 style={{ margin: '5px 0 0 0' }}>{founders.length}</h2>
         </div>
         <div style={{ padding: '20px', backgroundColor: '#f5f5f5', borderRadius: '8px' }}>
-          <p style={{ margin: 0, color: '#999', fontSize: '12px' }}>Cette semaine</p>
+          <p style={{ margin: 0, color: '#999', fontSize: '12px' }}>This week</p>
           <h2 style={{ margin: '5px 0 0 0' }}>{thisWeek}</h2>
         </div>
       </div>
 
-      <h2>D'où ils viennent</h2>
+      <h2>Where they come from</h2>
       <div style={{ marginBottom: '40px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px' }}>
         {Object.entries(bySource)
           .sort((a, b) => b[1] - a[1])
@@ -137,12 +139,12 @@ function SuiviContent() {
           ))}
       </div>
 
-      <h2>Tous les inscrits</h2>
+      <h2>All signups</h2>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ borderBottom: '2px solid #ddd' }}>
             <th style={{ textAlign: 'left', padding: '10px' }}>Email</th>
-            <th style={{ textAlign: 'left', padding: '10px' }}>Idée</th>
+            <th style={{ textAlign: 'left', padding: '10px' }}>Idea</th>
             <th style={{ textAlign: 'left', padding: '10px' }}>Source</th>
             <th style={{ textAlign: 'left', padding: '10px' }}>Date</th>
           </tr>
@@ -165,7 +167,7 @@ function SuiviContent() {
                 </span>
               </td>
               <td style={{ padding: '10px', fontSize: '12px', color: '#999' }}>
-                {new Date(founder.created_at).toLocaleDateString('fr-FR')}
+                {new Date(founder.created_at).toLocaleDateString('en-US')}
               </td>
             </tr>
           ))}
@@ -186,17 +188,17 @@ function SuiviContent() {
             cursor: 'pointer',
           }}
         >
-          Déconnexion
+          Logout
         </button>
       </p>
     </div>
   );
 }
 
-export default function Suivi() {
+export default function Tracking() {
   return (
-    <Suspense fallback={<div style={{ padding: '40px 20px' }}>Chargement...</div>}>
-      <SuiviContent />
+    <Suspense fallback={<div style={{ padding: '40px 20px' }}>Loading...</div>}>
+      <TrackingContent />
     </Suspense>
   );
 }
