@@ -80,7 +80,7 @@ Ship it! 💪
 ShipInDays · Ship your product in 30 days`;
 
       await resend.emails.send({
-        from: 'contact@hayzar.com',
+        from: 'onboarding@resend.dev',
         to: email,
         subject: 'Welcome to ShipInDays! 🚀',
         text: emailTemplate,
