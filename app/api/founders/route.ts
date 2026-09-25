@@ -1,14 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(request: NextRequest) {
   try {
-    const { email, idee } = await request.json();
+    const { email, idee, source } = await request.json();
 
     // Validation email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,6 +28,8 @@ export async function POST(request: NextRequest) {
       .select('id')
       .eq('email', email)
       .single();
+
+    const isNew = !existing;
 
     if (existing) {
       // Mise à jour si existe
@@ -43,7 +48,7 @@ export async function POST(request: NextRequest) {
       // Création si nouveau
       const { error } = await supabase
         .from('founders')
-        .insert([{ email, idee }]);
+        .insert([{ email, idee, source: source || 'direct' }]);
 
       if (error) {
         return NextResponse.json(
@@ -51,6 +56,35 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
+    }
+
+    // Envoyer l'email si c'est un nouveau fondateur
+    if (isNew) {
+      const emailTemplate = `Salut ! 🚀
+
+Merci d'avoir rejoint LazyPM. Tu as une idée en pause qui traîne depuis longtemps ?
+
+**Ton idée :**
+${idee}
+
+**La suite ?**
+1. Tu as 3 quêtes gratuites pour tester si tu peux vraiment la finir
+2. L'IA va transformer ton idée en plan de 30 quêtes
+3. Chaque quête a un résultat clair et un prompt à coller
+
+Réponds simplement à cet email pour me dire quelle autre idée tu as en pause.
+
+À demain ! 💪
+
+---
+LazyPM · De l'idée au premier client en 30 quêtes`;
+
+      await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: email,
+        subject: 'Bienvenue sur LazyPM ! 🚀',
+        text: emailTemplate,
+      });
     }
 
     return NextResponse.json({ success: true });

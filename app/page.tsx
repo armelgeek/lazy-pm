@@ -9,7 +9,9 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const idee = formData.get('idee') as string;
-    router.push(`/briefing?idee=${encodeURIComponent(idee)}`);
+    const searchParams = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
+    const source = searchParams.get('utm_source') || 'direct';
+    router.push(`/briefing?idee=${encodeURIComponent(idee)}&source=${encodeURIComponent(source)}`);
   };
 
   return (

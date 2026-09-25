@@ -6,6 +6,7 @@ import { useState, Suspense } from 'react';
 function BriefingContent() {
   const searchParams = useSearchParams();
   const ideeInitiale = searchParams.get('idee') || '';
+  const sourceInitiale = searchParams.get('source') || 'direct';
   const [email, setEmail] = useState('');
   const [idee, setIdee] = useState(ideeInitiale);
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,7 @@ function BriefingContent() {
       const res = await fetch('/api/founders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, idee }),
+        body: JSON.stringify({ email, idee, source: sourceInitiale }),
       });
 
       const data = await res.json();
