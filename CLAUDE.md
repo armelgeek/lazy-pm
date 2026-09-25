@@ -1,12 +1,12 @@
-# LazyPM · contexte pour Claude Code
+# ShipInDays · contexte pour Claude Code
 
 Ce fichier est pour Claude, pas pour toi. Copie-le une fois à la racine du projet sous le nom CLAUDE.md : Claude Code le lit à chaque quête.
 
 ## Le produit
-LazyPM aide les gens qui construisent avec l'IA (Lovable, Bolt, Cursor, Claude Code, v0) à finir leur projet, de l'idée au premier client, en 30 quêtes. Chaque quête a un résultat à construire, un test de vérité, les cas qu'on oublie, un piège, et le prompt exact à coller. Un check-in chaque soir entretient une série et recale la date de lancement. Un copilote aide quand on bloque.
+ShipInDays aide les gens qui construisent avec l'IA (Lovable, Bolt, Cursor, Claude Code, v0) à finir leur produit en 30 jours, de l'idée au premier client. Chaque jour a un résultat à construire, un test de vérité, les cas qu'on oublie, un piège, et le prompt exact à coller. Un check-in chaque soir entretient une série et recale la date de lancement. Un copilote aide quand on bloque.
 
 ## Qui te parle
-Le fondateur construit LazyPM en vibe codant. Il décrit des résultats, pas du code. Toi, tu fais les choix techniques ci-dessous sans lui demander, et tu lui expliques ce qu'il doit faire de son côté, en français simple, sans jargon, étape par étape.
+Le fondateur construit ShipInDays en vibe codant. Il décrit des résultats, pas du code. Toi, tu fais les choix techniques ci-dessous sans lui demander, et tu lui expliques ce qu'il doit faire de son côté, en français simple, sans jargon, étape par étape.
 
 ## Choix techniques (à appliquer sans les redemander)
 - Next.js (App Router, TypeScript), hébergé sur Vercel

@@ -43,7 +43,7 @@ export default function Home() {
                 strokeLinecap="round"
               />
             </svg>
-            LAZYPM.
+            SHIPINDAYS.
             <span className="pill pill--green pill--xs">
               <span className="dot dot--live"></span> accès anticipé
             </span>

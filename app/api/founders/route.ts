@@ -62,22 +62,22 @@ export async function POST(request: NextRequest) {
     if (isNew) {
       const emailTemplate = `Salut ! 🚀
 
-Merci d'avoir rejoint LazyPM. Tu as une idée en pause qui traîne depuis longtemps ?
+Merci d'avoir rejoint ShipInDays. Tu vas finir ce produit en 30 jours.
 
 **Ton idée :**
 ${idee}
 
 **La suite ?**
-1. Tu as 3 quêtes gratuites pour tester si tu peux vraiment la finir
-2. L'IA va transformer ton idée en plan de 30 quêtes
-3. Chaque quête a un résultat clair et un prompt à coller
+1. Tu as 3 jours gratuits pour valider ton idée
+2. L'IA génère un plan de 30 jours (une tâche par jour)
+3. Chaque jour : un prompt à coller, un test à faire
 
-Réponds simplement à cet email pour me dire quelle autre idée tu as en pause.
+Réponds à cet email pour me dire quelle autre idée tu veux lancer après celle-ci.
 
 À demain ! 💪
 
 ---
-LazyPM · De l'idée au premier client en 30 quêtes`;
+ShipInDays · Finis ton produit en 30 jours`;
 
       await resend.emails.send({
         from: 'onboarding@resend.dev',

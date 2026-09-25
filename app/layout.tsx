@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "../public/styles.css";
 
 export const metadata: Metadata = {
-  title: "LazyPM — de l'idée au premier client en 30 quêtes",
-  description: "Ton IA sait construire, mais pas te faire finir. 30 quêtes, le prompt exact, et ton premier client.",
+  title: "ShipInDays — de l'idée au premier client en 30 jours",
+  description: "Finis ton produit en 30 jours. Chaque jour une quête, le prompt exact à coller, et ton premier client.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

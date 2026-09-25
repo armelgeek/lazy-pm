@@ -1,4 +1,4 @@
-# 📓 Journal LazyPM
+# 📓 Journal ShipInDays
 
 ## Jour 1 · 2025-09-25
 
