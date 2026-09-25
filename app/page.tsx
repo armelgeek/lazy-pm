@@ -18,8 +18,7 @@ export default function Home() {
     <>
       <a className="skip-link" href="#content">Skip to content</a>
       <div className="ea-bar">
-        <span className="dot dot--live"></span> Early access · 3 free days to validate your idea ·
-        <a href="#founders">Founder spots available</a>
+        <span className="dot dot--live"></span> Early access · 3 free days to validate your idea
       </div>
 
       <header className="nav" id="nav">
