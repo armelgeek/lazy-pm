@@ -79,12 +79,17 @@ Ship it! 💪
 ---
 ShipInDays · Ship your product in 30 days`;
 
-      await resend.emails.send({
-        from: 'onboarding@resend.dev',
-        to: email,
-        subject: 'Welcome to ShipInDays! 🚀',
-        text: emailTemplate,
-      });
+      try {
+        const emailResult = await resend.emails.send({
+          from: 'onboarding@resend.dev',
+          to: email,
+          subject: 'Welcome to ShipInDays! 🚀',
+          text: emailTemplate,
+        });
+        console.log('Email sent:', emailResult);
+      } catch (emailError) {
+        console.error('Email send error:', emailError);
+      }
     }
 
     return NextResponse.json({ success: true });
