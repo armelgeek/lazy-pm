@@ -80,9 +80,9 @@ Ship it! 💪
 ShipInDays · Ship your product in 30 days`;
 
       await resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'contact@hayzar.com',
         to: email,
-        subject: 'Bienvenue sur LazyPM ! 🚀',
+        subject: 'Welcome to ShipInDays! 🚀',
         text: emailTemplate,
       });
     }
