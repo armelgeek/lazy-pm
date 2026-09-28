@@ -1,19 +1,21 @@
-export const welcomeEmail = (idea: string, founderName: string = 'ShipInDays') => `Hey! 🚀
+export const welcomeEmail = (idea: string, founderName: string = 'LazyPM') => `Salut ! 🚀
 
-Thanks for joining ShipInDays. You're going to ship this product in 30 days.
+Bienvenue sur LazyPM. Tu vas lancer ce produit en 30 jours.
 
-**Your idea:**
+**Ton idée :**
 ${idea}
 
-**What's next?**
-1. You have 3 free days to validate your idea
-2. AI generates your 30-day plan (one task per day)
-3. Each day: paste the prompt, run the test
+**C'est quoi la suite ?**
+1. Tu as 3 quêtes gratuites pour valider ton idée (#01, #02, #03)
+2. L'IA génère ton plan 30 jours (une quête par jour)
+3. Chaque jour : colle le prompt, fais le test
 
-Reply to this email and tell me what other idea you want to launch after this one.
+À partir de la quête #04, c'est $9/mois (ou $5/mois à vie si tu es dans les 20 premiers).
 
-Ship it! 💪
+Réponds à cet email et dis-moi quelle autre idée tu veux lancer après celle-ci.
+
+Lance-la ! 💪
 
 ---
 ${founderName}
-ShipInDays · Ship your product in 30 days`;
+LazyPM · Construis ton produit en 30 jours`;

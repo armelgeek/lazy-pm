@@ -61,14 +61,14 @@ export async function POST(request: NextRequest) {
 
     // Send email if it's a new founder
     if (isNew) {
-      const founderName = process.env.FOUNDER_NAME || 'ShipInDays';
+      const founderName = process.env.FOUNDER_NAME || 'LazyPM';
       const emailText = welcomeEmail(idee, founderName);
 
       try {
         const emailResult = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+          from: 'bienvenue@lazypm.com',
           to: email,
-          subject: 'Welcome to ShipInDays! 🚀',
+          subject: 'Bienvenue sur LazyPM ! 🚀',
           text: emailText,
         });
         console.log('Email sent:', emailResult);
