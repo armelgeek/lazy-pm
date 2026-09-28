@@ -177,11 +177,10 @@ export default function Chemin() {
         </button>
       </div>
 
-      <div style={{ marginBottom: '40px' }}>
+      <div style={{ marginBottom: '40px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
         <button
           onClick={() => router.push('/checkin')}
           style={{
-            width: '100%',
             padding: '16px',
             backgroundColor: '#C8952A',
             color: 'white',
@@ -189,11 +188,25 @@ export default function Chemin() {
             borderRadius: '8px',
             cursor: 'pointer',
             fontWeight: '600',
-            fontSize: '16px',
-            marginBottom: '20px',
+            fontSize: '14px',
           }}
         >
           ✨ Check-in du soir
+        </button>
+        <button
+          onClick={() => router.push('/plus-tard')}
+          style={{
+            padding: '16px',
+            backgroundColor: '#666',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px',
+          }}
+        >
+          📝 Plus tard
         </button>
       </div>
 
