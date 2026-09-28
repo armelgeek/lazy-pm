@@ -292,6 +292,39 @@ export default function Compte() {
         </select>
       </div>
 
+      {/* Emails */}
+      <div
+        style={{
+          padding: '24px',
+          backgroundColor: '#f9f9f9',
+          borderRadius: '8px',
+          marginBottom: '30px',
+        }}
+      >
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Emails et rappels
+        </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#666' }}>
+          Gère tes préférences de rappels et de résumés hebdomadaires.
+        </p>
+        <button
+          onClick={() => router.push('/preferences/emails')}
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: '#1F2421',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px',
+          }}
+        >
+          📧 Gérer les emails
+        </button>
+      </div>
+
       {/* Data */}
       <div
         style={{
