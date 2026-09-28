@@ -76,6 +76,20 @@ export async function POST(request: NextRequest) {
       plan = JSON.parse(jsonText);
     }
 
+    // Initialize quest statuses
+    const initializeQuests = (sections: any[]) => {
+      sections.forEach((section) => {
+        section.quests.forEach((quest: any, idx: number) => {
+          // Quests 1-3 are free and unlocked
+          quest.unlocked = quest.id <= 3;
+          quest.completed = false;
+          quest.isBoss = [4, 11, 19, 30].includes(quest.id);
+        });
+      });
+    };
+
+    initializeQuests([plan.section1, plan.section2, plan.section3, plan.section4]);
+
     // Calculate total hours and launch date
     const allQuests = [
       ...plan.section1.quests,
