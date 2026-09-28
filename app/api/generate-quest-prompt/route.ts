@@ -7,9 +7,12 @@ const client = new Anthropic();
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[API] Starting quest prompt generation');
+
     // Get user from auth header
     const authHeader = request.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
+      console.log('[API] No auth header');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -23,10 +26,14 @@ export async function POST(request: NextRequest) {
     );
 
     if (userError || !userData.user) {
+      console.log('[API] Auth error:', userError);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    console.log('[API] User:', userData.user.id);
+
     const { questId, questTitle, questObjective } = await request.json();
+    console.log('[API] Generating prompt for quest', questId);
 
     // Generate prompt using Claude
     const message = await client.messages.create({
@@ -47,19 +54,24 @@ export async function POST(request: NextRequest) {
     }
 
     const prompt = textContent.text;
+    console.log('[API] Prompt generated, saving to DB');
 
     // Save to database
-    const { error: saveError } = await supabase.from('quest_prompts').insert([
-      {
-        user_id: userData.user.id,
-        quest_id: questId,
-        prompt,
-        created_at: new Date().toISOString(),
-      },
-    ]);
+    const { data: insertData, error: saveError } = await supabase
+      .from('quest_prompts')
+      .insert([
+        {
+          user_id: userData.user.id,
+          quest_id: questId,
+          prompt,
+          created_at: new Date().toISOString(),
+        },
+      ]);
 
     if (saveError) {
-      console.error('Error saving prompt:', saveError);
+      console.error('[API] Error saving prompt:', saveError);
+    } else {
+      console.log('[API] Prompt saved successfully');
     }
 
     return NextResponse.json({
@@ -71,7 +83,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Quest prompt generation error:', error);
+    console.error('[API] Quest prompt generation error:', error);
     return NextResponse.json(
       { error: 'Failed to generate prompt' },
       { status: 500 }
