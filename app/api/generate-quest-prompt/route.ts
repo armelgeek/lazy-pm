@@ -16,14 +16,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Create Supabase client with auth token
+    const token = authHeader.slice(7);
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
+      {
+        global: {
+          headers: {
+            Authorization: authHeader,
+          },
+        },
+      }
     );
 
-    const { data: userData, error: userError } = await supabase.auth.getUser(
-      authHeader.slice(7)
-    );
+    const { data: userData, error: userError } = await supabase.auth.getUser();
 
     if (userError || !userData.user) {
       console.log('[API] Auth error:', userError);
