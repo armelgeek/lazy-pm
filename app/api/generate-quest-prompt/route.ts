@@ -42,6 +42,24 @@ export async function POST(request: NextRequest) {
     const { questId, questTitle, questObjective } = await request.json();
     console.log('[API] Generating prompt for quest', questId);
 
+    // Check if quest requires subscription (quests 1-3 are free, 4+ need subscription)
+    if (questId >= 4) {
+      // Check subscription status
+      const { data: subData } = await supabase
+        .from('subscriptions')
+        .select('status')
+        .eq('user_id', userData.user.id)
+        .maybeSingle();
+
+      if (!subData || subData.status !== 'active') {
+        console.log('[API] User not subscribed for quest', questId);
+        return NextResponse.json(
+          { error: 'Subscription required', needsPaywall: true },
+          { status: 403 }
+        );
+      }
+    }
+
     // Generate prompt using Claude
     const message = await client.messages.create({
       model: 'claude-sonnet-5',
