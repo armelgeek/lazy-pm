@@ -1,10 +1,7 @@
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
+'use client';
 
-const ThankYouContent = dynamic(() => import('./thank-you-content'), {
-  ssr: false,
-  loading: () => <div style={{ padding: '40px 20px', textAlign: 'center' }}>Chargement...</div>,
-});
+import { Suspense } from 'react';
+import ThankYouContent from './thank-you-content';
 
 export default function ThankYou() {
   return (
