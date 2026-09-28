@@ -1,51 +1,50 @@
-export default function Confidentialite() {
+export default function Privacy() {
   return (
     <div style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '30px' }}>Politique de confidentialité</h1>
+      <h1 style={{ marginBottom: '30px' }}>Privacy Policy</h1>
 
       <div style={{ lineHeight: '1.8', color: '#333' }}>
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            1. Quelles données on garde
+            1. What data we store
           </h2>
           <p>
-            Quand tu crées un compte, on stocke :
+            When you create an account, we store:
           </p>
           <p>
-            • Ton email<br />
-            • Ton mot de passe (chiffré, pas en clair)<br />
-            • Ton idée de produit (celle que tu écris au démarrage)<br />
-            • Ton plan de 30 quêtes généré<br />
-            • Tes check-ins du soir et tes notes<br />
-            • Tes informations de paiement (gérées par Stripe, pas nous)<br />
-            • Les événements de ton compte (quête ouverte, prompt généré, etc.)
+            • Your email<br />
+            • Your password (encrypted, never in plain text)<br />
+            • Your product idea description<br />
+            • Your personalized 30-quest plan<br />
+            • Your daily check-ins and notes<br />
+            • Payment information (handled by Stripe, not us)<br />
+            • Account events (quest opened, prompt generated, etc.)
           </p>
           <p style={{ marginTop: '12px' }}>
-            Tout est stocké sur Supabase, un serveur en Europe.
+            Everything is stored on Supabase, a server located in Europe.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            2. Ce qui est envoyé à l'IA (Anthropic)
+            2. What gets sent to AI (Anthropic)
           </h2>
           <p style={{ padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px', marginBottom: '12px' }}>
-            <strong>🔴 Important :</strong> Quand tu généras un prompt de quête ou un check-in,
-            on envoie à Claude (l'IA d'Anthropic) :
+            <strong>🔴 Important:</strong> When you generate a quest prompt or check-in, we send to Claude (Anthropic's AI):
           </p>
           <p>
-            • Le titre de la quête<br />
-            • L'objectif de la quête<br />
-            • Ton état au check-in (« terminée », « à moitié », « pas touché »)<br />
-            • Tes notes du soir (2 lignes)<br />
-            • Rien d'autre
+            • Quest title<br />
+            • Quest objective<br />
+            • Your check-in status ("completed", "partial", "not started")<br />
+            • Your evening notes (2 lines)<br />
+            • Nothing else
           </p>
           <p style={{ marginTop: '12px' }}>
-            <strong>Tes données personnelles ne vont JAMAIS à l'IA.</strong> On ne lui envoie pas ton
-            email, ton idée complète, ou tes infos de paiement.
+            <strong>Your personal data never goes to the AI.</strong> We don't send your email, full idea,
+            or payment info.
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#f0f0f0', borderRadius: '6px' }}>
-            Anthropic garde les messages 30 jours maximum, puis les supprime. Lire sa politique :{' '}
+            Anthropic retains messages for up to 30 days, then deletes them. See their policy:{' '}
             <a
               href="https://www.anthropic.com/privacy"
               target="_blank"
@@ -59,25 +58,25 @@ export default function Confidentialite() {
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            3. Cookies et tracking
+            3. Cookies and tracking
           </h2>
           <p>
-            On utilise un peu de localStorage pour garder ta session en cours (rien d'invasif). On
-            ne vend pas tes données à des régies publicitaires, zéro analytics creepy.
+            We use minimal localStorage to keep you logged in. We don't sell your data to advertisers
+            or use invasive analytics.
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px' }}>
-            <strong>⚠️ À faire relire :</strong> Vérifie que la version actuelle du site n'a pas
-            d'analytics cachés qu'on aurait oubliés.
+            <strong>⚠️ Verify:</strong> Check that the current site version doesn't have any hidden
+            analytics we may have forgotten about.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            4. Paiements (Stripe)
+            4. Payments (Stripe)
           </h2>
           <p>
-            On n'a jamais accès à tes numéros de carte. Stripe gère tout. On ne stocke qu'un ID
-            client Stripe pour savoir que tu as payé. Lire la politique Stripe :{' '}
+            We never see your card numbers. Stripe handles everything. We only store a Stripe
+            customer ID to know you've paid. Read Stripe's policy:{' '}
             <a
               href="https://stripe.com/privacy"
               target="_blank"
@@ -91,60 +90,59 @@ export default function Confidentialite() {
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            5. Combien de temps on garde tes données
+            5. How long we keep your data
           </h2>
           <p>
-            • Tant que ton compte existe = on garde tout<br />
-            • Tu supprimes ton compte = tout disparaît en 30 jours<br />
-            • Tu annules l'abonnement = on garde l'accès gratuitement aux quêtes 1-3
+            • While your account exists = we keep everything<br />
+            • You delete your account = everything disappears within 30 days<br />
+            • You cancel subscription = we keep your quests 1-3 free access
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            6. Tes droits
+            6. Your rights
           </h2>
           <p>
-            Tu peux demander à tout moment :<br />
-            • Une copie de tes données (on te l'envoie par email)<br />
-            • La suppression de ton compte et tes données<br />
-            • Une clarification sur comment on utilise tes infos
+            You can request anytime:<br />
+            • A copy of your data (we'll email it)<br />
+            • Deletion of your account and data<br />
+            • Clarification on how we use your info
           </p>
           <p style={{ marginTop: '12px' }}>
-            Écris au fondateur via le compte pour toute demande RGPD.
+            Email the founder in your account for any GDPR requests.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            7. Sécurité
+            7. Security
           </h2>
           <p>
-            • Les données en transit sont chiffrées (HTTPS partout)<br />
-            • Les mots de passe sont chiffrés en base<br />
-            • Supabase gère la sécurité des serveurs<br />
-            • On n'a pas d'accès root aux données utilisateur (Row Level Security)
+            • Data in transit is encrypted (HTTPS everywhere)<br />
+            • Passwords are encrypted in the database<br />
+            • Supabase manages server security<br />
+            • We don't have root access to user data (Row Level Security)
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px' }}>
-            <strong>⚠️ À faire relire :</strong> Fais un audit de sécurité avant d'encaisser les
-            premiers paiements. Demande à un expert de vérifier la configuration.
+            <strong>⚠️ Security audit needed:</strong> Before taking payments, have a security expert
+            review the Supabase and Stripe configuration.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            8. Changements
+            8. Changes to this policy
           </h2>
           <p>
-            Si cette politique change, on te le dira par email. Les changements majeurs = tu dois
-            accepter avant de continuer.
+            If this policy changes, we'll notify you by email. Major changes require your acceptance.
           </p>
         </section>
 
         <hr style={{ margin: '40px 0', border: 'none', borderTop: '1px solid #ddd' }} />
 
         <p style={{ fontSize: '12px', color: '#999' }}>
-          Dernière mise à jour : septembre 2026
+          Last updated: September 2026
         </p>
       </div>
     </div>

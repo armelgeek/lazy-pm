@@ -1,102 +1,102 @@
-export default function Remboursement() {
+export default function Refund() {
   return (
     <div style={{ padding: '40px 20px', maxWidth: '800px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '30px' }}>Politique de remboursement & garantie</h1>
+      <h1 style={{ marginBottom: '30px' }}>Refund Policy & Guarantee</h1>
 
       <div style={{ lineHeight: '1.8', color: '#333' }}>
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            1. Les deux abonnements
+            1. The two subscription options
           </h2>
           <p>
-            <strong>Mensuel · 9 $/mois</strong><br />
-            Pas de garantie, cancellation quand tu veux. Renouvellement automatique chaque mois.
+            <strong>Monthly · $9/month</strong><br />
+            No guarantee, cancel anytime. Auto-renews each month.
           </p>
           <p style={{ marginTop: '12px' }}>
-            <strong>Pass Saison · 69 $ (une seule fois)</strong><br />
-            12 mois d'accès, 3 projets, garantie de remboursement si tu ne lances rien.
+            <strong>Season Pass · $69 (one-time)</strong><br />
+            12 months of access, 3 projects, refund guarantee if you don't ship.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            2. La garantie du pass saison
+            2. The Season Pass guarantee
           </h2>
           <p style={{ padding: '16px', backgroundColor: '#e8f5e9', borderRadius: '6px', marginBottom: '12px' }}>
-            <strong>✓ Remboursement 100% garanti si :</strong>
+            <strong>✓ 100% refund guaranteed if:</strong>
           </p>
           <p>
-            Tu ne lances rien avant la fin de ta quête #30, OU<br />
-            12 mois ont passé depuis ton achat (ce qui vient en premier)
+            You don't complete your quest #30 before it's due, OR<br />
+            12 months have passed since your purchase (whichever comes first)
           </p>
           <p style={{ marginTop: '12px' }}>
-            Dans ce cas, tu as droit à un remboursement complet, sans question.
+            In that case, you're entitled to a full refund, no questions asked.
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px' }}>
-            <strong>⚠️ À faire relire :</strong> Définis précisément ce que signifie « lancer » :
-            un MVP en ligne ? Une vente ? Un utilisateur gratuit ? Fais vérifier par un avocat.
+            <strong>⚠️ Legal review needed:</strong> Define precisely what "shipped" means:
+            MVP online? First sale? Have a lawyer review this section.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            3. Qu'est-ce qui compte comme « lancé »
+            3. What counts as "completed"
           </h2>
           <p>
-            Une quête est lancée si elle est complétée à la #30 de ton plan, ce qui signifie :<br />
-            • Tu as coché « terminée » dans un check-in<br />
-            • La quête suivante s'est ouverte<br />
-            • Ton plan a enregistré cette progression
+            A quest is completed when:<br />
+            • You marked it "done" in a check-in<br />
+            • The next quest unlocked<br />
+            • Your plan recorded the completion
           </p>
           <p style={{ marginTop: '12px' }}>
-            Autrement dit : tu as suivi les 30 jours d'affilée, même lentement.
+            In other words: you followed your 30-day journey, even if slowly.
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px' }}>
-            <strong>⚠️ À vérifier :</strong> Clarifie la différence entre « terminer le plan » et
-            « avoir un produit en ligne ». Demande au fondateur quelle est vraiment l'intention.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '30px' }}>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', marginbottom: '12px' }}>
-            4. Comment demander un remboursement
-          </h2>
-          <p>
-            Avant la quête #30 ou avant 12 mois :
-          </p>
-          <p>
-            1. Envoie un email au fondateur avec « Remboursement » dans le titre<br />
-            2. Dis simplement « Je n'ai rien lancé »<br />
-            3. On te fait un remboursement Stripe en 5-7 jours
-          </p>
-          <p style={{ marginTop: '12px' }}>
-            Aucun papier, aucune question.
+            <strong>⚠️ Clarify:</strong> What's the difference between "completing the plan" and
+            "having a product online"? Confirm with the founder.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            5. Abonnement mensuel
+            4. How to request a refund
           </h2>
           <p>
-            Pour l'abonnement 9 $/mois :<br />
-            • Tu peux annuler quand tu veux<br />
-            • Pas de remboursement rétroactif (tu avais accès ce mois-ci)<br />
-            • L'annulation est immédiate
+            Before quest #30 or within 12 months:
+          </p>
+          <p>
+            1. Email the founder with "Refund" in the subject<br />
+            2. Simply say "I didn't complete the journey"<br />
+            3. We process your refund via Stripe in 5-7 days
+          </p>
+          <p style={{ marginTop: '12px' }}>
+            No paperwork, no questions.
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            6. Remboursements si bug ou service indisponible
+            5. Monthly subscription
           </h2>
           <p>
-            Si LazyPM a un bug grave ou est down pendant plus de 3 jours d'affilée et que tu
-            demandes un remboursement, on négocie. Écris au fondateur.
+            For the $9/month subscription:<br />
+            • Cancel anytime<br />
+            • No refunds for past months (you had access)<br />
+            • Cancellation is immediate
+          </p>
+        </section>
+
+        <section style={{ marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
+            6. Refunds for service issues
+          </h2>
+          <p>
+            If ShipInDays has a critical bug or is down for more than 3 consecutive days and you
+            request a refund, we'll negotiate. Contact the founder.
           </p>
           <p style={{ marginTop: '12px', padding: '12px', backgroundColor: '#fff5e6', borderRadius: '6px' }}>
-            <strong>⚠️ À faire relire :</strong> Précise davantage les conditions (uptime SLA,
-            etc.). Un avocat peut améliorer cette partie.
+            <strong>⚠️ Legal review needed:</strong> Define SLA terms more precisely. A lawyer can
+            strengthen this section.
           </p>
         </section>
 
@@ -105,36 +105,36 @@ export default function Remboursement() {
             7. Taxes
           </h2>
           <p>
-            Les prix affichés ne comprennent pas les taxes. Les taxes seront ajoutées à la
-            facture selon ta localisation (gérées par Stripe).
+            Displayed prices don't include taxes. Taxes will be added at checkout based on your
+            location (handled by Stripe).
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            8. Cas pas couverts
+            8. Not covered
           </h2>
           <p>
-            Pas de remboursement si :<br />
-            • Tu as accédé au service et l'as utilisé (c'est pas un essai gratuit après coup)<br />
-            • Tu dis « j'ai pas eu le temps »: la garantie c'est « tu as pas lancé »<br />
-            • Tu demandes après 12 mois (délai dépassé)
+            No refunds for:<br />
+            • You used the service (it's not a free trial after-the-fact)<br />
+            • "I didn't have time" isn't the same as "I didn't complete the journey"<br />
+            • Requests after 12 months (deadline passed)
           </p>
         </section>
 
         <section style={{ marginBottom: '30px' }}>
           <h2 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px' }}>
-            9. Questions ?
+            9. Questions?
           </h2>
           <p>
-            Écris au fondateur. Il répondra en 48h max.
+            Email the founder. Response within 48 hours guaranteed.
           </p>
         </section>
 
         <hr style={{ margin: '40px 0', border: 'none', borderTop: '1px solid #ddd' }} />
 
         <p style={{ fontSize: '12px', color: '#999' }}>
-          Dernière mise à jour : septembre 2026
+          Last updated: September 2026
         </p>
       </div>
     </div>

@@ -192,9 +192,9 @@ export default function Home() {
       <footer style={{ padding: '40px 20px', textAlign: 'center', color: '#999' }}>
         <p>&copy; 2026 ShipInDays. Built with AI, for makers.</p>
         <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px', fontSize: '14px' }}>
-          <a href="/conditions" style={{ color: '#666', textDecoration: 'none' }}>Conditions</a>
-          <a href="/confidentialite" style={{ color: '#666', textDecoration: 'none' }}>Confidentialité</a>
-          <a href="/remboursement" style={{ color: '#666', textDecoration: 'none' }}>Remboursement</a>
+          <a href="/conditions" style={{ color: '#666', textDecoration: 'none' }}>Terms</a>
+          <a href="/confidentialite" style={{ color: '#666', textDecoration: 'none' }}>Privacy</a>
+          <a href="/remboursement" style={{ color: '#666', textDecoration: 'none' }}>Refunds</a>
         </div>
       </footer>
     </>
