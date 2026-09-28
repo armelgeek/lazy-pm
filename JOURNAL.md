@@ -122,4 +122,21 @@
 
 **XP :** +20
 
-**Status:** Quête #05 validée. Prêt pour #06+
+### ✅ Quête #06 · Tester pour de vrai
+
+**Résultats :**
+- Bouton "🐛 Report issue" sur chaque page
+- API pour signaler les problèmes (page + browser)
+- Page /analytics pour voir les stats d'utilisation
+- Tracking des événements utilisateur (journey_viewed, prompt_generated)
+- Vue d'ensemble de l'abandon par étape
+
+**Tests réussis :**
+- ✅ BOUTON · Le bouton apparaît et fonctionne
+- ✅ SIGNALEMENT · Les rapports s'enregistrent en base
+- ✅ STATS · L'analytics page affiche les événements
+- ✅ HISTORIQUE · Les stats des 7 derniers jours
+
+**XP :** +20
+
+**Status:** Quête #06 validée. 6 quêtes complétées ! 🚀
