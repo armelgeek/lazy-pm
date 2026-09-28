@@ -177,6 +177,26 @@ export default function Chemin() {
         </button>
       </div>
 
+      <div style={{ marginBottom: '40px' }}>
+        <button
+          onClick={() => router.push('/checkin')}
+          style={{
+            width: '100%',
+            padding: '16px',
+            backgroundColor: '#C8952A',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '16px',
+            marginBottom: '20px',
+          }}
+        >
+          ✨ Check-in du soir
+        </button>
+      </div>
+
       {sections.map((section: Section, idx: number) => (
         <div key={idx} style={{ marginBottom: '40px' }}>
           <h2 style={{ fontSize: '18px', fontWeight: '700', marginBottom: '20px' }}>
