@@ -27,10 +27,13 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const content = message.content[0];
-    if (content.type !== 'text') {
-      throw new Error('Unexpected response type');
+    // Find the text content block (skip thinking blocks)
+    const textContent = message.content.find((c: any) => c.type === 'text');
+    if (!textContent || textContent.type !== 'text') {
+      console.error('No text content found in message:', message);
+      throw new Error('No text content in response');
     }
+    const content = textContent;
 
     // Extract JSON from markdown if needed
     let jsonText = content.text;

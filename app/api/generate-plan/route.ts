@@ -29,11 +29,13 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    let content = message.content[0];
-    if (content.type !== 'text') {
-      console.error('Unexpected content type:', content.type, 'Full message:', message);
-      throw new Error(`Unexpected response type: ${content.type}`);
+    // Find the text content block (skip thinking blocks)
+    const textContent = message.content.find((c: any) => c.type === 'text');
+    if (!textContent || textContent.type !== 'text') {
+      console.error('No text content found in message:', message);
+      throw new Error('No text content in response');
     }
+    const content = textContent;
 
     let plan;
     try {
@@ -59,11 +61,13 @@ export async function POST(request: NextRequest) {
         ],
       });
 
-      content = message.content[0];
-      if (content.type !== 'text') {
-        console.error('Retry: Unexpected content type:', content.type, 'Full message:', message);
-        throw new Error(`Unexpected response type: ${content.type}`);
+      // Find the text content block (skip thinking blocks)
+      const textContent = message.content.find((c: any) => c.type === 'text');
+      if (!textContent || textContent.type !== 'text') {
+        console.error('Retry: No text content found in message:', message);
+        throw new Error('No text content in response');
       }
+      content = textContent;
 
       // Extract JSON from markdown if needed
       let jsonText = content.text;
