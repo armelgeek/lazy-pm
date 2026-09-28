@@ -1,7 +1,13 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, Suspense, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+);
 
 interface Quest {
   id: number;
@@ -30,6 +36,7 @@ interface PlanData {
 }
 
 function PlanContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const ideaInitial = searchParams.get('idea') || '';
   const [loading, setLoading] = useState(false);
@@ -39,6 +46,50 @@ function PlanContent() {
   const [customHours, setCustomHours] = useState<Record<number, number>>({});
   const [timePerDay, setTimePerDay] = useState('1 hour');
   const [idea, setIdea] = useState(ideaInitial);
+  const [user, setUser] = useState<any>(null);
+  const [savingPlan, setSavingPlan] = useState(false);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    checkUser();
+  }, []);
+
+  const savePlan = async (plan: PlanData) => {
+    if (!user) {
+      // Store in localStorage for non-authenticated users
+      localStorage.setItem('pendingPlan', JSON.stringify(plan.plan));
+      // Redirect to auth
+      router.push('/auth');
+      return;
+    }
+
+    setSavingPlan(true);
+    try {
+      const { error } = await supabase.from('plans').insert([
+        {
+          user_id: user.id,
+          plan_data: plan.plan,
+        },
+      ]);
+
+      if (error) {
+        setMessage('❌ Error saving plan');
+        return;
+      }
+
+      // Redirect to journey
+      router.push('/chemin');
+    } catch (err) {
+      setMessage('❌ Connection error');
+    } finally {
+      setSavingPlan(false);
+    }
+  };
 
   const generatePlan = async () => {
     if (!idea.trim()) {
@@ -284,6 +335,7 @@ function PlanContent() {
           borderRadius: '8px',
           textAlign: 'center',
           marginTop: '40px',
+          marginBottom: '20px',
         }}
       >
         <p style={{ fontSize: '14px', color: '#666', margin: '0 0 8px 0' }}>
@@ -298,6 +350,24 @@ function PlanContent() {
           Launch: {calculateLaunchDate()}
         </h2>
       </div>
+
+      <button
+        onClick={() => savePlan(planData)}
+        disabled={savingPlan}
+        style={{
+          width: '100%',
+          padding: '12px 24px',
+          backgroundColor: savingPlan ? '#ccc' : '#1F2421',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: savingPlan ? 'not-allowed' : 'pointer',
+          fontWeight: '600',
+          fontSize: '14px',
+        }}
+      >
+        {savingPlan ? 'Saving...' : 'Save plan & start journey'}
+      </button>
     </div>
   );
 }

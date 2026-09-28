@@ -42,6 +42,29 @@ export default function Chemin() {
 
       setUser(user);
 
+      // Check for pending plan in localStorage
+      const pendingPlan = localStorage.getItem('pendingPlan');
+      if (pendingPlan) {
+        try {
+          const planData = JSON.parse(pendingPlan);
+          const { error } = await supabase.from('plans').insert([
+            {
+              user_id: user.id,
+              plan_data: planData,
+            },
+          ]);
+
+          if (!error) {
+            localStorage.removeItem('pendingPlan');
+            setPlan(planData);
+            setLoading(false);
+            return;
+          }
+        } catch (err) {
+          console.error('Error transferring plan:', err);
+        }
+      }
+
       // Fetch user's plan
       const { data, error } = await supabase
         .from('plans')

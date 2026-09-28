@@ -78,9 +78,21 @@ export default function Quete() {
 
     setPromptLoading(true);
     try {
+      // Get session to get auth token
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        return;
+      }
+
       const res = await fetch('/api/generate-quest-prompt', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           questId,
           questTitle: quest.title,

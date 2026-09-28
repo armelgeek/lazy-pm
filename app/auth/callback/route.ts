@@ -11,7 +11,10 @@ export async function GET(request: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
     );
 
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    // If there's a pending plan in localStorage, it will be transferred client-side
+    // after redirect to /chemin
   }
 
   // Redirect to /chemin (the quest path)
