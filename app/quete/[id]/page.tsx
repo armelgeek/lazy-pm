@@ -323,25 +323,6 @@ export default function Quete() {
         </div>
       )}
 
-      <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #ddd' }}>
-        <p style={{ fontSize: '12px', fontWeight: '700', color: '#666', margin: '0 0 12px 0' }}>
-          // Checkpoints
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-            <input type="checkbox" style={{ cursor: 'pointer' }} />
-            <span style={{ fontSize: '14px' }}>Task 1 completed</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-            <input type="checkbox" style={{ cursor: 'pointer' }} />
-            <span style={{ fontSize: '14px' }}>Task 2 completed</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-            <input type="checkbox" style={{ cursor: 'pointer' }} />
-            <span style={{ fontSize: '14px' }}>Task 3 completed</span>
-          </label>
-        </div>
-      </div>
     </div>
   );
 }
