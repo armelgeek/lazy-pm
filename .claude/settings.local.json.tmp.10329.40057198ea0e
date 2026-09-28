@@ -14,7 +14,8 @@
       "Bash(git commit -m 'Handle Claude thinking blocks in API responses *)",
       "Bash(git commit -m 'Fix const reassignment error *)",
       "Bash(git commit -m 'Add quest #05: auth, journey path, quest pages *)",
-      "Bash(git commit -m 'Complete quest #05: plan saving and localStorage transfer *)"
+      "Bash(git commit -m 'Complete quest #05: plan saving and localStorage transfer *)",
+      "Bash(git commit *)"
     ]
   }
 }

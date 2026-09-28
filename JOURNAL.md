@@ -104,4 +104,22 @@
 ✅ **#03** · IA reformule et pose 3 questions, réponses sauvegardées
 ✅ **#04** · Plan généré avec 30 quêtes, boss aux bons endroits, durées ajustables
 
-**Status:** Prêt pour la quête #05
+### ✅ Quête #05 · Comptes et page de quête
+
+**Résultats :**
+- Connexion sans mot de passe par lien email (magic link OTP)
+- Plans sauvegardés par utilisateur avec Row Level Security
+- Page du chemin (/chemin) affiche les 30 quêtes du plan
+- Page d'une quête (/quete/[id]) avec prompt généré à la première visite
+- Plans stockés en localStorage transférés au compte après connexion
+- Sécurité : chaque utilisateur ne voit que ses propres données
+
+**Tests réussis :**
+- ✅ RETROUVÉ · Plan avant connexion reste après login
+- ✅ COPIER · Bouton copie le prompt sur tous les appareils
+- ✅ UNE FOIS · Même quête ouverte 2x génère le prompt une seule fois
+- ✅ VOISIN · Impossible de voir la quête d'un autre utilisateur
+
+**XP :** +20
+
+**Status:** Quête #05 validée. Prêt pour #06+
