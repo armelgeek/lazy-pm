@@ -6,8 +6,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[CHECKOUT] Starting checkout creation');
+
     const authHeader = request.headers.get('Authorization');
+    console.log('[CHECKOUT] Auth header:', authHeader?.slice(0, 20) + '...');
+
     if (!authHeader?.startsWith('Bearer ')) {
+      console.log('[CHECKOUT] Missing auth header');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -24,11 +29,16 @@ export async function POST(request: NextRequest) {
     );
 
     const { data: userData } = await supabase.auth.getUser();
+    console.log('[CHECKOUT] User:', userData.user?.id);
+
     if (!userData.user) {
+      console.log('[CHECKOUT] No user found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { planType, email } = await request.json();
+    console.log('[CHECKOUT] Plan type:', planType);
+    console.log('[CHECKOUT] Stripe keys configured:', !!process.env.STRIPE_SECRET_KEY);
 
     // Check if founder (email in list)
     const founderList = (process.env.FOUNDER_EMAILS || '').split(',').map(e => e.trim());
@@ -80,11 +90,15 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log('[CHECKOUT] Session created:', session.id);
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error('Checkout error:', error);
+    console.error('[CHECKOUT] Error:', error);
+    if (error instanceof Error) {
+      console.error('[CHECKOUT] Message:', error.message);
+    }
     return NextResponse.json(
-      { error: 'Failed to create checkout' },
+      { error: 'Failed to create checkout', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
