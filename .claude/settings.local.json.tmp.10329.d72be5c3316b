@@ -11,7 +11,8 @@
       "Bash(git commit -m 'Use claude-sonnet-5 for cost optimization *)",
       "Bash(git commit -m 'Allow plan generation without pre-filled idea *)",
       "Bash(git commit -m 'Improve plan generation robustness *)",
-      "Bash(git commit -m 'Handle Claude thinking blocks in API responses *)"
+      "Bash(git commit -m 'Handle Claude thinking blocks in API responses *)",
+      "Bash(git commit -m 'Fix const reassignment error *)"
     ]
   }
 }

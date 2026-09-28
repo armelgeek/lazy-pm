@@ -35,12 +35,11 @@ export async function POST(request: NextRequest) {
       console.error('No text content found in message:', message);
       throw new Error('No text content in response');
     }
-    const content = textContent;
 
     let plan;
     try {
       // Extract JSON from markdown if needed
-      let jsonText = content.text;
+      let jsonText = textContent.text;
       const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         jsonText = jsonMatch[1];
@@ -62,15 +61,14 @@ export async function POST(request: NextRequest) {
       });
 
       // Find the text content block (skip thinking blocks)
-      const textContent = message.content.find((c: any) => c.type === 'text');
-      if (!textContent || textContent.type !== 'text') {
+      const textContent2 = message.content.find((c: any) => c.type === 'text');
+      if (!textContent2 || textContent2.type !== 'text') {
         console.error('Retry: No text content found in message:', message);
         throw new Error('No text content in response');
       }
-      content = textContent;
 
       // Extract JSON from markdown if needed
-      let jsonText = content.text;
+      let jsonText = textContent2.text;
       const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         jsonText = jsonMatch[1];

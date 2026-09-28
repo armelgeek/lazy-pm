@@ -33,10 +33,9 @@ export async function POST(request: NextRequest) {
       console.error('No text content found in message:', message);
       throw new Error('No text content in response');
     }
-    const content = textContent;
 
     // Extract JSON from markdown if needed
-    let jsonText = content.text;
+    let jsonText = textContent.text;
     const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
     if (jsonMatch) {
       jsonText = jsonMatch[1];
