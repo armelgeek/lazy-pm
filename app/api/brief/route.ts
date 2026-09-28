@@ -32,7 +32,14 @@ export async function POST(request: NextRequest) {
       throw new Error('Unexpected response type');
     }
 
-    const response = JSON.parse(content.text);
+    // Extract JSON from markdown if needed
+    let jsonText = content.text;
+    const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[1];
+    }
+
+    const response = JSON.parse(jsonText);
 
     return NextResponse.json({
       success: true,

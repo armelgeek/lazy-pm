@@ -36,7 +36,13 @@ export async function POST(request: NextRequest) {
 
     let plan;
     try {
-      plan = JSON.parse(content.text);
+      // Extract JSON from markdown if needed
+      let jsonText = content.text;
+      const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonText = jsonMatch[1];
+      }
+      plan = JSON.parse(jsonText);
     } catch (e) {
       // Retry once if JSON parsing fails
       console.log('First attempt failed, retrying...');
@@ -57,7 +63,13 @@ export async function POST(request: NextRequest) {
         throw new Error('Unexpected response type');
       }
 
-      plan = JSON.parse(content.text);
+      // Extract JSON from markdown if needed
+      let jsonText = content.text;
+      const jsonMatch = jsonText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonText = jsonMatch[1];
+      }
+      plan = JSON.parse(jsonText);
     }
 
     // Calculate total hours and launch date
