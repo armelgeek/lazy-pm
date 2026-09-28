@@ -22,6 +22,10 @@ export default function Quete() {
   const [loading, setLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState(true);
   const [needsPaywall, setNeedsPaywall] = useState(false);
+  const [showCopilot, setShowCopilot] = useState(false);
+  const [copilotMessage, setCopilotMessage] = useState('');
+  const [copilotResponse, setCopilotResponse] = useState('');
+  const [copilotLoading, setCopilotLoading] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -148,6 +152,52 @@ export default function Quete() {
     router.push('/');
   };
 
+  const handleCopilotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!copilotMessage.trim()) return;
+
+    setCopilotLoading(true);
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        router.push('/auth');
+        return;
+      }
+
+      const res = await fetch('/api/copilot', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          questId,
+          userMessage: copilotMessage,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCopilotResponse(data.error || 'Erreur');
+        setCopilotMessage('');
+        return;
+      }
+
+      setCopilotResponse(data.response);
+      setCopilotMessage('');
+    } catch (err) {
+      console.error('Copilot error:', err);
+      setCopilotResponse('Erreur serveur');
+    } finally {
+      setCopilotLoading(false);
+    }
+  };
+
   if (loading) {
     return <div style={{ padding: '40px 20px' }}>Loading...</div>;
   }
@@ -263,24 +313,41 @@ export default function Quete() {
       </div>
 
       {!prompt && (
-        <button
-          onClick={generatePrompt}
-          disabled={promptLoading}
-          style={{
-            width: '100%',
-            padding: '12px 24px',
-            backgroundColor: promptLoading ? '#ccc' : '#1F2421',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: promptLoading ? 'not-allowed' : 'pointer',
-            fontWeight: '600',
-            fontSize: '14px',
-            marginBottom: '20px',
-          }}
-        >
-          {promptLoading ? 'Generating prompt...' : 'Generate prompt for today'}
-        </button>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
+          <button
+            onClick={generatePrompt}
+            disabled={promptLoading}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: promptLoading ? '#ccc' : '#1F2421',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: promptLoading ? 'not-allowed' : 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+            }}
+          >
+            {promptLoading ? 'Generating...' : 'Generate prompt'}
+          </button>
+          {isSubscribed && (
+            <button
+              onClick={() => setShowCopilot(true)}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#666',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+              }}
+            >
+              🆘 Je suis bloqué
+            </button>
+          )}
+        </div>
       )}
 
       {prompt && (
@@ -320,6 +387,127 @@ export default function Quete() {
           >
             {copied ? '✓ Copied!' : 'Copy prompt'}
           </button>
+        </div>
+      )}
+
+      {/* Copilot Panel */}
+      {showCopilot && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 1000,
+          }}
+          onClick={() => {
+            if (copilotResponse === '') {
+              setShowCopilot(false);
+            }
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '12px 12px 0 0',
+              padding: '20px',
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '70vh',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '700' }}>Je suis bloqué</h2>
+              <button
+                onClick={() => {
+                  setShowCopilot(false);
+                  setCopilotResponse('');
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  color: '#999',
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div
+              style={{
+                flex: 1,
+                overflowY: 'auto',
+                marginBottom: '16px',
+                padding: '12px',
+                backgroundColor: '#f9f9f9',
+                borderRadius: '6px',
+                minHeight: '100px',
+              }}
+            >
+              {copilotResponse ? (
+                <div
+                  style={{
+                    fontSize: '14px',
+                    lineHeight: '1.6',
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {copilotResponse}
+                </div>
+              ) : (
+                <p style={{ color: '#999', margin: 0 }}>Pose ta question...</p>
+              )}
+            </div>
+
+            <form
+              onSubmit={handleCopilotSubmit}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                gap: '8px',
+              }}
+            >
+              <input
+                type="text"
+                value={copilotMessage}
+                onChange={(e) => setCopilotMessage(e.target.value)}
+                placeholder="Décris ce qui te bloque..."
+                disabled={copilotLoading}
+                style={{
+                  padding: '10px',
+                  borderRadius: '6px',
+                  border: '1px solid #ddd',
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                }}
+              />
+              <button
+                type="submit"
+                disabled={copilotLoading || !copilotMessage.trim()}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: copilotLoading ? '#ccc' : '#1F2421',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: copilotLoading ? 'not-allowed' : 'pointer',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                }}
+              >
+                {copilotLoading ? 'Chargement...' : 'Envoyer'}
+              </button>
+            </form>
+          </div>
         </div>
       )}
 
