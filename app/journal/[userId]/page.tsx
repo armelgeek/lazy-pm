@@ -29,6 +29,7 @@ export default function Journal() {
   const [followerEmail, setFollowerEmail] = useState('');
   const [followerLoading, setFollowerLoading] = useState(false);
   const [followerMessage, setFollowerMessage] = useState('');
+  const [copyMessage, setCopyMessage] = useState('');
 
   useEffect(() => {
     const loadJournal = async () => {
@@ -68,10 +69,74 @@ export default function Journal() {
       }
 
       setLoading(false);
+
+      // Update meta tags for social sharing
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lazypm.com';
+      const journalUrl = `${baseUrl}/journal/${userId}`;
+      const title = `Le journal de la construction • LazyPM`;
+      const description = `${streak} jours de série. Construction en public.`;
+
+      document.title = title;
+
+      // Update OG tags
+      let ogTitle = document.querySelector('meta[property="og:title"]');
+      if (!ogTitle) {
+        ogTitle = document.createElement('meta');
+        ogTitle.setAttribute('property', 'og:title');
+        document.head.appendChild(ogTitle);
+      }
+      ogTitle.setAttribute('content', title);
+
+      let ogDesc = document.querySelector('meta[property="og:description"]');
+      if (!ogDesc) {
+        ogDesc = document.createElement('meta');
+        ogDesc.setAttribute('property', 'og:description');
+        document.head.appendChild(ogDesc);
+      }
+      ogDesc.setAttribute('content', description);
+
+      let ogUrl = document.querySelector('meta[property="og:url"]');
+      if (!ogUrl) {
+        ogUrl = document.createElement('meta');
+        ogUrl.setAttribute('property', 'og:url');
+        document.head.appendChild(ogUrl);
+      }
+      ogUrl.setAttribute('content', journalUrl);
+
+      let ogType = document.querySelector('meta[property="og:type"]');
+      if (!ogType) {
+        ogType = document.createElement('meta');
+        ogType.setAttribute('property', 'og:type');
+        document.head.appendChild(ogType);
+      }
+      ogType.setAttribute('content', 'website');
     };
 
     loadJournal();
   }, [userId]);
+
+  const handleShareTwitter = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lazypm.com';
+    const url = `${baseUrl}/journal/${userId}`;
+    const text = `Je suis en construction en public avec LazyPM! ${streak} jours de série 🚀`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl, '_blank');
+  };
+
+  const handleShareLinkedIn = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lazypm.com';
+    const url = `${baseUrl}/journal/${userId}`;
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+    window.open(linkedInUrl, '_blank');
+  };
+
+  const handleCopyLink = () => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lazypm.com';
+    const url = `${baseUrl}/journal/${userId}`;
+    navigator.clipboard.writeText(url);
+    setCopyMessage('✓ Lien copié!');
+    setTimeout(() => setCopyMessage(''), 3000);
+  };
 
   const handleFollowSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,6 +239,78 @@ export default function Journal() {
               </div>
             ))}
           </div>
+        )}
+      </div>
+
+      {/* Share */}
+      <div
+        style={{
+          padding: '24px',
+          backgroundColor: '#f9f9f9',
+          borderRadius: '8px',
+          marginBottom: '30px',
+          borderTop: '1px solid #ddd',
+        }}
+      >
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>Partager ton journal</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+          <button
+            onClick={handleShareTwitter}
+            style={{
+              padding: '12px',
+              backgroundColor: '#1DA1F2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+            }}
+          >
+            𝕏 Twitter
+          </button>
+          <button
+            onClick={handleShareLinkedIn}
+            style={{
+              padding: '12px',
+              backgroundColor: '#0A66C2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+            }}
+          >
+            💼 LinkedIn
+          </button>
+          <button
+            onClick={handleCopyLink}
+            style={{
+              padding: '12px',
+              backgroundColor: '#1F2421',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '14px',
+            }}
+          >
+            🔗 Copier
+          </button>
+        </div>
+        {copyMessage && (
+          <p
+            style={{
+              margin: '12px 0 0 0',
+              fontSize: '13px',
+              color: '#0a7a3e',
+              textAlign: 'center',
+            }}
+          >
+            {copyMessage}
+          </p>
         )}
       </div>
 
