@@ -72,6 +72,15 @@ export async function POST(request: NextRequest) {
       ? process.env.STRIPE_FOUNDER_PRICE_ID
       : process.env.STRIPE_MONTHLY_PRICE_ID;
 
+    console.log('[CHECKOUT] Monthly price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
+    console.log('[CHECKOUT] Founder price ID:', process.env.STRIPE_FOUNDER_PRICE_ID);
+    console.log('[CHECKOUT] Selected price ID:', priceId);
+
+    if (!priceId) {
+      console.log('[CHECKOUT] Price ID not found!');
+      return NextResponse.json({ error: 'Price ID not configured' }, { status: 500 });
+    }
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       payment_method_types: ['card'],
