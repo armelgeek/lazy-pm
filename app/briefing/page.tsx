@@ -3,6 +3,18 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, Suspense } from 'react';
 
+interface Question {
+  id: number;
+  question: string;
+  type: string;
+  options: string[];
+}
+
+interface BriefingResponse {
+  reformulation: string;
+  questions: Question[];
+}
+
 function BriefingContent() {
   const searchParams = useSearchParams();
   const ideaInitial = searchParams.get('idea') || '';
@@ -12,6 +24,41 @@ function BriefingContent() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const [briefing, setBriefing] = useState<BriefingResponse | null>(null);
+  const [briefingLoading, setBriefingLoading] = useState(false);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+
+  const generateBriefing = async () => {
+    if (!idea.trim()) {
+      setMessage('❌ Please describe your idea first');
+      return;
+    }
+
+    setBriefingLoading(true);
+    setMessage('');
+
+    try {
+      const res = await fetch('/api/brief', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage(data.error || 'Failed to generate briefing');
+        return;
+      }
+
+      setBriefing(data.data);
+      setAnswers({});
+    } catch (err) {
+      setMessage('❌ Connection error');
+    } finally {
+      setBriefingLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +83,7 @@ function BriefingContent() {
       setMessage('✅ Your idea has been saved! Check your email.');
       setEmail('');
       setIdea('');
+      setBriefing(null);
     } catch (err) {
       setMessage('❌ Connection error');
     } finally {
@@ -104,6 +152,7 @@ function BriefingContent() {
                 value={idea}
                 onChange={(e) => setIdea(e.target.value)}
                 placeholder="I want to build a tool that..."
+                disabled={!!briefing}
                 required
                 style={{
                   width: '100%',
@@ -114,49 +163,129 @@ function BriefingContent() {
                   fontFamily: 'inherit',
                   fontSize: '14px',
                   resize: 'vertical',
+                  opacity: briefing ? 0.6 : 1,
                 }}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <label htmlFor="email" style={{ fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', color: '#1F2421' }}>
-                Your email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-                style={{
-                  width: '100%',
-                  padding: '12px 14px',
-                  borderRadius: '8px',
-                  border: '1px solid #ddd',
-                  fontSize: '14px',
-                }}
-              />
-            </div>
+            {!briefing && (
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  type="button"
+                  onClick={generateBriefing}
+                  disabled={briefingLoading || !idea.trim()}
+                  style={{
+                    padding: '12px 24px',
+                    backgroundColor: briefingLoading ? '#ccc' : '#1F2421',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: briefingLoading ? 'not-allowed' : 'pointer',
+                    fontWeight: '600',
+                    fontSize: '14px',
+                  }}
+                >
+                  {briefingLoading ? 'Generating briefing...' : 'Analyze my idea'}
+                </button>
+              </div>
+            )}
 
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: loading ? '#ccc' : '#1F2421',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  fontWeight: '600',
-                  fontSize: '14px',
-                }}
-              >
-                {loading ? 'Saving...' : 'Save my idea'}
-              </button>
-            </div>
+            {briefing && (
+              <>
+                <div style={{ padding: '16px', backgroundColor: '#f0f8ff', borderRadius: '8px', borderLeft: '4px solid #1F2421' }}>
+                  <p style={{ fontSize: '12px', fontWeight: '700', color: '#666', margin: '0 0 8px 0' }}>AI reformulation</p>
+                  <p style={{ fontSize: '16px', fontWeight: '600', color: '#1F2421', margin: 0 }}>
+                    {briefing.reformulation}
+                  </p>
+                </div>
+
+                {briefing.questions.map((q) => (
+                  <div key={q.id} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <label style={{ fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', color: '#1F2421' }}>
+                      {q.question}
+                    </label>
+                    <select
+                      value={answers[q.id] || ''}
+                      onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '8px',
+                        border: '1px solid #ddd',
+                        fontSize: '14px',
+                        fontFamily: 'inherit',
+                      }}
+                    >
+                      <option value="">Select an option</option>
+                      {q.options.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <label htmlFor="email" style={{ fontSize: '12px', fontWeight: '700', textTransform: 'uppercase', color: '#1F2421' }}>
+                    Your email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    required
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      borderRadius: '8px',
+                      border: '1px solid #ddd',
+                      fontSize: '14px',
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '12px' }}>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                      padding: '12px 24px',
+                      backgroundColor: loading ? '#ccc' : '#1F2421',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: loading ? 'not-allowed' : 'pointer',
+                      fontWeight: '600',
+                      fontSize: '14px',
+                    }}
+                  >
+                    {loading ? 'Saving...' : 'Save my idea & start!'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBriefing(null);
+                      setAnswers({});
+                      setMessage('');
+                    }}
+                    style={{
+                      padding: '12px 24px',
+                      backgroundColor: '#f5f5f5',
+                      color: '#1F2421',
+                      border: '1px solid #ddd',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '14px',
+                    }}
+                  >
+                    Back
+                  </button>
+                </div>
+              </>
+            )}
 
             {message && (
               <div

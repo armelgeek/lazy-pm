@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { welcomeEmail } from '@/lib/email-templates';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
@@ -60,31 +61,15 @@ export async function POST(request: NextRequest) {
 
     // Send email if it's a new founder
     if (isNew) {
-      const emailTemplate = `Hey! 🚀
-
-Thanks for joining ShipInDays. You're going to ship this product in 30 days.
-
-**Your idea:**
-${idee}
-
-**What's next?**
-1. You have 3 free days to validate your idea
-2. AI generates your 30-day plan (one task per day)
-3. Each day: paste the prompt, run the test
-
-Reply to this email and tell me what other idea you want to launch after this one.
-
-Ship it! 💪
-
----
-ShipInDays · Ship your product in 30 days`;
+      const founderName = process.env.FOUNDER_NAME || 'ShipInDays';
+      const emailText = welcomeEmail(idee, founderName);
 
       try {
         const emailResult = await resend.emails.send({
-          from: 'onboarding@resend.dev',
+          from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
           to: email,
           subject: 'Welcome to ShipInDays! 🚀',
-          text: emailTemplate,
+          text: emailText,
         });
         console.log('Email sent:', emailResult);
       } catch (emailError) {
