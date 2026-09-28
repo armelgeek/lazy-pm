@@ -20,6 +20,8 @@ export default function Quete() {
   const [promptLoading, setPromptLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(true);
+  const [needsPaywall, setNeedsPaywall] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -33,6 +35,21 @@ export default function Quete() {
       }
 
       setUser(user);
+
+      // Check subscription for quests 4+
+      if (questId >= 4) {
+        const { data: subData } = await supabase
+          .from('subscriptions')
+          .select('status')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (!subData || subData.status !== 'active') {
+          setIsSubscribed(false);
+          setLoading(false);
+          return;
+        }
+      }
 
       // Fetch user's plan
       const { data: planData } = await supabase
@@ -109,6 +126,9 @@ export default function Quete() {
       const data = await res.json();
       if (res.ok) {
         setPrompt(data.prompt);
+      } else if (res.status === 403 && data.needsPaywall) {
+        setNeedsPaywall(true);
+        setIsSubscribed(false);
       }
     } catch (err) {
       console.error('Error generating prompt:', err);
@@ -130,6 +150,50 @@ export default function Quete() {
 
   if (loading) {
     return <div style={{ padding: '40px 20px' }}>Loading...</div>;
+  }
+
+  if (!isSubscribed && questId >= 4) {
+    return (
+      <div style={{ padding: '40px 20px', maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '16px' }}>
+          🔒 Quest locked
+        </h1>
+        <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
+          Quests #04 and beyond are only available to subscribers. Subscribe to unlock this quest and access AI-generated prompts.
+        </p>
+        <button
+          onClick={() => router.push('/pricing')}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#1F2421',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px',
+            marginRight: '12px',
+          }}
+        >
+          Subscribe
+        </button>
+        <button
+          onClick={() => router.push('/chemin')}
+          style={{
+            padding: '12px 24px',
+            backgroundColor: '#f5f5f5',
+            color: '#1F2421',
+            border: '1px solid #ddd',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px',
+          }}
+        >
+          Back
+        </button>
+      </div>
+    );
   }
 
   if (!quest) {
