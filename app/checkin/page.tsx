@@ -49,7 +49,24 @@ export default function Checkin() {
         .single();
 
       if (planData) {
-        const plan = planData.plan_data;
+        let plan = planData.plan_data;
+        let needsUpdate = false;
+
+        // Initialize quest statuses if missing
+        [plan.section1, plan.section2, plan.section3, plan.section4].forEach((section) => {
+          section.quests.forEach((quest: any) => {
+            if (quest.unlocked === undefined) {
+              quest.unlocked = quest.id <= 3;
+              quest.completed = false;
+              needsUpdate = true;
+            }
+          });
+        });
+
+        if (needsUpdate) {
+          await supabase.from('plans').update({ plan_data: plan }).eq('user_id', user.id);
+        }
+
         const allQuests = [
           ...plan.section1.quests,
           ...plan.section2.quests,
