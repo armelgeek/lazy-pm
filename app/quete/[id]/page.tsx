@@ -54,12 +54,12 @@ export default function Quete() {
         if (foundQuest) {
           setQuest(foundQuest);
           // Check if prompt already exists
-          const { data: promptData } = await supabase
+          const { data: promptData, error } = await supabase
             .from('quest_prompts')
             .select('prompt')
             .eq('user_id', user.id)
             .eq('quest_id', questId)
-            .single();
+            .maybeSingle();
 
           if (promptData?.prompt) {
             setPrompt(promptData.prompt);
