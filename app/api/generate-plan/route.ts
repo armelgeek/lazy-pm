@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
 
     let content = message.content[0];
     if (content.type !== 'text') {
-      throw new Error('Unexpected response type');
+      console.error('Unexpected content type:', content.type, 'Full message:', message);
+      throw new Error(`Unexpected response type: ${content.type}`);
     }
 
     let plan;
@@ -60,7 +61,8 @@ export async function POST(request: NextRequest) {
 
       content = message.content[0];
       if (content.type !== 'text') {
-        throw new Error('Unexpected response type');
+        console.error('Retry: Unexpected content type:', content.type, 'Full message:', message);
+        throw new Error(`Unexpected response type: ${content.type}`);
       }
 
       // Extract JSON from markdown if needed
