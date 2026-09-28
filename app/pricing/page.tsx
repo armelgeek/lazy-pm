@@ -34,7 +34,7 @@ export default function Pricing() {
         .from('subscriptions')
         .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setSubscription(data);
