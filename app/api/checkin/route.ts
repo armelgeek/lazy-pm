@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { questId, questTitle, state, notes, objectives, timezone } = await request.json();
+    const { questId, questTitle, state, notes, objectives, timezone, isPublic } = await request.json();
 
     // Check if already checked in today
     const today = new Date().toISOString().split('T')[0];
@@ -90,6 +90,7 @@ export async function POST(request: NextRequest) {
           notes: state === 'done' ? null : notes,
           ai_response: JSON.stringify(aiResponse),
           date_utc: today,
+          is_public: isPublic,
         },
       ])
       .select()

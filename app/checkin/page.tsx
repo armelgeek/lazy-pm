@@ -27,6 +27,7 @@ export default function Checkin() {
   const [submitting, setSubmitting] = useState(false);
   const [aiResponse, setAiResponse] = useState<any>(null);
   const [error, setError] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -148,6 +149,7 @@ export default function Checkin() {
           notes: state === 'done' ? '' : notes,
           objectives: objectives.filter(o => o.checked),
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          isPublic,
         }),
       });
 
@@ -400,6 +402,16 @@ export default function Checkin() {
             {error}
           </div>
         )}
+
+        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', marginBottom: '20px' }}>
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
+            style={{ cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: '14px' }}>Publier dans mon journal</span>
+        </label>
 
         <div style={{ display: 'flex', gap: '12px' }}>
           <button
