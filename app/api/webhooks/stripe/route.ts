@@ -2,9 +2,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-11-20',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
@@ -51,7 +49,7 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated': {
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription = event.data.object as any;
         const userId = subscription.metadata.userId;
 
         await supabase.from('subscriptions').upsert(
