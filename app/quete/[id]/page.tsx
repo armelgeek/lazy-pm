@@ -53,16 +53,22 @@ export default function Quete() {
 
         if (foundQuest) {
           setQuest(foundQuest);
-          // Check if prompt already exists
-          const { data: promptData, error } = await supabase
-            .from('quest_prompts')
-            .select('prompt')
-            .eq('user_id', user.id)
-            .eq('quest_id', questId)
-            .maybeSingle();
+          // Check if prompt already exists via API
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
 
-          if (promptData?.prompt) {
-            setPrompt(promptData.prompt);
+          if (session) {
+            const res = await fetch(`/api/get-quest-prompt?questId=${questId}`, {
+              headers: {
+                Authorization: `Bearer ${session.access_token}`,
+              },
+            });
+
+            const data = await res.json();
+            if (data.prompt) {
+              setPrompt(data.prompt);
+            }
           }
         }
       }
