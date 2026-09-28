@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
@@ -9,7 +9,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 );
 
-export default function ThankYou() {
+function ThankYouContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
@@ -162,5 +162,13 @@ export default function ThankYou() {
         Aller à mon parcours
       </button>
     </div>
+  );
+}
+
+export default function ThankYou() {
+  return (
+    <Suspense fallback={<div style={{ padding: '40px 20px', textAlign: 'center' }}>Chargement...</div>}>
+      <ThankYouContent />
+    </Suspense>
   );
 }
