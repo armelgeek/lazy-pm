@@ -228,7 +228,13 @@ export default function Pricing() {
         </div>
       </div>
 
-      <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #ddd' }}>
+      <div style={{ marginTop: '40px', paddingTop: '20px', borderTop: '1px solid #ddd', textAlign: 'center' }}>
+        <p style={{ fontSize: '12px', color: '#999', marginBottom: '16px' }}>
+          By subscribing, you agree to our{' '}
+          <a href="/conditions" style={{ color: '#1F2421', textDecoration: 'underline' }}>conditions</a>,{' '}
+          <a href="/confidentialite" style={{ color: '#1F2421', textDecoration: 'underline' }}>privacy policy</a>, and{' '}
+          <a href="/remboursement" style={{ color: '#1F2421', textDecoration: 'underline' }}>refund guarantee</a>
+        </p>
         <button
           onClick={() => router.push('/chemin')}
           style={{
