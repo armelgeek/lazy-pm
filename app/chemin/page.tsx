@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import ReportBugButton from '@/app/components/ReportBugButton';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
@@ -41,6 +42,24 @@ export default function Chemin() {
       }
 
       setUser(user);
+
+      // Track event
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        fetch('/api/track-event', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            eventType: 'journey_viewed',
+            page: '/chemin',
+          }),
+        }).catch(() => {});
+      }
 
       // Check for pending plan in localStorage
       const pendingPlan = localStorage.getItem('pendingPlan');
@@ -136,7 +155,9 @@ export default function Chemin() {
   const sections = [plan.section1, plan.section2, plan.section3, plan.section4];
 
   return (
-    <div style={{ padding: '40px 20px', maxWidth: '900px', margin: '0 auto' }}>
+    <>
+      <ReportBugButton pageName="/chemin" />
+      <div style={{ padding: '40px 20px', maxWidth: '900px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <h1>Your 30-day journey</h1>
         <button
@@ -206,6 +227,7 @@ export default function Chemin() {
           </div>
         </div>
       ))}
-    </div>
+      </div>
+    </>
   );
 }
