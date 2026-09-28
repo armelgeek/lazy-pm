@@ -24,6 +24,7 @@ export default function Compte() {
   const [timezone, setTimezone] = useState('UTC');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const init = async () => {
@@ -106,13 +107,13 @@ export default function Compte() {
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Export error:', err);
-      alert('Erreur lors de l\'export');
+      setMessage('Erreur lors de l\'export');
     }
   };
 
   const handleDeleteAccount = async () => {
     if (deleteConfirmText !== 'supprimer mon compte') {
-      alert('Tape le texte exact pour confirmer');
+      setMessage('Tape le texte exact pour confirmer');
       return;
     }
 
@@ -148,7 +149,7 @@ export default function Compte() {
       router.push('/');
     } catch (err) {
       console.error('Delete error:', err);
-      alert('Erreur lors de la suppression');
+      setMessage('Erreur lors de la suppression');
     }
   };
 
@@ -179,6 +180,21 @@ export default function Compte() {
       </button>
 
       <h1 style={{ marginBottom: '30px' }}>Mon compte</h1>
+
+      {message && (
+        <div
+          style={{
+            padding: '12px',
+            backgroundColor: message.includes('Erreur') ? '#ffe0e0' : '#e8f5e9',
+            borderRadius: '6px',
+            color: message.includes('Erreur') ? '#c00' : '#0a7a3e',
+            marginBottom: '30px',
+            fontSize: '14px',
+          }}
+        >
+          {message}
+        </div>
+      )}
 
       {/* Email */}
       <div
@@ -322,6 +338,39 @@ export default function Compte() {
           }}
         >
           📧 Gérer les emails
+        </button>
+      </div>
+
+      {/* Public Journal */}
+      <div
+        style={{
+          padding: '24px',
+          backgroundColor: '#f9f9f9',
+          borderRadius: '8px',
+          marginBottom: '30px',
+        }}
+      >
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Mon journal public
+        </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#666' }}>
+          Partage ton progrès en temps réel. Tes followers verront tes check-ins publics.
+        </p>
+        <button
+          onClick={() => window.open(`/journal/${user?.id}`, '_blank')}
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: '#1F2421',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: '600',
+            fontSize: '14px',
+          }}
+        >
+          🌍 Voir mon journal
         </button>
       </div>
 
