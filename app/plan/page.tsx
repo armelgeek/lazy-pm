@@ -38,8 +38,14 @@ function PlanContent() {
   const [skippedQuests, setSkippedQuests] = useState<Set<number>>(new Set());
   const [customHours, setCustomHours] = useState<Record<number, number>>({});
   const [timePerDay, setTimePerDay] = useState('1 hour');
+  const [idea, setIdea] = useState(ideaInitial);
 
   const generatePlan = async () => {
+    if (!idea.trim()) {
+      setMessage('❌ Please describe your idea first');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
@@ -48,7 +54,7 @@ function PlanContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idea: ideaInitial,
+          idea,
           tool: 'Claude Code',
           timePerDay,
           monetization: 'Free prototype',
@@ -115,6 +121,28 @@ function PlanContent() {
         </p>
 
         <div style={{ marginBottom: '20px' }}>
+          <label htmlFor="idea" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+            Your idea
+          </label>
+          <textarea
+            id="idea"
+            value={idea}
+            onChange={(e) => setIdea(e.target.value)}
+            placeholder="I want to build a tool that..."
+            style={{
+              width: '100%',
+              padding: '12px',
+              minHeight: '80px',
+              borderRadius: '8px',
+              border: '1px solid #ddd',
+              fontFamily: 'inherit',
+              fontSize: '14px',
+              resize: 'vertical',
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
           <label htmlFor="timePerDay" style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
             How much time per day?
           </label>
@@ -140,15 +168,15 @@ function PlanContent() {
 
         <button
           onClick={generatePlan}
-          disabled={loading}
+          disabled={loading || !idea.trim()}
           style={{
             width: '100%',
             padding: '12px',
-            backgroundColor: loading ? '#ccc' : '#1F2421',
+            backgroundColor: loading || !idea.trim() ? '#ccc' : '#1F2421',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
-            cursor: loading ? 'not-allowed' : 'pointer',
+            cursor: loading || !idea.trim() ? 'not-allowed' : 'pointer',
             fontWeight: '600',
             fontSize: '14px',
           }}
