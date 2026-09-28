@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
 
     const today = new Date().toISOString().split('T')[0];
     const dayOfWeek = new Date()
-      .toLocaleDateString('en-US', { weekday: 'lowercase' });
+      .toLocaleDateString('en-US', { weekday: 'long' })
+      .toLowerCase();
 
     // Get all users with email preferences
     const { data: allUsers } = await supabase.auth.admin.listUsers();
