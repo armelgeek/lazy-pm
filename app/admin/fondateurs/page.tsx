@@ -74,7 +74,7 @@ function FondateursContent() {
 
   const generateInvites = async () => {
     if (selectedEmails.length === 0) {
-      setError('Sélectionnez au least un email');
+      setError('Sélectionnez au moins un email');
       return;
     }
 
@@ -89,7 +89,7 @@ function FondateursContent() {
         },
         body: JSON.stringify({
           emails: selectedEmails,
-          previewOnly: true, // For testing
+          password: password,
         }),
       });
 

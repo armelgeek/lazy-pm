@@ -4,39 +4,21 @@ import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get('Authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const { emails, password } = await request.json();
+
+    // Verify password
+    if (password !== process.env.FOUNDER_PASSWORD) {
+      return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
     }
-
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-      {
-        global: {
-          headers: {
-            Authorization: authHeader,
-          },
-        },
-      }
-    );
-
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Only admin can generate invites
-    const founderEmails = (process.env.FOUNDER_EMAILS || '').split(',').map(e => e.trim());
-    if (!founderEmails.includes(userData.user.email || '')) {
-      return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
-    }
-
-    const { emails, previewOnly } = await request.json();
 
     if (!Array.isArray(emails) || emails.length === 0) {
       return NextResponse.json({ error: 'No emails provided' }, { status: 400 });
     }
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+    );
 
     const invites = [];
     const expiresAt = new Date();
@@ -79,7 +61,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      previewOnly: !!previewOnly,
       count: invites.length,
       invites,
     });
