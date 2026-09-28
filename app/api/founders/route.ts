@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
       try {
         const emailResult = await resend.emails.send({
-          from: 'bienvenue@lazypm.com',
+          from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
           to: email,
           subject: 'Bienvenue sur LazyPM ! 🚀',
           text: emailText,
@@ -74,6 +74,10 @@ export async function POST(request: NextRequest) {
         console.log('Email sent:', emailResult);
       } catch (emailError) {
         console.error('Email send error:', emailError);
+        return NextResponse.json(
+          { error: 'Email send failed', details: String(emailError) },
+          { status: 500 }
+        );
       }
     }
 
