@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const userPrompt = planUserPrompt(idea, tool || 'Claude Code', timePerDay || '1 hour', monetization || 'Free prototype');
 
     let message = await client.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-5-5',
       max_tokens: 4096,
       system: planSystemPrompt,
       messages: [
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       // Retry once if JSON parsing fails
       console.log('First attempt failed, retrying...');
       message = await client.messages.create({
-        model: 'claude-opus-4-1-20250805',
+        model: 'claude-opus-5-5',
         max_tokens: 4096,
         system: planSystemPrompt,
         messages: [

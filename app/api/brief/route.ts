@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const message = await client.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-5-5',
       max_tokens: 1024,
       system: briefingSystemPrompt,
       messages: [
