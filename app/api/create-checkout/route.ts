@@ -72,11 +72,15 @@ export async function POST(request: NextRequest) {
       ? process.env.STRIPE_FOUNDER_PRICE_ID
       : process.env.STRIPE_MONTHLY_PRICE_ID;
 
-    console.log('[CHECKOUT] Monthly price ID:', process.env.STRIPE_MONTHLY_PRICE_ID);
-    console.log('[CHECKOUT] Founder price ID:', process.env.STRIPE_FOUNDER_PRICE_ID);
-    console.log('[CHECKOUT] Selected price ID:', priceId);
+    const monthlyId = process.env.STRIPE_MONTHLY_PRICE_ID?.trim();
+    const founderId = process.env.STRIPE_FOUNDER_PRICE_ID?.trim();
+    const trimmedPriceId = priceId?.trim();
 
-    if (!priceId) {
+    console.log('[CHECKOUT] Monthly price ID:', monthlyId, '(length:', monthlyId?.length, ')');
+    console.log('[CHECKOUT] Founder price ID:', founderId, '(length:', founderId?.length, ')');
+    console.log('[CHECKOUT] Selected price ID:', trimmedPriceId, '(length:', trimmedPriceId?.length, ')');
+
+    if (!trimmedPriceId) {
       console.log('[CHECKOUT] Price ID not found!');
       return NextResponse.json({ error: 'Price ID not configured' }, { status: 500 });
     }
@@ -86,7 +90,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: priceId,
+          price: trimmedPriceId,
           quantity: 1,
         },
       ],
